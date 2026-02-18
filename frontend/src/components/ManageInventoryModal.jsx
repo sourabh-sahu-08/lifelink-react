@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { useToast } from '../context/ToastContext';
+import API_BASE_URL from '../config/apiConfig';
 
 const ManageInventoryModal = ({ isOpen, onClose, inventory, onRefresh }) => {
     const [selectedType, setSelectedType] = useState(inventory[0]?.type || 'O-');
@@ -12,7 +13,7 @@ const ManageInventoryModal = ({ isOpen, onClose, inventory, onRefresh }) => {
     const handleUpdate = async () => {
         setSubmitting(true);
         try {
-            await axios.post('http://localhost:5000/api/inventory/update', {
+            await axios.post(`${API_BASE_URL}/api/inventory/update`, {
                 type: selectedType,
                 units: parseInt(units)
             });

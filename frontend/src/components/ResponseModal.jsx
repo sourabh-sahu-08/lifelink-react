@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { useToast } from '../context/ToastContext';
+import API_BASE_URL from '../config/apiConfig';
 
 const ResponseModal = ({ isOpen, onClose, request }) => {
     const [step, setStep] = useState(1);
@@ -13,7 +14,7 @@ const ResponseModal = ({ isOpen, onClose, request }) => {
     const handleConfirm = async () => {
         setSubmitting(true);
         try {
-            await axios.post('http://localhost:5000/api/respond', {
+            await axios.post(`${API_BASE_URL}/api/respond`, {
                 requestId: request.id,
                 donorId: 1 // In a real app, this would be the logged-in user's ID
             });

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import Skeleton from '../components/Skeleton';
 import { useOutletContext } from 'react-router-dom';
+import API_BASE_URL from '../config/apiConfig';
 
 const Requests = () => {
     const { triggerResponse } = useOutletContext();
@@ -14,7 +15,7 @@ const Requests = () => {
     useEffect(() => {
         const fetchRequests = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/requests');
+                const response = await axios.get(`${API_BASE_URL}/api/requests`);
                 setRequests(response.data);
             } catch (error) {
                 console.error("Error fetching requests:", error);

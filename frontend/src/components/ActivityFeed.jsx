@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
+import API_BASE_URL from '../config/apiConfig';
 
 const ActivityFeed = ({ limit = 3 }) => {
     const [activities, setActivities] = useState([]);
@@ -9,7 +10,7 @@ const ActivityFeed = ({ limit = 3 }) => {
     useEffect(() => {
         const fetchActivity = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/activity');
+                const response = await axios.get(`${API_BASE_URL}/api/activity`);
                 if (Array.isArray(response.data)) {
                     setActivities(response.data.slice(0, limit));
                 }

@@ -5,6 +5,7 @@ import { useOutletContext } from 'react-router-dom';
 import ActivityFeed from '../components/ActivityFeed';
 import ManageInventoryModal from '../components/ManageInventoryModal';
 import Skeleton from '../components/Skeleton';
+import API_BASE_URL from '../config/apiConfig';
 
 const HospitalDashboard = () => {
     const { triggerNewRequest } = useOutletContext();
@@ -21,8 +22,8 @@ const HospitalDashboard = () => {
     const fetchData = async () => {
         try {
             const [statsRes, inventoryRes] = await Promise.all([
-                axios.get('http://localhost:5000/api/stats'),
-                axios.get('http://localhost:5000/api/inventory')
+                axios.get(`${API_BASE_URL}/api/stats`),
+                axios.get(`${API_BASE_URL}/api/inventory`)
             ]);
             setStats(statsRes.data.hospitalStats);
             setInventory(inventoryRes.data);

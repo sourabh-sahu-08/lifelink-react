@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import Skeleton from '../components/Skeleton';
+import API_BASE_URL from '../config/apiConfig';
 
 const Profile = ({ userType = 'donor' }) => {
     const [history, setHistory] = useState([]);
@@ -22,8 +23,8 @@ const Profile = ({ userType = 'donor' }) => {
         const fetchData = async () => {
             try {
                 const [histRes, statsRes] = await Promise.all([
-                    axios.get(`http://localhost:5000/api/history/1`), // Hardcoded ID 1 for mock
-                    axios.get('http://localhost:5000/api/stats')
+                    axios.get(`${API_BASE_URL}/api/history/1`), // Hardcoded ID 1 for mock
+                    axios.get(`${API_BASE_URL}/api/stats`)
                 ]);
                 setHistory(histRes.data);
                 setStats(userType === 'donor' ? statsRes.data.donorStats : statsRes.data.hospitalStats);

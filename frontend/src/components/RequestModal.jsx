@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { useToast } from '../context/ToastContext';
+import API_BASE_URL from '../config/apiConfig';
 
 const RequestModal = ({ isOpen, onClose, onRefresh }) => {
     const { addToast } = useToast();
@@ -19,7 +20,7 @@ const RequestModal = ({ isOpen, onClose, onRefresh }) => {
         e.preventDefault();
         setSubmitting(true);
         try {
-            await axios.post('http://localhost:5000/api/requests', {
+            await axios.post(`${API_BASE_URL}/api/requests`, {
                 hospital: "St. Mary's Hospital",
                 ...formData
             });

@@ -5,6 +5,7 @@ import { useOutletContext } from 'react-router-dom';
 import Skeleton from '../components/Skeleton';
 import { useToast } from '../context/ToastContext';
 import ActivityFeed from '../components/ActivityFeed';
+import API_BASE_URL from '../config/apiConfig';
 
 const DonorDashboard = () => {
     const { triggerResponse } = useOutletContext();
@@ -62,8 +63,8 @@ const DonorDashboard = () => {
         const fetchData = async () => {
             try {
                 const [statsRes, requestsRes] = await Promise.all([
-                    axios.get('http://localhost:5000/api/stats'),
-                    axios.get('http://localhost:5000/api/requests')
+                    axios.get(`${API_BASE_URL}/api/stats`),
+                    axios.get(`${API_BASE_URL}/api/requests`)
                 ]);
                 setStats(statsRes.data.donorStats);
                 setRequests(requestsRes.data);
