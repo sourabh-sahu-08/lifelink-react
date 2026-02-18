@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeLink - Blood Donation Platform</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Mapbox CSS -->
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background-color: #f8fafc;
+        }
+        
+        .emergency-pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        
+        .blood-type-badge {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: bold;
+            color: white;
+            margin: 0 auto;
+        }
+        
+        .type-o { background-color: #ef4444; }
+        .type-a { background-color: #3b82f6; }
+        .type-b { background-color: #10b981; }
+        .type-ab { background-color: #8b5cf6; }
+        
+        .donor-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .donor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-active {
+            position: relative;
+            color: #ef4444;
+        }
+        
+        .nav-active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #ef4444;
+            border-radius: 3px;
+        }
+        
+        /* Switch User Styles */
+        .user-type-selector {
+            transition: all 0.3s ease;
+        }
+        
+        .user-type-active {
+            background-color: #ef4444;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        /* Hospital-specific styles */
+        .hospital-nav-active {
+            color: #3b82f6;
+        }
+        
+        .hospital-nav-active::after {
+            background-color: #3b82f6;
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-pending { background-color: #fef3c7; color: #92400e; }
+        .status-active { background-color: #d1fae5; color: #065f46; }
+        .status-responded { background-color: #dbeafe; color: #1e40af; }
+        
+        /* Modal overlay */
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        /* Modern Hero Card Styles */
+        .hero-card-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .badge-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .badge-card:hover {
+            transform: translateY(-5px) scale(1.05);
+        }
+        
+        .partner-card {
+            border-left: 4px solid #10b981;
+        }
+        
+        /* Hospital View Hidden by Default */
+        .hospital-view {
+            display: none;
+        }
+        
+        /* Modern Card Design */
+        .modern-card {
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Map Styles */
+        .map-container {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .map-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 100%);
+            z-index: 1;
+            padding: 15px;
+            color: white;
+        }
+        
+        .map-legend {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background: rgba(255,255,255,0.9);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            z-index: 1;
+        }
+        
+        .map-donor-marker {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .map-hospital-marker {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            background: #3b82f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- User Type Selector (Top Bar) -->
+    <div class="bg-white border-b shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <i class="fas fa-tint text-red-600 text-xl mr-2"></i>
+                    <span class="text-lg font-bold text-gray-900">LifeLink</span>
+                </div>
+                <div class="flex space-x-2">
+                    <button id="switchToDonor" class="user-type-selector px-4 py-2 rounded-lg bg-red-600 text-white font-medium user-type-active">
+                        <i class="fas fa-user mr-2"></i> Donor View
+                    </button>
+                    <button id="switchToHospital" class="user-type-selector px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium">
+                        <i class="fas fa-hospital mr-2"></i> Hospital View
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================== -->
+    <!-- DONOR VIEW (Default View) -->
+    <!-- ======================== -->
+    <div id="donorView" class="donor-view">
+        <!-- Donor Navigation -->
+        <nav class="bg-white shadow-sm sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="hidden md:ml-6 md:flex md:space-x-8">
+                            <a href="#" class="nav-active text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">Dashboard</a>
+                            <a href="#" class="text-gray-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">Requests</a>
+                            <a href="#" class="text-gray-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">My Profile</a>
+                            <a href="#" class="text-gray-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">Rewards</a>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <button id="emergencyBtn" class="mr-3 emergency-pulse bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium flex items-center">
+                            <i class="fas fa-bell mr-2"></i> Emergency Alert
+                        </button>
+                        <div class="relative">
+                            <button class="flex items-center text-sm rounded-full focus:outline-none">
+                                <img class="h-8 w-8 rounded-full" src="https://ui-avatars.com/api/?name=Pratishtha&background=ef4444&color=fff" alt="User">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Donor Main Content -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <!-- Modern Hero Card -->
+            <div class="modern-card mb-8 bg-gradient-to-br from-white to-gray-50 border border-gray-100">
+                <!-- Card Header with Gradient -->
+                <div class="relative">
+                    <div class="h-40 bg-gradient-to-r from-red-500 via-red-600 to-red-700"></div>
+                    <div class="absolute -bottom-16 left-6">
+                        <div class="relative">
+                            <div class="h-32 w-32 rounded-full border-4 border-white shadow-xl overflow-hidden">
+                                <img class="h-full w-full object-cover" src="https://imgs.search.brave.com/x9cT0QbtyGguPJPWYLIRbpkmT82eqyBDXf9mzmf3vIs/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNzMv/NjE0LzM0OC9zbWFs/bC9hLXdvbWFuLXMt/YXZhdGFyLXdpdGgt/YnJvd24taGFpci1h/bmQtYS1zbWlsZS12/ZWN0b3IuanBn" alt="Donor">
+                            </div>
+                            <div class="absolute bottom-2 right-2 bg-gradient-to-r from-red-500 to-red-600 text-white p-2 rounded-full">
+                                <i class="fas fa-tint text-lg"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute top-4 right-4">
+                        <button onclick="shareHeroCard()" class="glass-effect hover:bg-white/30 text-white p-3 rounded-full">
+                            <i class="fas fa-share-alt text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Card Body -->
+                <div class="pt-20 px-6 pb-6">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-900">Pratishtha Deshpande</h1>
+                            <div class="flex items-center mt-2 space-x-3">
+                                <span class="blood-type-badge type-b text-lg font-bold">B+</span>
+                                <div class="flex items-center">
+                                    <div class="flex items-center text-yellow-500">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                    <span class="ml-2 text-sm text-gray-600">4.7/5.0</span>
+                                </div>
+                            </div>
+                            <p class="text-gray-500 text-sm mt-2">
+                                <i class="fas fa-map-marker-alt mr-1"></i>
+                                Delhi, India • Joined Jan 2023
+                            </p>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold gradient-text">#12</div>
+                            <div class="text-xs text-gray-500 uppercase tracking-wider">City Rank</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                        <div class="text-center p-4 bg-white rounded-xl border border-gray-100 shadow-sm">
+                            <div class="text-2xl font-bold text-red-600 mb-1">12</div>
+                            <div class="text-sm text-gray-600">Donations</div>
+                            <div class="text-xs text-gray-400 mt-1">3.6L total</div>
+                        </div>
+                        <div class="text-center p-4 bg-white rounded-xl border border-gray-100 shadow-sm">
+                            <div class="text-2xl font-bold text-green-600 mb-1">14</div>
+                            <div class="text-sm text-gray-600">Lives Saved</div>
+                            <div class="text-xs text-gray-400 mt-1">Direct impact</div>
+                        </div>
+                        <div class="text-center p-4 bg-white rounded-xl border border-gray-100 shadow-sm">
+                            <div class="text-2xl font-bold text-blue-600 mb-1">8.2</div>
+                            <div class="text-sm text-gray-600">Avg Response</div>
+                            <div class="text-xs text-gray-400 mt-1">Minutes</div>
+                        </div>
+                        <div class="text-center p-4 bg-white rounded-xl border border-gray-100 shadow-sm">
+                            <div class="text-2xl font-bold text-purple-600 mb-1">98%</div>
+                            <div class="text-sm text-gray-600">Response Rate</div>
+                            <div class="text-xs text-gray-400 mt-1">Always ready</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Badges Section -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                            <i class="fas fa-award text-yellow-500 mr-2"></i>
+                            Achievements
+                        </h3>
+                        <div class="grid grid-cols-3 md:grid-cols-6 gap-3">
+                            <div class="badge-card text-center p-3 bg-gradient-to-br from-yellow-50 to-white border border-yellow-100 rounded-xl">
+                                <div class="w-12 h-12 mx-auto bg-gradient-to-br from-yellow-100 to-yellow-50 rounded-full flex items-center justify-center mb-2 shadow-sm">
+                                    <i class="fas fa-trophy text-yellow-600"></i>
+                                </div>
+                                <span class="text-xs font-medium text-gray-900">First Blood</span>
+                            </div>
+                            <div class="badge-card text-center p-3 bg-gradient-to-br from-blue-50 to-white border border-blue-100 rounded-xl">
+                                <div class="w-12 h-12 mx-auto bg-gradient-to-br from-blue-100 to-blue-50 rounded-full flex items-center justify-center mb-2 shadow-sm">
+                                    <i class="fas fa-star text-blue-600"></i>
+                                </div>
+                                <span class="text-xs font-medium text-gray-900">Regular Hero</span>
+                            </div>
+                            <div class="badge-card text-center p-3 bg-gradient-to-br from-red-50 to-white border border-red-100 rounded-xl">
+                                <div class="w-12 h-12 mx-auto bg-gradient-to-br from-red-100 to-red-50 rounded-full flex items-center justify-center mb-2 shadow-sm">
+                                    <i class="fas fa-bolt text-red-600"></i>
+                                </div>
+                                <span class="text-xs font-medium text-gray-900">Quick Responder</span>
+                            </div>
+                            <div class="badge-card text-center p-3 bg-gradient-to-br from-green-50 to-white border border-green-100 rounded-xl">
+                                <div class="w-12 h-12 mx-auto bg-gradient-to-br from-green-100 to-green-50 rounded-full flex items-center justify-center mb-2 shadow-sm">
+                                    <i class="fas fa-heart text-green-600"></i>
+                                </div>
+                                <span class="text-xs font-medium text-gray-900">Life Saver</span>
+                            </div>
+                            <div class="badge-card text-center p-3 bg-gradient-to-br from-purple-50 to-white border border-purple-100 rounded-xl">
+                                <div class="w-12 h-12 mx-auto bg-gradient-to-br from-purple-100 to-purple-50 rounded-full flex items-center justify-center mb-2 shadow-sm">
+                                    <i class="fas fa-award text-purple-600"></i>
+                                </div>
+                                <span class="text-xs font-medium text-gray-900">Dedicated</span>
+                            </div>
+                            <div class="badge-card text-center p-3 bg-gradient-to-br from-indigo-50 to-white border border-indigo-100 rounded-xl">
+                                <div class="w-12 h-12 mx-auto bg-gradient-to-br from-indigo-100 to-indigo-50 rounded-full flex items-center justify-center mb-2 shadow-sm">
+                                    <i class="fas fa-gem text-indigo-600"></i>
+                                </div>
+                                <span class="text-xs font-medium text-gray-900">Rare Hero</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Next Milestone -->
+                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl p-5">
+                        <div class="flex items-center mb-3">
+                            <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-3 rounded-lg mr-4">
+                                <i class="fas fa-gift text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Next Milestone Reward</h4>
+                                <p class="text-sm text-gray-600">3 more donations to unlock premium benefits!</p>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-700">Progress to 15 donations</span>
+                                <span class="font-bold text-blue-600">12/15</span>
+                            </div>
+                            <div class="w-full bg-blue-100 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-700">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span>Unlock: 20% discount at MedPlus Pharmacy + Gold Status</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left Column: Active Requests -->
+                <div class="lg:col-span-2">
+                    <!-- Eligibility Checker -->
+                    <div class="bg-white rounded-xl shadow mb-8 overflow-hidden">
+                        <div class="px-6 py-4 border-b">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h2 class="text-xl font-bold text-gray-900">Eligibility Checker</h2>
+                                    <p class="text-gray-600 text-sm">Complete health assessment to receive alerts</p>
+                                </div>
+                                <div class="flex items-center">
+                                    <span id="eligibilityStatus" class="px-3 py-1 text-sm bg-green-100 text-green-800 rounded-full font-medium">Eligible</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div id="eligibilitySummary" class="eligibility-summary">
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                                        <div class="flex items-center mb-2">
+                                            <div class="bg-blue-100 p-2 rounded-lg mr-3">
+                                                <i class="fas fa-calendar-times text-blue-600"></i>
+                                            </div>
+                                            <div>
+                                                <h4 class="font-medium text-gray-900">Donation Interval</h4>
+                                                <p class="text-sm text-gray-600">56+ days passed</p>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">✓</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                                        <div class="flex items-center mb-2">
+                                            <div class="bg-blue-100 p-2 rounded-lg mr-3">
+                                                <i class="fas fa-weight text-blue-600"></i>
+                                            </div>
+                                            <div>
+                                                <h4 class="font-medium text-gray-900">Weight</h4>
+                                                <p class="text-sm text-gray-600">Minimum 50kg</p>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">✓</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                                        <div class="flex items-center mb-2">
+                                            <div class="bg-blue-100 p-2 rounded-lg mr-3">
+                                                <i class="fas fa-thermometer-half text-blue-600"></i>
+                                            </div>
+                                            <div>
+                                                <h4 class="font-medium text-gray-900">Health</h4>
+                                                <p class="text-sm text-gray-600">No active illness</p>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">✓</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                                        <div class="flex items-center mb-2">
+                                            <div class="bg-blue-100 p-2 rounded-lg mr-3">
+                                                <i class="fas fa-pills text-blue-600"></i>
+                                            </div>
+                                            <div>
+                                                <h4 class="font-medium text-gray-900">Medications</h4>
+                                                <p class="text-sm text-gray-600">No restrictions</p>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">✓</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <button id="checkEligibilityBtn" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-3 rounded-lg font-medium flex items-center justify-center">
+                                    <i class="fas fa-stethoscope mr-2"></i> Start Eligibility Assessment
+                                </button>
+                            </div>
+                            
+                            <!-- Eligibility Quiz (Hidden by Default) -->
+                            <div id="eligibilityQuiz" class="hidden">
+                                <!-- Progress Bar -->
+                                <div class="mb-8">
+                                    <div class="flex justify-between mb-2">
+                                        <span class="text-sm font-medium text-gray-700">Eligibility Assessment</span>
+                                        <span id="quizProgress" class="text-sm font-medium text-blue-600">0/10</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div id="quizProgressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Quiz Questions Container -->
+                                <div id="quizContainer">
+                                    <!-- Questions will be dynamically inserted here -->
+                                </div>
+                                
+                                <!-- Quiz Navigation -->
+                                <div class="flex justify-between mt-8 pt-6 border-t">
+                                    <button id="prevQuestionBtn" class="px-5 py-2.5 border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg font-medium hidden">
+                                        <i class="fas fa-arrow-left mr-2"></i> Previous
+                                    </button>
+                                    <button id="nextQuestionBtn" class="ml-auto px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium">
+                                        Next Question <i class="fas fa-arrow-right ml-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Eligibility Results (Hidden by Default) -->
+                            <div id="eligibilityResults" class="hidden">
+                                <!-- Results will be dynamically inserted here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Active Emergency Requests -->
+                    <div class="bg-white rounded-xl shadow overflow-hidden">
+                        <div class="px-6 py-4 border-b">
+                            <h2 class="text-xl font-bold text-gray-900">Active Emergency Requests</h2>
+                            <p class="text-gray-600 text-sm">Real-time blood requests in your area</p>
+                        </div>
+                        <div class="p-4">
+                            <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg emergency-pulse">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <div class="blood-type-badge type-o">O-</div>
+                                        <div class="ml-4">
+                                            <h3 class="font-bold text-gray-900">CRITICAL: St. Mary's Hospital</h3>
+                                            <p class="text-sm text-gray-600">Accident victim, 4 units needed immediately</p>
+                                            <div class="flex items-center mt-1">
+                                                <i class="fas fa-map-marker-alt text-red-500 text-xs mr-1"></i>
+                                                <span class="text-xs text-gray-600">2.3km away • Posted 12 min ago</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium">
+                                        Respond Now
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <!-- Request 2 -->
+                                <div class="p-4 border rounded-lg donor-card">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <div class="blood-type-badge type-a">A+</div>
+                                            <div class="ml-4">
+                                                <h3 class="font-bold text-gray-900">City General Hospital</h3>
+                                                <p class="text-sm text-gray-600">Surgery, 1 unit needed</p>
+                                                <div class="flex items-center mt-1">
+                                                    <i class="fas fa-map-marker-alt text-blue-500 text-xs mr-1"></i>
+                                                    <span class="text-xs text-gray-600">5.1km away • Posted 25 min ago</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
+                                            Respond
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Column: Rewards & Profile -->
+                <div>
+                    <!-- Local Rewards Section -->
+                    <div class="bg-white rounded-xl shadow mb-8">
+                        <div class="px-6 py-4 border-b">
+                            <h2 class="text-xl font-bold text-gray-900 flex items-center">
+                                <i class="fas fa-gift text-red-500 mr-2"></i>
+                                Partner Rewards
+                            </h2>
+                            <p class="text-gray-600 text-sm">Discounts from local businesses</p>
+                        </div>
+                        <div class="p-4">
+                            <!-- MedPlus Card -->
+                            <div class="partner-card border rounded-lg p-4 mb-4 bg-gradient-to-r from-green-50 to-white">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <div class="h-12 w-12 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                                            <i class="fas fa-pills text-green-600 text-xl"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold text-gray-900">MedPlus Pharmacy</h3>
+                                            <p class="text-sm text-gray-600">15% off all medicines</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-lg font-bold text-green-600">ACTIVE</div>
+                                        <div class="text-xs text-gray-500">10+ donations</div>
+                                    </div>
+                                </div>
+                                <div class="mt-3 flex items-center text-sm text-gray-700">
+                                    <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i>
+                                    <span>2.1km away • Show this card at store</span>
+                                </div>
+                            </div>
+                            
+                            <!-- More Rewards -->
+                            <div class="space-y-3">
+                                <div class="border rounded-lg p-3 flex items-center justify-between hover:bg-yellow-50">
+                                    <div class="flex items-center">
+                                        <div class="h-10 w-10 bg-yellow-100 rounded-lg flex items-center justify-center mr-3">
+                                            <i class="fas fa-apple-alt text-yellow-600"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-medium text-gray-900">Nature's Basket</h4>
+                                            <p class="text-xs text-gray-600">10% off health foods</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">20 donations</span>
+                                </div>
+                                
+                                <div class="border rounded-lg p-3 flex items-center justify-between hover:bg-blue-50">
+                                    <div class="flex items-center">
+                                        <div class="h-10 w-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                                            <i class="fas fa-microscope text-blue-600"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-medium text-gray-900">Lal Path Labs</h4>
+                                            <p class="text-xs text-gray-600">₹500 off checkup</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded">Rapid Responder</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
+                                <div class="flex items-start">
+                                    <i class="fas fa-handshake text-blue-600 text-xl mt-1 mr-3"></i>
+                                    <div>
+                                        <h4 class="font-bold text-blue-800 mb-1">Partnership Model</h4>
+                                        <p class="text-blue-700 text-sm">
+                                            Local businesses get featured advertising. Donors get exclusive discounts. Everyone wins!
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Stats -->
+                    <div class="bg-white rounded-xl shadow">
+                        <div class="px-6 py-4 border-b">
+                            <h2 class="text-xl font-bold text-gray-900">Your Impact</h2>
+                        </div>
+                        <div class="p-4">
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-heartbeat text-red-500 mr-3"></i>
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-700">Lives Saved</p>
+                                            <p class="text-xs text-gray-500">Direct impact</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-lg font-bold text-red-600">14</span>
+                                </div>
+                                
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-clock text-blue-500 mr-3"></i>
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-700">Avg Response Time</p>
+                                            <p class="text-xs text-gray-500">Faster than 92%</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-lg font-bold text-blue-600">8.2min</span>
+                                </div>
+                                
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-calendar-alt text-green-500 mr-3"></i>
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-700">Next Eligible</p>
+                                            <p class="text-xs text-gray-500">Donation date</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-lg font-bold text-green-600">Nov 15</span>
+                                </div>
+                            </div>
+                            
+                            <button class="w-full mt-6 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-4 py-3 rounded-lg font-medium">
+                                <i class="fas fa-history mr-2"></i> View Donation History
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================== -->
+    <!-- HOSPITAL VIEW (Hidden by Default) -->
+    <!-- ======================== -->
+    <div id="hospitalView" class="hospital-view">
+        <!-- Hospital Navigation -->
+        <nav class="bg-white shadow-lg sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 flex items-center">
+                            <i class="fas fa-hospital text-blue-600 text-2xl mr-2"></i>
+                            <span class="text-xl font-bold text-gray-900">LifeLink</span>
+                            <span class="ml-2 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">HOSPITAL</span>
+                        </div>
+                        <div class="hidden md:ml-6 md:flex md:space-x-8">
+                            <a href="#" class="hospital-nav-active text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">Dashboard</a>
+                            <a href="#" class="text-gray-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">Requests</a>
+                            <a href="#" class="text-gray-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">Inventory</a>
+                            <a href="#" class="text-gray-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">Analytics</a>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <button id="hospitalEmergencyBtn" class="mr-3 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium flex items-center">
+                            <i class="fas fa-plus-circle mr-2"></i> New Blood Request
+                        </button>
+                        <div class="relative">
+                            <button class="flex items-center text-sm rounded-full focus:outline-none">
+                                <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                                    <i class="fas fa-hospital-user text-blue-600"></i>
+                                </div>
+                                <span class="ml-2 hidden md:inline">St. Mary's Hospital</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hospital Main Content -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <!-- Hospital Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 bg-red-100 p-3 rounded-lg">
+                            <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Active Requests</p>
+                            <p class="text-2xl font-bold text-gray-900">4</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 bg-green-100 p-3 rounded-lg">
+                            <i class="fas fa-user-check text-green-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Donors Responded</p>
+                            <p class="text-2xl font-bold text-gray-900">18</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 bg-blue-100 p-3 rounded-lg">
+                            <i class="fas fa-tint text-blue-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Units Collected</p>
+                            <p class="text-2xl font-bold text-gray-900">142</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 bg-purple-100 p-3 rounded-lg">
+                            <i class="fas fa-heartbeat text-purple-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Success Rate</p>
+                            <p class="text-2xl font-bold text-gray-900">92%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hospital Content Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left Column: Active Requests -->
+                <div class="lg:col-span-2">
+                    <!-- Hospital Active Requests -->
+                    <div class="bg-white rounded-xl shadow mb-8">
+                        <div class="px-6 py-4 border-b">
+                            <h2 class="text-xl font-bold text-gray-900">Active Blood Requests</h2>
+                            <p class="text-gray-600 text-sm">Manage emergency requests</p>
+                        </div>
+                        <div class="p-4">
+                            <!-- Critical Request -->
+                            <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg emergency-pulse">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <div class="blood-type-badge type-o">O-</div>
+                                        <div class="ml-4">
+                                            <div class="flex items-center">
+                                                <h3 class="font-bold text-gray-900">Accident Victim - ER #245</h3>
+                                                <span class="status-badge status-pending ml-3">Critical</span>
+                                            </div>
+                                            <p class="text-sm text-gray-600 mt-1">4 units needed immediately</p>
+                                            <div class="flex items-center mt-2">
+                                                <i class="fas fa-clock text-gray-400 text-xs mr-1"></i>
+                                                <span class="text-xs text-gray-600">Posted 12 min ago</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-2xl font-bold text-red-600">2/4</div>
+                                        <div class="text-xs text-gray-500">units collected</div>
+                                    </div>
+                                </div>
+                                <div class="mt-4 grid grid-cols-3 gap-4">
+                                    <div class="text-center p-2 bg-white rounded">
+                                        <div class="text-lg font-bold text-green-600">8</div>
+                                        <div class="text-xs text-gray-600">Donors alerted</div>
+                                    </div>
+                                    <div class="text-center p-2 bg-white rounded">
+                                        <div class="text-lg font-bold text-blue-600">3</div>
+                                        <div class="text-xs text-gray-600">Responded</div>
+                                    </div>
+                                    <div class="text-center p-2 bg-white rounded">
+                                        <div class="text-lg font-bold text-purple-600">2</div>
+                                        <div class="text-xs text-gray-600">En route</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Other Requests -->
+                            <div class="space-y-4">
+                                <div class="p-4 border rounded-lg">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <div class="blood-type-badge type-a">A+</div>
+                                            <div class="ml-4">
+                                                <div class="flex items-center">
+                                                    <h3 class="font-bold text-gray-900">Cardiac Surgery - OT #3</h3>
+                                                    <span class="status-badge status-active ml-3">Active</span>
+                                                </div>
+                                                <p class="text-sm text-gray-600 mt-1">2 units needed</p>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="text-2xl font-bold text-blue-600">1/2</div>
+                                            <div class="text-xs text-gray-500">units collected</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MAP SECTION (ADDED BACK) -->
+                    <div class="bg-white rounded-xl shadow">
+                        <div class="px-6 py-4 border-b">
+                            <h2 class="text-xl font-bold text-gray-900">Donor Coverage Map</h2>
+                            <p class="text-gray-600 text-sm">Live donor locations within 10km radius</p>
+                        </div>
+                        <div class="p-4">
+                            <!-- Interactive Map Container -->
+                            <div class="map-container mb-4">
+                                <div id="hospitalMap" class="h-64 w-full rounded-lg bg-gradient-to-br from-blue-50 to-gray-100 relative">
+                                    <!-- Map Overlay with Info -->
+                                    <div class="map-overlay">
+                                        <h3 class="font-bold text-white drop-shadow-lg">Donor Coverage Area</h3>
+                                        <p class="text-white/90 text-sm drop-shadow">10km radius from hospital</p>
+                                    </div>
+                                    
+                                    <!-- Map Legend -->
+                                    <div class="map-legend">
+                                        <div class="flex items-center space-x-4">
+                                            <div class="flex items-center">
+                                                <div class="map-hospital-marker mr-2">
+                                                    <i class="fas fa-hospital text-xs"></i>
+                                                </div>
+                                                <span class="text-xs">Hospital</span>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <div class="map-donor-marker bg-red-500 mr-2"></div>
+                                                <span class="text-xs">O- Donors</span>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <div class="map-donor-marker bg-blue-500 mr-2"></div>
+                                                <span class="text-xs">A+ Donors</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Simulated Map Points -->
+                                    <div class="absolute inset-0">
+                                        <!-- Hospital Marker (Center) -->
+                                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                            <div class="map-hospital-marker animate-pulse">
+                                                <i class="fas fa-hospital"></i>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Donor Markers (Random positions) -->
+                                        <div class="map-donor-marker bg-red-500 absolute top-1/3 left-1/4"></div>
+                                        <div class="map-donor-marker bg-blue-500 absolute top-1/4 left-1/3"></div>
+                                        <div class="map-donor-marker bg-green-500 absolute top-2/3 left-2/3"></div>
+                                        <div class="map-donor-marker bg-red-500 absolute top-1/2 left-3/4"></div>
+                                        <div class="map-donor-marker bg-blue-500 absolute top-3/4 left-1/2"></div>
+                                        <div class="map-donor-marker bg-purple-500 absolute top-1/3 left-2/3"></div>
+                                        <div class="map-donor-marker bg-red-500 absolute top-2/3 left-1/4"></div>
+                                        <div class="map-donor-marker bg-blue-500 absolute top-1/4 left-3/4"></div>
+                                        
+                                        <!-- 10km Radius Circle -->
+                                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 border-2 border-blue-300 border-dashed rounded-full opacity-50"></div>
+                                    </div>
+                                    
+                                    <!-- Map Loading/Placeholder -->
+                                    <div class="absolute inset-0 flex items-center justify-center z-0">
+                                        <div class="text-center">
+                                            <i class="fas fa-map-marked-alt text-gray-300 text-4xl mb-2"></i>
+                                            <p class="text-gray-400 font-medium">Live Donor Map</p>
+                                            <p class="text-gray-400 text-sm">(48 donors in your area)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Donor Statistics -->
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div class="text-center p-3 bg-gray-50 rounded-lg">
+                                    <div class="text-lg font-bold text-red-600">O-</div>
+                                    <div class="text-sm text-gray-600">Universal Donor</div>
+                                    <div class="text-xs text-gray-500">18 available</div>
+                                </div>
+                                <div class="text-center p-3 bg-gray-50 rounded-lg">
+                                    <div class="text-lg font-bold text-blue-600">A+</div>
+                                    <div class="text-sm text-gray-600">Most Common</div>
+                                    <div class="text-xs text-gray-500">67 available</div>
+                                </div>
+                                <div class="text-center p-3 bg-gray-50 rounded-lg">
+                                    <div class="text-lg font-bold text-green-600">B+</div>
+                                    <div class="text-sm text-gray-600">Asian Common</div>
+                                    <div class="text-xs text-gray-500">42 available</div>
+                                </div>
+                                <div class="text-center p-3 bg-gray-50 rounded-lg">
+                                    <div class="text-lg font-bold text-purple-600">AB-</div>
+                                    <div class="text-sm text-gray-600">Rarest</div>
+                                    <div class="text-xs text-gray-500">3 available</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Map Controls -->
+                            <div class="mt-4 flex justify-between">
+                                <button id="refreshMap" class="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center">
+                                    <i class="fas fa-sync-alt mr-2"></i> Refresh Map
+                                </button>
+                                <button id="viewAllDonors" class="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center">
+                                    <i class="fas fa-list mr-2"></i> View All Donors List
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Column: Quick Actions -->
+                <div>
+                    <!-- Quick Request Form -->
+                    <div class="bg-white rounded-xl shadow mb-8">
+                        <div class="px-6 py-4 border-b">
+                            <h2 class="text-xl font-bold text-gray-900">Quick Blood Request</h2>
+                            <p class="text-gray-600 text-sm">Create emergency in 30 seconds</p>
+                        </div>
+                        <div class="p-4">
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Blood Type Needed</label>
+                                    <div class="grid grid-cols-4 gap-2">
+                                        <button class="blood-type-option p-2 border rounded text-center hover:border-red-500 hover:bg-red-50">
+                                            <div class="blood-type-badge type-o mx-auto">O-</div>
+                                        </button>
+                                        <button class="blood-type-option p-2 border rounded text-center hover:border-blue-500 hover:bg-blue-50">
+                                            <div class="blood-type-badge type-a mx-auto">A+</div>
+                                        </button>
+                                        <button class="blood-type-option p-2 border rounded text-center hover:border-green-500 hover:bg-green-50">
+                                            <div class="blood-type-badge type-b mx-auto">B+</div>
+                                        </button>
+                                        <button class="blood-type-option p-2 border rounded text-center hover:border-purple-500 hover:bg-purple-50">
+                                            <div class="blood-type-badge type-ab mx-auto">AB-</div>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Units Required</label>
+                                    <div class="flex items-center">
+                                        <button class="p-2 border rounded-l-lg hover:bg-gray-50">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <input type="text" value="2" class="flex-1 border-y px-4 py-2 text-center" readonly>
+                                        <button class="p-2 border rounded-r-lg hover:bg-gray-50">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Urgency</label>
+                                    <select class="w-full px-3 py-2 border rounded-lg">
+                                        <option>Critical - Immediate (within 2 hours)</option>
+                                        <option selected>Urgent - Today (within 6 hours)</option>
+                                        <option>Planned - Next Day</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <button id="sendEmergencyBtn" class="w-full mt-6 bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-lg font-medium">
+                                <i class="fas fa-bell mr-2"></i> Send Emergency Alert
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Blood Inventory -->
+                    <div class="bg-white rounded-xl shadow">
+                        <div class="px-6 py-4 border-b">
+                            <h2 class="text-xl font-bold text-gray-900">Blood Inventory</h2>
+                            <p class="text-gray-600 text-sm">Current stock levels</p>
+                        </div>
+                        <div class="p-4">
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-sm font-medium text-gray-700">O- (Critical)</span>
+                                        <span class="text-sm font-medium text-red-600">2 units</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-red-600 h-2 rounded-full" style="width: 10%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-sm font-medium text-gray-700">A+ (Low)</span>
+                                        <span class="text-sm font-medium text-yellow-600">8 units</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-yellow-500 h-2 rounded-full" style="width: 40%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-sm font-medium text-gray-700">B+ (Stable)</span>
+                                        <span class="text-sm font-medium text-green-600">15 units</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-green-600 h-2 rounded-full" style="width: 75%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="w-full mt-6 border border-blue-600 text-blue-600 hover:bg-blue-50 px-4 py-3 rounded-lg font-medium">
+                                <i class="fas fa-sync-alt mr-2"></i> Update Inventory
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Nearby Donors Quick View -->
+                    <div class="bg-white rounded-xl shadow mt-8">
+                        <div class="px-6 py-4 border-b">
+                            <h2 class="text-xl font-bold text-gray-900">Top Responders</h2>
+                            <p class="text-gray-600 text-sm">Most active donors nearby</p>
+                        </div>
+                        <div class="p-4">
+                            <div class="space-y-3">
+                                <div class="p-3 border rounded-lg hover:bg-blue-50">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                                <span class="font-bold text-blue-600">RK</span>
+                                            </div>
+                                            <div class="ml-4">
+                                                <h4 class="font-medium text-gray-900">Rohit Kumar</h4>
+                                                <div class="flex items-center text-sm text-gray-600">
+                                                    <span class="blood-type-badge type-o text-xs mr-2">O-</span>
+                                                    <i class="fas fa-map-marker-alt text-xs mr-1"></i>
+                                                    <span>1.2km • 8 donations</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span class="px-3 py-1 text-xs bg-green-100 text-green-800 rounded-full">Available</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="p-3 border rounded-lg hover:bg-blue-50">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
+                                                <span class="font-bold text-green-600">PS</span>
+                                            </div>
+                                            <div class="ml-4">
+                                                <h4 class="font-medium text-gray-900">Priya Sharma</h4>
+                                                <div class="flex items-center text-sm text-gray-600">
+                                                    <span class="blood-type-badge type-a text-xs mr-2">A+</span>
+                                                    <i class="fas fa-map-marker-alt text-xs mr-1"></i>
+                                                    <span>3.5km • 12 donations</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span class="px-3 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">In 2 hours</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Emergency Modal (Shared) -->
+    <div id="emergencyModal" class="fixed inset-0 modal-overlay flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4">
+            <div class="bg-red-600 text-white p-6 rounded-t-xl">
+                <div class="flex items-center">
+                    <i class="fas fa-exclamation-triangle text-2xl mr-3"></i>
+                    <h2 class="text-2xl font-bold">Emergency Blood Request</h2>
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="mb-6">
+                    <h3 class="font-bold text-gray-900 mb-2">Apollo Hospital</h3>
+                    <p class="text-gray-600">Accident victim requires 4 units of O- blood immediately.</p>
+                    <div class="mt-4 p-3 bg-red-50 rounded-lg">
+                        <div class="flex items-center">
+                            <i class="fas fa-clock text-red-600 mr-2"></i>
+                            <span class="font-medium">Time is critical:</span>
+                            <span class="ml-2 text-red-700">12 minutes elapsed</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col space-y-3">
+                    <button id="confirmEmergency" class="bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-lg font-medium">
+                        <i class="fas fa-broadcast-tower mr-2"></i> Activate & Respond
+                    </button>
+                    <button id="closeModal" class="border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-3 rounded-lg font-medium">
+                        Not Available
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Request Modal (Hospital) -->
+    <div id="newRequestModal" class="fixed inset-0 modal-overlay flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4">
+            <div class="bg-blue-600 text-white p-6 rounded-t-xl">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i class="fas fa-plus-circle text-2xl mr-3"></i>
+                        <h2 class="text-2xl font-bold">New Blood Request</h2>
+                    </div>
+                    <button id="closeNewRequestModal" class="text-white hover:text-gray-200">
+                        <i class="fas fa-times text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="p-6">
+                <p class="text-gray-600 mb-6">Detailed request form would appear here for hospital staff.</p>
+                <button class="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-lg font-medium">
+                    Submit Request
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================
+        // ELIGIBILITY QUIZ DATA
+        // ========================
+        const eligibilityQuestions = [
+            {
+                id: 1,
+                question: "Have you donated blood in the last 56 days?",
+                description: "There must be a minimum of 8 weeks (56 days) between whole blood donations.",
+                options: [
+                    { text: "No, it's been more than 56 days", value: "eligible", points: 1 },
+                    { text: "Yes, within the last 56 days", value: "ineligible", points: 0 }
+                ],
+                type: "radio"
+            },
+            {
+                id: 2,
+                question: "Do you weigh at least 50kg (110 lbs)?",
+                description: "For your safety and to ensure you have adequate blood volume to donate.",
+                options: [
+                    { text: "Yes, I weigh at least 50kg", value: "eligible", points: 1 },
+                    { text: "No, I weigh less than 50kg", value: "ineligible", points: 0 }
+                ],
+                type: "radio"
+            },
+            {
+                id: 3,
+                question: "Are you currently feeling healthy and well?",
+                description: "You should not donate if you have a cold, flu, sore throat, or any infection.",
+                options: [
+                    { text: "Yes, I feel healthy today", value: "eligible", points: 1 },
+                    { text: "No, I'm not feeling well", value: "ineligible", points: 0 }
+                ],
+                type: "radio"
+            },
+            {
+                id: 4,
+                question: "In the last 6 months, have you had any of the following?",
+                description: "Select all that apply",
+                options: [
+                    { text: "Major surgery", value: "surgery", points: -1 },
+                    { text: "Dental extraction or root canal", value: "dental", points: 0 },
+                    { text: "Tattoo or piercing", value: "tattoo", points: -1 },
+                    { text: "Blood transfusion", value: "transfusion", points: -1 },
+                    { text: "None of the above", value: "none", points: 1 }
+                ],
+                type: "checkbox"
+            },
+            {
+                id: 5,
+                question: "Do you have any of these chronic conditions?",
+                description: "Select all that apply",
+                options: [
+                    { text: "Heart disease", value: "heart", points: -1 },
+                    { text: "Cancer (except some skin cancers)", value: "cancer", points: -1 },
+                    { text: "HIV/AIDS", value: "hiv", points: -1 },
+                    { text: "Hepatitis B or C", value: "hepatitis", points: -1 },
+                    { text: "None of the above", value: "none", points: 1 }
+                ],
+                type: "checkbox"
+            },
+            {
+                id: 6,
+                question: "Are you currently taking any of these medications?",
+                description: "Select all that apply",
+                options: [
+                    { text: "Antibiotics (for infection)", value: "antibiotics", points: -1 },
+                    { text: "Blood thinners (Warfarin, Heparin)", value: "thinners", points: -1 },
+                    { text: "Acne medication (Isotretinoin)", value: "acne", points: -1 },
+                    { text: "None of the above", value: "none", points: 1 }
+                ],
+                type: "checkbox"
+            },
+            {
+                id: 7,
+                question: "Have you traveled outside the country in the last 3 months?",
+                description: "Some travel destinations may require a deferral period.",
+                options: [
+                    { text: "No international travel", value: "eligible", points: 1 },
+                    { text: "Yes, to low-risk countries", value: "eligible", points: 1 },
+                    { text: "Yes, to malaria-risk areas", value: "ineligible", points: 0 }
+                ],
+                type: "radio"
+            },
+            {
+                id: 8,
+                question: "Are you pregnant or have you been pregnant in the last 6 weeks?",
+                description: "Pregnancy requires a deferral period for safety.",
+                options: [
+                    { text: "No", value: "eligible", points: 1 },
+                    { text: "Currently pregnant", value: "ineligible", points: 0 },
+                    { text: "Recently gave birth (last 6 weeks)", value: "ineligible", points: 0 }
+                ],
+                type: "radio"
+            },
+            {
+                id: 9,
+                question: "Have you had a fever in the last 2 weeks?",
+                description: "Fever can indicate an underlying infection.",
+                options: [
+                    { text: "No fever in last 2 weeks", value: "eligible", points: 1 },
+                    { text: "Yes, had a fever recently", value: "ineligible", points: 0 }
+                ],
+                type: "radio"
+            },
+            {
+                id: 10,
+                question: "Have you consumed alcohol in the last 24 hours?",
+                description: "Alcohol can affect your blood and hydration levels.",
+                options: [
+                    { text: "No alcohol in last 24 hours", value: "eligible", points: 1 },
+                    { text: "Yes, consumed alcohol recently", value: "ineligible", points: 0 }
+                ],
+                type: "radio"
+            }
+        ];
+
+        // ========================
+        // SWITCH USER FUNCTIONALITY
+        // ========================
+        const switchToDonor = document.getElementById('switchToDonor');
+        const switchToHospital = document.getElementById('switchToHospital');
+        const donorView = document.getElementById('donorView');
+        const hospitalView = document.getElementById('hospitalView');
+
+        // Switch to Donor View
+        switchToDonor.addEventListener('click', function() {
+            donorView.style.display = 'block';
+            hospitalView.style.display = 'none';
+            
+            switchToDonor.classList.remove('border', 'border-gray-300', 'text-gray-700', 'hover:bg-gray-50');
+            switchToDonor.classList.add('bg-red-600', 'text-white', 'user-type-active');
+            
+            switchToHospital.classList.remove('bg-blue-600', 'text-white', 'user-type-active');
+            switchToHospital.classList.add('border', 'border-gray-300', 'text-gray-700', 'hover:bg-gray-50');
+            
+            showNotification('Switched to Donor View', 'info');
+        });
+
+        // Switch to Hospital View
+        switchToHospital.addEventListener('click', function() {
+            donorView.style.display = 'none';
+            hospitalView.style.display = 'block';
+            
+            switchToHospital.classList.remove('border', 'border-gray-300', 'text-gray-700', 'hover:bg-gray-50');
+            switchToHospital.classList.add('bg-blue-600', 'text-white', 'user-type-active');
+            
+            switchToDonor.classList.remove('bg-red-600', 'text-white', 'user-type-active');
+            switchToDonor.classList.add('border', 'border-gray-300', 'text-gray-700', 'hover:bg-gray-50');
+            
+            showNotification('Switched to Hospital View', 'info');
+        });
+
+        // ========================
+        // ELIGIBILITY QUIZ LOGIC
+        // ========================
+        const checkEligibilityBtn = document.getElementById('checkEligibilityBtn');
+        const eligibilityQuiz = document.getElementById('eligibilityQuiz');
+        const eligibilitySummary = document.getElementById('eligibilitySummary');
+        const eligibilityResults = document.createElement('div');
+        const quizContainer = document.getElementById('quizContainer');
+        const quizProgress = document.getElementById('quizProgress');
+        const quizProgressBar = document.getElementById('quizProgressBar');
+        const nextQuestionBtn = document.getElementById('nextQuestionBtn');
+        const prevQuestionBtn = document.getElementById('prevQuestionBtn');
+        const eligibilityStatus = document.getElementById('eligibilityStatus');
+
+        // Eligibility Quiz State
+        let currentQuestionIndex = 0;
+        let userAnswers = {};
+        let totalScore = 0;
+        let isEligible = true;
+
+        // Start eligibility quiz
+        checkEligibilityBtn.addEventListener('click', function() {
+            eligibilitySummary.style.display = 'none';
+            eligibilityQuiz.classList.remove('hidden');
+            eligibilityResults.classList.add('hidden');
+            currentQuestionIndex = 0;
+            userAnswers = {};
+            totalScore = 0;
+            loadQuestion(currentQuestionIndex);
+            updateProgress();
+            prevQuestionBtn.classList.add('hidden');
+            eligibilityQuiz.classList.add('slide-in');
+        });
+
+        // Load question function
+        function loadQuestion(index) {
+            const question = eligibilityQuestions[index];
+            
+            let optionsHtml = '';
+            
+            if (question.type === 'radio') {
+                question.options.forEach((option, i) => {
+                    const isChecked = userAnswers[question.id] === option.value ? 'checked' : '';
+                    optionsHtml += `
+                        <div class="flex items-center mb-3 p-3 border rounded-lg hover:bg-blue-50">
+                            <input type="radio" id="option-${i}" name="question-${question.id}" value="${option.value}" data-points="${option.points}" ${isChecked} class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300">
+                            <label for="option-${i}" class="ml-3 text-gray-700 cursor-pointer flex-1">${option.text}</label>
+                        </div>
+                    `;
+                });
+            } else if (question.type === 'checkbox') {
+                question.options.forEach((option, i) => {
+                    const isChecked = userAnswers[question.id] && userAnswers[question.id].includes(option.value) ? 'checked' : '';
+                    optionsHtml += `
+                        <div class="flex items-center mb-3 p-3 border rounded-lg hover:bg-blue-50">
+                            <input type="checkbox" id="option-${i}" name="question-${question.id}" value="${option.value}" data-points="${option.points}" ${isChecked} class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="option-${i}" class="ml-3 text-gray-700 cursor-pointer flex-1">${option.text}</label>
+                        </div>
+                    `;
+                });
+            }
+            
+            quizContainer.innerHTML = `
+                <div class="mb-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">${question.question}</h3>
+                    <p class="text-gray-600 mb-6 text-sm">${question.description}</p>
+                    <div class="space-y-2">
+                        ${optionsHtml}
+                    </div>
+                </div>
+            `;
+            
+            // Add event listeners to options
+            if (question.type === 'radio') {
+                document.querySelectorAll(`input[name="question-${question.id}"]`).forEach(radio => {
+                    radio.addEventListener('change', function() {
+                        userAnswers[question.id] = this.value;
+                        const points = parseInt(this.getAttribute('data-points'));
+                        if (points < 0) {
+                            totalScore += points;
+                        } else if (this.value === 'eligible') {
+                            totalScore += points;
+                        }
+                    });
+                });
+            } else if (question.type === 'checkbox') {
+                document.querySelectorAll(`input[name="question-${question.id}"]`).forEach(checkbox => {
+                    checkbox.addEventListener('change', function() {
+                        if (!userAnswers[question.id]) {
+                            userAnswers[question.id] = [];
+                        }
+                        
+                        const value = this.value;
+                        const points = parseInt(this.getAttribute('data-points'));
+                        
+                        if (this.checked) {
+                            if (!userAnswers[question.id].includes(value)) {
+                                userAnswers[question.id].push(value);
+                                totalScore += points;
+                            }
+                        } else {
+                            const index = userAnswers[question.id].indexOf(value);
+                            if (index > -1) {
+                                userAnswers[question.id].splice(index, 1);
+                                totalScore -= points;
+                            }
+                        }
+                    });
+                });
+            }
+            
+            // Update next button text on last question
+            if (index === eligibilityQuestions.length - 1) {
+                nextQuestionBtn.innerHTML = 'Submit Assessment <i class="fas fa-check ml-2"></i>';
+            } else {
+                nextQuestionBtn.innerHTML = 'Next Question <i class="fas fa-arrow-right ml-2"></i>';
+            }
+        }
+
+        // Update progress
+        function updateProgress() {
+            const progress = ((currentQuestionIndex + 1) / eligibilityQuestions.length) * 100;
+            quizProgressBar.style.width = `${progress}%`;
+            quizProgress.textContent = `${currentQuestionIndex + 1}/${eligibilityQuestions.length}`;
+        }
+
+        // Next question
+        nextQuestionBtn.addEventListener('click', function() {
+            // Validate current question has an answer
+            const question = eligibilityQuestions[currentQuestionIndex];
+            if (!userAnswers[question.id] || 
+                (question.type === 'checkbox' && userAnswers[question.id].length === 0)) {
+                showNotification('Please select an answer before continuing.', 'error');
+                return;
+            }
+            
+            if (currentQuestionIndex < eligibilityQuestions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion(currentQuestionIndex);
+                updateProgress();
+                
+                if (currentQuestionIndex > 0) {
+                    prevQuestionBtn.classList.remove('hidden');
+                }
+            } else {
+                // Submit assessment
+                submitAssessment();
+            }
+        });
+
+        // Previous question
+        prevQuestionBtn.addEventListener('click', function() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion(currentQuestionIndex);
+                updateProgress();
+                
+                if (currentQuestionIndex === 0) {
+                    prevQuestionBtn.classList.add('hidden');
+                }
+            }
+        });
+
+        // Submit assessment
+        function submitAssessment() {
+            // Determine eligibility based on score
+            isEligible = totalScore >= 7; // Need at least 7 points to be eligible
+            
+            // Create results element
+            eligibilityResults.innerHTML = `
+                <div class="text-center mb-8">
+                    <div class="text-6xl mb-4 ${isEligible ? 'text-green-500' : 'text-red-500'}">
+                        <i class="fas fa-${isEligible ? 'check-circle' : 'times-circle'}"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">
+                        ${isEligible ? 'You Are Eligible to Donate!' : 'Not Eligible at This Time'}
+                    </h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">
+                        ${isEligible ? 
+                            'Based on your responses, you meet all the basic eligibility criteria for blood donation. You will continue to receive emergency alerts.' : 
+                            'Based on your responses, you do not meet the eligibility criteria for blood donation at this time. You will not receive emergency alerts until you become eligible.'}
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-white border rounded-lg p-5">
+                        <h3 class="font-bold text-lg mb-3 text-gray-900">Your Eligibility Profile</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm font-medium text-gray-700">Health Status</span>
+                                    <span class="text-sm font-medium ${isEligible ? 'text-green-600' : 'text-red-600'}">${isEligible ? 'Passed' : 'Failed'}</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="${isEligible ? 'bg-green-600' : 'bg-red-600'} h-2 rounded-full" style="width: ${isEligible ? '100%' : '30%'}"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm font-medium text-gray-700">Time Since Last Donation</span>
+                                    <span class="text-sm font-medium ${isEligible ? 'text-green-600' : 'text-red-600'}">${isEligible ? '85 days' : 'Check needed'}</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="${isEligible ? 'bg-green-600' : 'bg-red-600'} h-2 rounded-full" style="width: ${isEligible ? '85%' : '40%'}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white border rounded-lg p-5">
+                        <h3 class="font-bold text-lg mb-3 text-gray-900">Next Steps</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <i class="fas ${isEligible ? 'fa-check-circle text-green-500' : 'fa-times-circle text-red-500'} mt-1 mr-3"></i>
+                                <span>${isEligible ? 'You will receive emergency alerts' : 'No alerts until eligible'}</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas ${isEligible ? 'fa-bell text-blue-500' : 'fa-bell-slash text-gray-400'} mt-1 mr-3"></i>
+                                <span>${isEligible ? 'Alerts within 10km radius' : 'Alerts disabled'}</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-calendar-alt ${isEligible ? 'text-green-500' : 'text-red-500'} mt-1 mr-3"></i>
+                                <span>${isEligible ? 'Re-check in 3 months' : 'Consult doctor if unsure'}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <button id="restartQuizBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium mr-4">
+                        <i class="fas fa-redo mr-2"></i> Re-take Assessment
+                    </button>
+                    <button id="closeResultsBtn" class="border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-3 rounded-lg font-medium">
+                        Close Assessment
+                    </button>
+                </div>
+            `;
+            
+            // Insert results after quiz
+            eligibilityQuiz.parentNode.insertBefore(eligibilityResults, eligibilityQuiz.nextSibling);
+            
+            // Show results, hide quiz
+            eligibilityQuiz.classList.add('hidden');
+            eligibilityResults.classList.remove('hidden');
+            eligibilityResults.classList.add('slide-in');
+            
+            // Update status badge
+            if (isEligible) {
+                eligibilityStatus.textContent = 'Eligible';
+                eligibilityStatus.className = 'px-3 py-1 text-sm bg-green-100 text-green-800 rounded-full font-medium';
+                
+                // Enable emergency alerts
+                document.getElementById('emergencyBtn').disabled = false;
+                document.getElementById('emergencyBtn').classList.remove('opacity-50', 'cursor-not-allowed');
+                
+                showNotification('Eligibility check complete! You will receive emergency alerts.', 'success');
+            } else {
+                eligibilityStatus.textContent = 'Not Eligible';
+                eligibilityStatus.className = 'px-3 py-1 text-sm bg-red-100 text-red-800 rounded-full font-medium';
+                
+                // Disable emergency alerts
+                document.getElementById('emergencyBtn').disabled = true;
+                document.getElementById('emergencyBtn').classList.add('opacity-50', 'cursor-not-allowed');
+                
+                showNotification('Eligibility check complete. You are not eligible to donate at this time.', 'info');
+            }
+            
+            // Add event listeners to result buttons
+            document.getElementById('restartQuizBtn')?.addEventListener('click', function() {
+                eligibilityResults.remove();
+                eligibilitySummary.style.display = 'block';
+                eligibilityQuiz.classList.add('hidden');
+            });
+            
+            document.getElementById('closeResultsBtn')?.addEventListener('click', function() {
+                eligibilityResults.remove();
+                eligibilitySummary.style.display = 'block';
+                eligibilityQuiz.classList.add('hidden');
+            });
+        }
+
+        // ========================
+        // MAP FUNCTIONALITY (Hospital View)
+        // ========================
+        const refreshMapBtn = document.getElementById('refreshMap');
+        const viewAllDonorsBtn = document.getElementById('viewAllDonors');
+        const sendEmergencyBtn = document.getElementById('sendEmergencyBtn');
+        
+        // Refresh Map Button
+        if (refreshMapBtn) {
+            refreshMapBtn.addEventListener('click', function() {
+                showNotification('Map refreshed! Updated donor locations loaded.', 'info');
+                // Simulate map refresh animation
+                const map = document.getElementById('hospitalMap');
+                map.classList.add('opacity-50');
+                setTimeout(() => {
+                    map.classList.remove('opacity-50');
+                }, 300);
+            });
+        }
+        
+        // View All Donors Button
+        if (viewAllDonorsBtn) {
+            viewAllDonorsBtn.addEventListener('click', function() {
+                showNotification('Opening full donor list...', 'info');
+                // In real app, this would navigate to donors page
+            });
+        }
+        
+        // Send Emergency Button (Hospital)
+        if (sendEmergencyBtn) {
+            sendEmergencyBtn.addEventListener('click', function() {
+                const bloodTypeOptions = document.querySelectorAll('.blood-type-option');
+                let selectedBloodType = 'O-';
+                
+                bloodTypeOptions.forEach(option => {
+                    if (option.classList.contains('border-red-500')) {
+                        selectedBloodType = option.querySelector('.blood-type-badge').textContent;
+                    }
+                });
+                
+                showNotification(`Emergency alert sent for ${selectedBloodType} blood! Donors in 10km radius notified.`, 'success');
+                
+                // Show success animation
+                sendEmergencyBtn.innerHTML = '<i class="fas fa-check mr-2"></i> Alert Sent!';
+                sendEmergencyBtn.classList.remove('bg-red-600', 'hover:bg-red-700');
+                sendEmergencyBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+                
+                setTimeout(() => {
+                    sendEmergencyBtn.innerHTML = '<i class="fas fa-bell mr-2"></i> Send Emergency Alert';
+                    sendEmergencyBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                    sendEmergencyBtn.classList.add('bg-red-600', 'hover:bg-red-700');
+                }, 3000);
+            });
+        }
+        
+        // Blood Type Selection (Hospital)
+        const bloodTypeOptions = document.querySelectorAll('.blood-type-option');
+        bloodTypeOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove all active states
+                bloodTypeOptions.forEach(opt => {
+                    opt.classList.remove('border-red-500', 'border-blue-500', 'border-green-500', 'border-purple-500', 'bg-red-50', 'bg-blue-50', 'bg-green-50', 'bg-purple-50');
+                });
+                
+                // Add active state to clicked option
+                const badge = this.querySelector('.blood-type-badge');
+                const bloodType = badge.textContent;
+                
+                if (bloodType === 'O-') {
+                    this.classList.add('border-red-500', 'bg-red-50');
+                } else if (bloodType === 'A+') {
+                    this.classList.add('border-blue-500', 'bg-blue-50');
+                } else if (bloodType === 'B+') {
+                    this.classList.add('border-green-500', 'bg-green-50');
+                } else if (bloodType === 'AB-') {
+                    this.classList.add('border-purple-500', 'bg-purple-50');
+                }
+            });
+        });
+
+        // ========================
+        // SHARED FUNCTIONALITY
+        // ========================
+        const emergencyBtn = document.getElementById('emergencyBtn');
+        const hospitalEmergencyBtn = document.getElementById('hospitalEmergencyBtn');
+        const emergencyModal = document.getElementById('emergencyModal');
+        const newRequestModal = document.getElementById('newRequestModal');
+        const closeModal = document.getElementById('closeModal');
+        const closeNewRequestModal = document.getElementById('closeNewRequestModal');
+        const confirmEmergency = document.getElementById('confirmEmergency');
+
+        // Donor Emergency Button
+        if (emergencyBtn) {
+            emergencyBtn.addEventListener('click', function() {
+                emergencyModal.classList.remove('hidden');
+                emergencyModal.classList.add('slide-in');
+            });
+        }
+
+        // Hospital Emergency Button
+        if (hospitalEmergencyBtn) {
+            hospitalEmergencyBtn.addEventListener('click', function() {
+                newRequestModal.classList.remove('hidden');
+                newRequestModal.classList.add('slide-in');
+            });
+        }
+
+        // Close Modals
+        if (closeModal) {
+            closeModal.addEventListener('click', function() {
+                emergencyModal.classList.add('hidden');
+            });
+        }
+
+        if (closeNewRequestModal) {
+            closeNewRequestModal.addEventListener('click', function() {
+                newRequestModal.classList.add('hidden');
+            });
+        }
+
+        // Confirm Emergency
+        if (confirmEmergency) {
+            confirmEmergency.addEventListener('click', function() {
+                emergencyModal.classList.add('hidden');
+                showNotification('Emergency response sent! Hospital notified.', 'success');
+                
+                // Add pulse effect
+                document.body.classList.add('emergency-pulse');
+                setTimeout(() => {
+                    document.body.classList.remove('emergency-pulse');
+                }, 3000);
+            });
+        }
+
+        // Share Hero Card Function
+        function shareHeroCard() {
+            showNotification('Hero card image copied to clipboard! Share your achievement on social media.', 'success');
+            // In real app, this would generate a shareable image/link
+        }
+
+        // Notification Function
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 px-6 py-4 rounded-xl shadow-xl text-white max-w-sm transform transition-transform duration-300 translate-x-full`;
+            
+            if (type === 'success') {
+                notification.classList.add('bg-gradient-to-r', 'from-green-500', 'to-green-600');
+            } else if (type === 'info') {
+                notification.classList.add('bg-gradient-to-r', 'from-blue-500', 'to-blue-600');
+            } else if (type === 'error') {
+                notification.classList.add('bg-gradient-to-r', 'from-red-500', 'to-red-600');
+            }
+            
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'} mr-3 text-lg"></i>
+                    <span class="font-medium">${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 10);
+            
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 300);
+            }, 4000);
+            
+            notification.addEventListener('click', function() {
+                this.classList.add('translate-x-full');
+                setTimeout(() => {
+                    this.remove();
+                }, 300);
+            });
+        }
+
+        // Initialize with Donor View
+        window.addEventListener('load', function() {
+            donorView.style.display = 'block';
+            hospitalView.style.display = 'none';
+            
+            // Show welcome notification
+            setTimeout(() => {
+                showNotification('Welcome to LifeLink! Switch between Donor and Hospital views using the top buttons.', 'info');
+            }, 1000);
+        });
+
+        // Simulate real-time updates
+        setInterval(() => {
+            // Randomly show notifications
+            if (Math.random() > 0.7) {
+                const messages = [
+                    "New emergency request in your area",
+                    "Blood inventory updated",
+                    "3 donors available for O- blood",
+                    "Your hero rank improved!",
+                    "New partner store added nearby"
+                ];
+                showNotification(messages[Math.floor(Math.random() * messages.length)], 'info');
+            }
+        }, 15000);
+    </script>
+</body>
+</html>
