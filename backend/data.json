@@ -1,0 +1,293 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Pratishtha Deshpande",
+      "email": "pratishtha@example.com",
+      "password": "password123",
+      "role": "donor",
+      "bloodType": "B+",
+      "city": "Delhi",
+      "phone": "+91 98765 43210"
+    },
+    {
+      "id": 2,
+      "name": "St. Mary's Hospital",
+      "email": "admin@stmarys.org",
+      "password": "hospital123",
+      "role": "hospital",
+      "city": "Delhi",
+      "phone": "+91 88888 77777"
+    },
+    {
+      "id": 3,
+      "name": "Test Hero",
+      "email": "hero@test.com",
+      "password": "pass",
+      "role": "donor",
+      "bloodType": "AB+",
+      "city": "Mumbai",
+      "phone": "1234567890"
+    },
+    {
+      "id": 4,
+      "name": "hey",
+      "email": "name1@example.com",
+      "password": "123456789",
+      "role": "hospital",
+      "bloodType": "O+",
+      "city": "raipur",
+      "phone": "8889494747"
+    }
+  ],
+  "donors": [
+    {
+      "id": 1,
+      "name": "Rohit Kumar",
+      "bloodType": "O-",
+      "location": {
+        "lat": 28.6139,
+        "lng": 77.209
+      },
+      "donations": 9,
+      "status": "Available",
+      "lastDonation": "2026-02-18",
+      "city": "Delhi"
+    },
+    {
+      "id": 2,
+      "name": "Priya Sharma",
+      "bloodType": "A+",
+      "location": {
+        "lat": 28.6239,
+        "lng": 77.219
+      },
+      "donations": 12,
+      "status": "In 2 hours",
+      "lastDonation": "2024-01-15",
+      "city": "Noida"
+    },
+    {
+      "id": 3,
+      "name": "Amit Patel",
+      "bloodType": "B+",
+      "location": {
+        "lat": 28.6339,
+        "lng": 77.229
+      },
+      "donations": 5,
+      "status": "Available",
+      "lastDonation": "2024-02-01",
+      "city": "Gurgaon"
+    },
+    {
+      "id": 4,
+      "name": "Sneha Gupta",
+      "bloodType": "AB-",
+      "location": {
+        "lat": 28.6439,
+        "lng": 77.239
+      },
+      "donations": 3,
+      "status": "Available",
+      "lastDonation": "2023-11-20",
+      "city": "Delhi"
+    },
+    {
+      "id": 5,
+      "name": "Test Hero",
+      "bloodType": "AB+",
+      "location": {
+        "lat": 28.6139,
+        "lng": 77.209
+      },
+      "donations": 0,
+      "status": "Available",
+      "lastDonation": "Never",
+      "city": "Mumbai"
+    }
+  ],
+  "requests": [
+    {
+      "id": 5,
+      "hospital": "Test",
+      "bloodType": "O-",
+      "units": 1,
+      "urgency": "Normal",
+      "reason": "Test",
+      "time": "Just now",
+      "collected": 0,
+      "distance": "Calculating..."
+    },
+    {
+      "id": 4,
+      "hospital": "St. Mary's Hospital",
+      "bloodType": "O-",
+      "units": 5,
+      "urgency": "Critical",
+      "reason": "Emergency",
+      "time": "Just now",
+      "collected": 1,
+      "distance": "Calculating..."
+    },
+    {
+      "id": 3,
+      "hospital": "Test Hospital",
+      "bloodType": "B-",
+      "units": 5,
+      "urgency": "Active",
+      "reason": "Persistence Test",
+      "time": "Just now",
+      "collected": 0,
+      "distance": "Calculating..."
+    },
+    {
+      "id": 1,
+      "hospital": "St. Mary's Hospital",
+      "bloodType": "O-",
+      "units": 4,
+      "collected": 2,
+      "urgency": "Critical",
+      "time": "12 min ago",
+      "distance": "2.3km",
+      "reason": "Accident victim"
+    },
+    {
+      "id": 2,
+      "hospital": "City General Hospital",
+      "bloodType": "A+",
+      "units": 2,
+      "collected": 1,
+      "urgency": "Active",
+      "time": "25 min ago",
+      "distance": "5.1km",
+      "reason": "Surgery"
+    }
+  ],
+  "inventory": [
+    {
+      "type": "O-",
+      "units": 3,
+      "total": 20,
+      "status": "Critical",
+      "percent": 15,
+      "color": "red",
+      "text": "text-red-600",
+      "bgColor": "bg-red-500"
+    },
+    {
+      "type": "A+",
+      "units": 8,
+      "total": 20,
+      "status": "Low",
+      "percent": 40,
+      "color": "yellow",
+      "text": "text-yellow-600",
+      "bgColor": "bg-yellow-500"
+    },
+    {
+      "type": "B+",
+      "units": 15,
+      "total": 20,
+      "status": "Stable",
+      "percent": 75,
+      "color": "green",
+      "text": "text-green-600",
+      "bgColor": "bg-green-500"
+    },
+    {
+      "type": "AB-",
+      "units": 3,
+      "total": 20,
+      "status": "Low",
+      "percent": 15,
+      "color": "red",
+      "text": "text-red-600",
+      "bgColor": "bg-red-500"
+    }
+  ],
+  "donorHistory": [
+    {
+      "id": 4,
+      "donorId": 1,
+      "requestId": 5,
+      "hospital": "Test",
+      "date": "2026-02-18",
+      "amount": "350ml",
+      "type": "Donation",
+      "status": "Scheduled"
+    },
+    {
+      "id": 3,
+      "donorId": 1,
+      "requestId": 4,
+      "hospital": "St. Mary's Hospital",
+      "date": "2026-02-18",
+      "amount": "350ml",
+      "type": "Donation",
+      "status": "Completed"
+    },
+    {
+      "id": 1,
+      "donorId": 1,
+      "hospital": "City Hospital",
+      "date": "2024-01-20",
+      "amount": "350ml",
+      "type": "Donation",
+      "status": "Completed"
+    },
+    {
+      "id": 2,
+      "donorId": 1,
+      "hospital": "Red Cross Center",
+      "date": "2023-11-15",
+      "amount": "350ml",
+      "type": "Donation",
+      "status": "Completed"
+    }
+  ],
+  "activities": [
+    {
+      "id": 6,
+      "user": "Rohit Kumar",
+      "action": "Responded to Test",
+      "time": "Just now",
+      "type": "donation"
+    },
+    {
+      "id": 5,
+      "user": "St. Mary's Hospital",
+      "action": "Collected 1 unit from Rohit Kumar",
+      "time": "Just now",
+      "type": "system"
+    },
+    {
+      "id": 4,
+      "user": "Rohit Kumar",
+      "action": "Responded to St. Mary's Hospital",
+      "time": "Just now",
+      "type": "donation"
+    },
+    {
+      "id": 1,
+      "user": "City Hospital",
+      "action": "Broadcasted O- Request",
+      "time": "2m ago",
+      "type": "request"
+    },
+    {
+      "id": 2,
+      "user": "Rohit Kumar",
+      "action": "Donated at Red Cross",
+      "time": "15m ago",
+      "type": "donation"
+    },
+    {
+      "id": 3,
+      "user": "St. Mary's",
+      "action": "Inventory Updated",
+      "time": "1h ago",
+      "type": "system"
+    }
+  ]
+}

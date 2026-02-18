@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { useToast } from '../context/ToastContext';
+import { useAuth } from '../context/AuthContext';
 import API_BASE_URL from '../config/apiConfig';
 
 const RequestModal = ({ isOpen, onClose, onRefresh }) => {
     const { addToast } = useToast();
+    const { user } = useAuth();
     const [formData, setFormData] = useState({
         bloodType: 'O-',
         units: 2,
@@ -21,7 +23,8 @@ const RequestModal = ({ isOpen, onClose, onRefresh }) => {
         setSubmitting(true);
         try {
             await axios.post(`${API_BASE_URL}/api/requests`, {
-                hospital: "St. Mary's Hospital",
+                hospital: user?.name || "St. Mary's Hospital",
+                hospitalId: user?.id,
                 ...formData
             });
             addToast(`Broadcasted ${formData.bloodType} request successfully!`, 'success');
@@ -128,7 +131,11 @@ const RequestModal = ({ isOpen, onClose, onRefresh }) => {
                                 disabled={submitting}
                                 className="w-full bg-red-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-red-200 hover:bg-red-700 transition-all transform active:scale-[0.98] disabled:opacity-50"
                             >
-                                {submitting ? 'Broadcasting...' : 'Signal Emergency Alert'}
+                                {submitting ? (
+                                    <>
+                                        <i className="fas fa-spinner fa-spin mr-2"></i> Broadcasting...
+                                    </>
+                                ) : 'Signal Emergency Alert'}
                             </button>
                         </form>
                     </motion.div>

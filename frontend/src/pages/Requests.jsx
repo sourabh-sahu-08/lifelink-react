@@ -12,6 +12,8 @@ const Requests = () => {
     const [search, setSearch] = useState('');
     const [filterType, setFilterType] = useState('All');
 
+    const { refreshKey } = useOutletContext();
+
     useEffect(() => {
         const fetchRequests = async () => {
             try {
@@ -24,7 +26,7 @@ const Requests = () => {
             }
         };
         fetchRequests();
-    }, []);
+    }, [refreshKey]);
 
     const filteredRequests = (Array.isArray(requests) ? requests : []).filter(req => {
         const matchesSearch = req.hospital.toLowerCase().includes(search.toLowerCase()) ||

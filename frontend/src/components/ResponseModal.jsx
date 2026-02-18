@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { useToast } from '../context/ToastContext';
+import { useAuth } from '../context/AuthContext';
 import API_BASE_URL from '../config/apiConfig';
 
-const ResponseModal = ({ isOpen, onClose, request }) => {
+const ResponseModal = ({ isOpen, onClose, request, onRefresh }) => {
     const [step, setStep] = useState(1);
     const [submitting, setSubmitting] = useState(false);
     const { addToast } = useToast();
+    const { user } = useAuth();
 
     if (!request) return null;
 
@@ -16,10 +18,11 @@ const ResponseModal = ({ isOpen, onClose, request }) => {
         try {
             await axios.post(`${API_BASE_URL}/api/respond`, {
                 requestId: request.id,
-                donorId: 1 // In a real app, this would be the logged-in user's ID
+                donorId: user?.id || 1
             });
             setStep(2);
             addToast(`Successfully responded to ${request.hospital}!`, 'success');
+            if (onRefresh) onRefresh();
         } catch (error) {
             console.error("Error responding to request:", error);
             addToast("Failed to record response. Please try again.", 'error');
@@ -76,7 +79,11 @@ const ResponseModal = ({ isOpen, onClose, request }) => {
                                         disabled={submitting}
                                         className="w-full bg-red-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-red-200 hover:bg-red-700 transition-all transform active:scale-[0.98] disabled:opacity-50"
                                     >
-                                        {submitting ? 'Notifying Hospital...' : 'I am on my way'}
+                                        {submitting ? (
+                                            <>
+                                                <i className="fas fa-spinner fa-spin mr-2"></i> Notifying Hospital...
+                                            </>
+                                        ) : 'I am on my way'}
                                     </button>
                                     <button
                                         onClick={onClose}

@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Skeleton from '../components/Skeleton';
 import API_BASE_URL from '../config/apiConfig';
 
-const Profile = ({ userType = 'donor' }) => {
+const Profile = ({ user }) => {
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState({
@@ -19,11 +19,13 @@ const Profile = ({ userType = 'donor' }) => {
         successRate: "0%"
     });
 
+    const userType = user.role;
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const [histRes, statsRes] = await Promise.all([
-                    axios.get(`${API_BASE_URL}/api/history/1`), // Hardcoded ID 1 for mock
+                    axios.get(`${API_BASE_URL}/api/history/${user.id}`),
                     axios.get(`${API_BASE_URL}/api/stats`)
                 ]);
                 setHistory(histRes.data);
@@ -35,15 +37,15 @@ const Profile = ({ userType = 'donor' }) => {
             }
         };
         fetchData();
-    }, [userType]);
+    }, [userType, user.id]);
 
-    const user = {
-        name: userType === 'donor' ? "Pratishtha Deshpande" : "St. Mary's Hospital",
-        email: userType === 'donor' ? "pratishtha@example.com" : "admin@stmarys.org",
-        phone: "+91 98765 43210",
-        location: "Delhi, India",
-        bloodType: "B+",
-        joinedDate: "Jan 2023"
+    const userData = {
+        name: user.name,
+        email: user.email,
+        phone: user.phone || "+91 XXXXX XXXXX",
+        location: user.city || "Unknown",
+        bloodType: user.bloodType || "N/A",
+        joinedDate: "Jan 2024"
     };
 
     return (
@@ -58,15 +60,15 @@ const Profile = ({ userType = 'donor' }) => {
                     <div className="absolute -bottom-20 left-12 flex items-end">
                         <div className="h-40 w-40 rounded-[2.5rem] border-8 border-white shadow-2xl overflow-hidden bg-white">
                             <img
-                                src={`https://ui-avatars.com/api/?name=${user.name}&background=${userType === 'donor' ? 'ef4444' : '2563eb'}&color=fff&size=512`}
+                                src={`https://ui-avatars.com/api/?name=${userData.name}&background=${userType === 'donor' ? 'ef4444' : '2563eb'}&color=fff&size=512`}
                                 alt="Profile"
                                 className="h-full w-full object-cover"
                             />
                         </div>
                         <div className="ml-8 mb-6">
-                            <h1 className="text-4xl font-black text-white drop-shadow-xl tracking-tight">{user.name}</h1>
+                            <h1 className="text-4xl font-black text-white drop-shadow-xl tracking-tight">{userData.name}</h1>
                             <p className="text-red-50 flex items-center font-bold text-sm mt-2">
-                                <i className="fas fa-map-marker-alt mr-2 opacity-80"></i> {user.location}
+                                <i className="fas fa-map-marker-alt mr-2 opacity-80"></i> {userData.location}
                             </p>
                         </div>
                     </div>

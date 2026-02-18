@@ -8,23 +8,15 @@ import ActivityFeed from '../components/ActivityFeed';
 import API_BASE_URL from '../config/apiConfig';
 
 const DonorDashboard = () => {
-    const { triggerResponse } = useOutletContext();
-    const { addToast } = useToast();
-    const [stats, setStats] = useState({
-        donations: 0,
-        livesSaved: 0,
-        avgResponse: 0,
-        responseRate: "0%",
-        cityRank: "--",
-        nextEligible: "Checking..."
-    });
-    const [requests, setRequests] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [user, setUser] = useState({ name: "Pratishtha D.", bloodType: "O-" });
+    const { triggerResponse, user } = useOutletContext();
     const [showQuiz, setShowQuiz] = useState(false);
     const [quizIndex, setQuizIndex] = useState(0);
     const [userAnswers, setUserAnswers] = useState({});
     const [quizResult, setQuizResult] = useState(null);
+    const [stats, setStats] = useState(null);
+    const [requests, setRequests] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const { addToast } = useToast();
 
     const eligibilityQuestions = [
         {
@@ -140,7 +132,7 @@ const DonorDashboard = () => {
                             <div className="h-44 w-44 rounded-[2.5rem] border-[10px] border-white shadow-2xl overflow-hidden bg-white">
                                 <img
                                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                    src="https://ui-avatars.com/api/?name=Pratishtha+Deshpande&background=random&size=512"
+                                    src={`https://ui-avatars.com/api/?name=${user?.name}&background=random&size=512`}
                                     alt="Donor"
                                 />
                             </div>
@@ -153,8 +145,8 @@ const DonorDashboard = () => {
                     <div className="pt-24 flex flex-col md:flex-row justify-between items-start gap-8">
                         <div>
                             <div className="flex items-center space-x-4">
-                                <h1 className="text-4xl font-black text-gray-900 tracking-tight">Pratishtha Deshpande</h1>
-                                <span className="blood-type-badge type-b text-xl px-4 py-1.5 h-auto rounded-xl shadow-lg shadow-red-100">B+</span>
+                                <h1 className="text-4xl font-black text-gray-900 tracking-tight">{user?.name}</h1>
+                                <span className="blood-type-badge type-b text-xl px-4 py-1.5 h-auto rounded-xl shadow-lg shadow-red-100">{user?.bloodType}</span>
                             </div>
                             <div className="flex items-center mt-3 space-x-4">
                                 <div className="flex items-center bg-yellow-400/10 px-3 py-1.5 rounded-xl border border-yellow-200">
@@ -166,7 +158,7 @@ const DonorDashboard = () => {
                                 </div>
                                 <p className="text-gray-400 text-xs font-bold uppercase tracking-widest flex items-center">
                                     <i className="fas fa-map-marker-alt mr-2 text-red-500"></i>
-                                    Delhi, India • Member since 2023
+                                    {user?.city || "Delhi, India"} • Member since 2024
                                 </p>
                             </div>
                         </div>
@@ -311,8 +303,9 @@ const DonorDashboard = () => {
                                 <motion.div
                                     key={request.id}
                                     whileHover={{ x: 10 }}
-                                    className={`p-8 border-2 rounded-[2rem] relative overflow-hidden transition-all duration-300 ${request.urgency === 'Critical' ? 'bg-red-50/30 border-red-100 group' : 'border-gray-50 hover:border-blue-100 hover:bg-blue-50/10'}`}
+                                    className={`p-8 border-2 rounded-[2rem] relative overflow-hidden transition-all duration-300 ${request.bloodType === user?.bloodType ? 'border-red-500 bg-red-50 shadow-xl shadow-red-100' : request.urgency === 'Critical' ? 'bg-red-50/30 border-red-100 group' : 'border-gray-50 hover:border-blue-100 hover:bg-blue-50/10'}`}
                                 >
+                                    {request.bloodType === user?.bloodType && <div className="absolute top-0 left-0 p-3 bg-red-600 text-white text-[10px] font-black rounded-br-2xl uppercase tracking-[0.2em] z-10 flex items-center"><i className="fas fa-star mr-2"></i> Perfect Match</div>}
                                     {request.urgency === 'Critical' && <div className="absolute top-0 right-0 p-3 bg-red-600 text-white text-[10px] font-black rounded-bl-2xl uppercase tracking-[0.2em]">Priority</div>}
                                     <div className="flex flex-col xl:flex-row justify-between items-center gap-8">
                                         <div className="flex items-center w-full">

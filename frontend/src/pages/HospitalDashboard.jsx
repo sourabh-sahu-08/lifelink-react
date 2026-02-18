@@ -8,7 +8,7 @@ import Skeleton from '../components/Skeleton';
 import API_BASE_URL from '../config/apiConfig';
 
 const HospitalDashboard = () => {
-    const { triggerNewRequest } = useOutletContext();
+    const { triggerNewRequest, refreshKey, user } = useOutletContext();
     const [isInventoryModalOpen, setIsInventoryModalOpen] = useState(false);
     const [stats, setStats] = useState({
         activeRequests: 0,
@@ -17,16 +17,20 @@ const HospitalDashboard = () => {
         successRate: "0%"
     });
     const [inventory, setInventory] = useState([]);
+    const [pendingDonations, setPendingDonations] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [fulfillingId, setFulfillingId] = useState(null);
 
     const fetchData = async () => {
         try {
-            const [statsRes, inventoryRes] = await Promise.all([
+            const [statsRes, inventoryRes, pendingRes] = await Promise.all([
                 axios.get(`${API_BASE_URL}/api/stats`),
-                axios.get(`${API_BASE_URL}/api/inventory`)
+                axios.get(`${API_BASE_URL}/api/inventory`),
+                axios.get(`${API_BASE_URL}/api/hospital/pending/${encodeURIComponent(user?.name)}`)
             ]);
             setStats(statsRes.data.hospitalStats);
             setInventory(inventoryRes.data);
+            setPendingDonations(pendingRes.data);
         } catch (error) {
             console.error("Error fetching hospital data:", error);
         } finally {
@@ -34,9 +38,21 @@ const HospitalDashboard = () => {
         }
     };
 
+    const handleFulfill = async (historyId) => {
+        setFulfillingId(historyId);
+        try {
+            await axios.post(`${API_BASE_URL}/api/fulfill`, { historyId });
+            fetchData();
+        } catch (error) {
+            console.error("Error fulfilling donation:", error);
+        } finally {
+            setFulfillingId(null);
+        }
+    };
+
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [refreshKey]);
 
     if (loading) return (
         <div className="space-y-8">
@@ -60,10 +76,10 @@ const HospitalDashboard = () => {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 bg-white p-10 rounded-[2.5rem] border border-gray-100 shadow-2xl relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-red-600/5 blur-[100px] rounded-full"></div>
                 <div className="relative z-10">
-                    <h1 className="text-4xl font-black text-gray-900 tracking-tight leading-none">Operational Overview</h1>
+                    <h1 className="text-4xl font-black text-gray-900 tracking-tight leading-none">Welcome, {user?.name || "Hospital"}</h1>
                     <p className="text-gray-400 font-bold uppercase tracking-[0.2em] text-[10px] mt-3 flex items-center">
                         <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
-                        St. Mary's Regional Hub • Sector 7G
+                        {user?.city || "Delhi"} Regional Hub • Sector 7G
                     </p>
                 </div>
                 <div className="flex items-center space-x-4 relative z-10">
@@ -285,6 +301,39 @@ const HospitalDashboard = () => {
 
                     <div className="bg-white rounded-[2.5rem] shadow-xl border border-gray-100 p-8">
                         <h3 className="font-black text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-8 flex items-center justify-between">
+                            <span><i className="fas fa-user-clock mr-3 text-red-500"></i> Pending Donors</span>
+                            <span className="bg-red-50 px-2 py-1 rounded text-red-600">{pendingDonations.length}</span>
+                        </h3>
+                        <div className="space-y-4">
+                            {pendingDonations.length === 0 ? (
+                                <p className="text-[10px] text-gray-400 font-bold uppercase text-center py-4">No pending arrivals</p>
+                            ) : (
+                                pendingDonations.map(don => (
+                                    <div key={don.id} className="p-4 bg-slate-50 rounded-2xl border border-gray-100 flex items-center justify-between group hover:bg-white hover:border-red-100 transition-all">
+                                        <div className="flex items-center space-x-4">
+                                            <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center font-black text-red-600 text-xs">
+                                                {don.donorName.split(' ')[0][0]}{don.donorName.split(' ')[1]?.[0] || ''}
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-black text-gray-900">{don.donorName}</p>
+                                                <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">{don.amount} • {don.date}</p>
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={() => handleFulfill(don.id)}
+                                            disabled={fulfillingId === don.id}
+                                            className="px-4 py-2 bg-red-600 hover:bg-black text-white rounded-xl text-[9px] font-black uppercase tracking-widest shadow-lg shadow-red-100 transition-all disabled:opacity-50"
+                                        >
+                                            {fulfillingId === don.id ? <i className="fas fa-spinner fa-spin"></i> : "Collect"}
+                                        </button>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-[2.5rem] shadow-xl border border-gray-100 p-8">
+                        <h3 className="font-black text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-8 flex items-center justify-between">
                             <span><i className="fas fa-satellite-dish mr-3 text-blue-500 animate-pulse"></i> Live Network Activity</span>
                             <span className="bg-blue-50 px-2 py-1 rounded text-blue-600">Live</span>
                         </h3>
@@ -309,7 +358,10 @@ const HospitalDashboard = () => {
 
             <ManageInventoryModal
                 isOpen={isInventoryModalOpen}
-                onClose={() => setIsInventoryModalOpen(false)}
+                onClose={() => {
+                    setIsInventoryModalOpen(false);
+                    fetchData();
+                }}
                 inventory={inventory}
                 onRefresh={fetchData}
             />
