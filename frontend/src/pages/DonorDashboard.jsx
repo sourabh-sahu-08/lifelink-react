@@ -349,7 +349,7 @@ const DonorDashboard = () => {
                         <div className="space-y-6">
                             {[
                                 { label: 'Lives Affected', value: (stats?.livesSaved * 2.5).toFixed(0), icon: 'users', color: 'text-blue-500', bg: 'bg-blue-50' },
-                                { label: 'Units Contributed', value: stats?.donations * 0.35 + 'L', icon: 'tint', color: 'text-red-500', bg: 'bg-red-50' },
+                                { label: 'Units Contributed', value: ((stats?.donations || 0) * 0.35).toFixed(1) + 'L', icon: 'tint', color: 'text-red-500', bg: 'bg-red-50' },
                                 { label: 'Next Eligible', value: stats?.nextEligible, icon: 'calendar-check', color: 'text-green-500', bg: 'bg-green-50' }
                             ].map((impact, i) => (
                                 <div key={i} className="flex items-center justify-between p-5 rounded-[2rem] bg-gray-50/50 hover:bg-white hover:shadow-xl transition-all border border-transparent hover:border-gray-100">

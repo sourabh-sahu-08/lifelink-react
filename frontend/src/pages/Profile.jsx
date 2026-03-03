@@ -66,9 +66,9 @@ const Profile = ({ user }) => {
                             />
                         </div>
                         <div className="ml-8 mb-6">
-                            <h1 className="text-4xl font-black text-white drop-shadow-xl tracking-tight">{userData.name}</h1>
-                            <p className="text-red-50 flex items-center font-bold text-sm mt-2">
-                                <i className="fas fa-map-marker-alt mr-2 opacity-80"></i> {userData.location}
+                            <h1 className="text-4xl font-black text-gray-900 tracking-tight">{userData.name}</h1>
+                            <p className="text-gray-500 flex items-center font-bold text-sm mt-2">
+                                <i className="fas fa-map-marker-alt mr-2 text-red-500"></i> {userData.location}
                             </p>
                         </div>
                     </div>

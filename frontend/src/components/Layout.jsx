@@ -14,7 +14,7 @@ const Layout = () => {
     const [refreshKey, setRefreshKey] = useState(0);
 
     const triggerResponse = (req) => {
-        setSelectedRequest(req || { hospital: "Emergency Center", bloodType: "O-", urgency: "Critical", distance: "2.1km", reason: "Multiple Trauma" });
+        setSelectedRequest(req || { id: 1, hospital: "Emergency Center", bloodType: "O-", urgency: "Critical", distance: "2.1km", reason: "Multiple Trauma" });
         setIsResponseModalOpen(true);
     };
 

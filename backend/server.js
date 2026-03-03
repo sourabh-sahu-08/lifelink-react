@@ -167,12 +167,13 @@ app.get('/api/requests', (req, res) => {
 });
 
 app.post('/api/requests', (req, res) => {
+    const distance = (Math.random() * 8 + 1).toFixed(1) + "km";
     const newRequest = {
         id: requests.length + 1,
         ...req.body,
         time: "Just now",
         collected: req.body.collected || 0,
-        distance: "Calculating..."
+        distance: distance
     };
     requests.unshift(newRequest);
     syncData();
@@ -181,7 +182,7 @@ app.post('/api/requests', (req, res) => {
 
 app.post('/api/respond', (req, res) => {
     const { requestId, donorId } = req.body;
-    const request = requests.find(r => r.id === requestId);
+    const request = requests.find(r => r.id === parseInt(requestId));
     if (request) {
         // We don't increment collected yet, only upon fulfillment
         const donor = donors.find(d => d.id === (donorId || 1));
@@ -189,7 +190,7 @@ app.post('/api/respond', (req, res) => {
         const newHistory = {
             id: donorHistory.length + 1,
             donorId: donorId || 1,
-            requestId: requestId,
+            requestId: parseInt(requestId),
             hospital: request.hospital,
             date: new Date().toISOString().split('T')[0],
             amount: "350ml",
