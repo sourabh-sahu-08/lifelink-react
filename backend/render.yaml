@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: lifelink-backend
+    env: node
+    plan: free
+    repo: https://github.com/sourabh-sahu-08/lifelink-react
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: PORT
+        value: 5001

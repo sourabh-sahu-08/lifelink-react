@@ -43,7 +43,7 @@ const Profile = ({ user }) => {
         name: user.name,
         email: user.email,
         phone: user.phone || "+91 XXXXX XXXXX",
-        location: user.city || "Unknown",
+        location: user.location || user.city || "Unknown",
         bloodType: user.bloodType || "N/A",
         joinedDate: "Jan 2024"
     };
@@ -117,16 +117,20 @@ const Profile = ({ user }) => {
                             <h3 className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] border-b border-gray-100 pb-4">Security & Settings</h3>
                             <div className="space-y-4">
                                 {[
-                                    { icon: 'lock', label: 'Change Password', color: 'text-gray-400' },
-                                    { icon: 'bell', label: 'Notifications', color: 'text-gray-400' },
-                                    { icon: 'shield-alt', label: 'Privacy Policy', color: 'text-gray-400' }
+                                    { icon: 'lock', label: 'Change Password', color: 'text-indigo-500', bg: 'bg-indigo-50', hover: 'hover:border-indigo-100 hover:shadow-indigo-100/50' },
+                                    { icon: 'bell', label: 'Notifications', color: 'text-orange-500', bg: 'bg-orange-50', hover: 'hover:border-orange-100 hover:shadow-orange-100/50' },
+                                    { icon: 'shield-alt', label: 'Privacy Policy', color: 'text-teal-500', bg: 'bg-teal-50', hover: 'hover:border-teal-100 hover:shadow-teal-100/50' }
                                 ].map((item, i) => (
-                                    <button key={i} className="w-full text-left px-6 py-5 rounded-2xl bg-gray-50 hover:bg-white hover:shadow-xl transition-all flex justify-between items-center group border border-transparent hover:border-gray-100">
+                                    <button key={i} className={`w-full text-left p-5 rounded-3xl bg-white hover:bg-gray-50/30 shadow-sm hover:shadow-lg transition-all flex justify-between items-center group border border-gray-100/50 ${item.hover}`}>
                                         <div className="flex items-center">
-                                            <i className={`fas fa-${item.icon} ${item.color} mr-4 group-hover:text-gray-900`}></i>
-                                            <span className="font-black text-gray-700 text-sm uppercase tracking-widest">{item.label}</span>
+                                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mr-6 ${item.bg} group-hover:scale-110 transition-transform`}>
+                                                <i className={`fas fa-${item.icon} ${item.color} text-lg`}></i>
+                                            </div>
+                                            <span className="font-black text-gray-800 text-sm uppercase tracking-widest">{item.label}</span>
                                         </div>
-                                        <i className="fas fa-chevron-right text-gray-200 group-hover:text-gray-400"></i>
+                                        <div className="w-10 h-10 rounded-full flex items-center justify-center bg-gray-50 group-hover:bg-white border border-transparent group-hover:border-gray-200 transition-colors shadow-sm group-hover:shadow">
+                                            <i className="fas fa-arrow-right text-gray-300 group-hover:text-gray-600 -rotate-45 group-hover:rotate-0 transition-all duration-300"></i>
+                                        </div>
                                     </button>
                                 ))}
                             </div>

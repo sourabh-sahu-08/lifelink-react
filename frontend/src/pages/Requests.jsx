@@ -6,13 +6,11 @@ import { useOutletContext } from 'react-router-dom';
 import API_BASE_URL from '../config/apiConfig';
 
 const Requests = () => {
-    const { triggerResponse } = useOutletContext();
+    const { triggerResponse, refreshKey, userType, user } = useOutletContext();
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     const [filterType, setFilterType] = useState('All');
-
-    const { refreshKey } = useOutletContext();
 
     useEffect(() => {
         const fetchRequests = async () => {
@@ -125,12 +123,22 @@ const Requests = () => {
                                         <span className="flex items-center"><i className="fas fa-clock mr-2 text-blue-500"></i> {request.time}</span>
                                     </div>
 
-                                    <button
-                                        onClick={() => triggerResponse(request)}
-                                        className="w-full bg-red-600 text-white py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-red-100 hover:bg-red-700 transition-all transform active:scale-[0.98]"
-                                    >
-                                        Respond Now
-                                    </button>
+                                    {userType === 'donor' ? (
+                                        <button
+                                            onClick={() => triggerResponse(request)}
+                                            className="w-full bg-red-600 text-white py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-red-100 hover:bg-red-700 transition-all transform active:scale-[0.98]"
+                                        >
+                                            Respond Now
+                                        </button>
+                                    ) : request.hospital === user?.name ? (
+                                        <div className="w-full bg-green-50 text-green-600 py-4 rounded-2xl font-black uppercase tracking-widest text-center border border-green-100 cursor-default">
+                                            Your Broadcast
+                                        </div>
+                                    ) : (
+                                        <div className="w-full bg-gray-50 text-gray-400 py-4 rounded-2xl font-black uppercase tracking-widest text-center border border-gray-100 cursor-default">
+                                            External Request
+                                        </div>
+                                    )}
                                 </div>
                             </motion.div>
                         ))}
