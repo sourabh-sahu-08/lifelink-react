@@ -47,11 +47,12 @@ function deg2rad(deg) {
 }
 
 app.use(cors({
-    origin: ['https://lifelink-react.vercel.app', 'http://localhost:5173'],
+    origin: ['https://lifelink-react.vercel.app', 'https://lifelink-react-hezk.vercel.app', 'http://localhost:5173'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
     credentials: true
 }));
+
 
 app.use(express.json());
 
