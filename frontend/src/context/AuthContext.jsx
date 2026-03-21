@@ -9,11 +9,24 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const savedUser = localStorage.getItem('lifelink_user');
-        if (savedUser) {
-            setUser(JSON.parse(savedUser));
-        }
-        setLoading(false);
+        const checkAuth = async () => {
+            const savedUser = localStorage.getItem('lifelink_user');
+            if (savedUser) {
+                const parsed = JSON.parse(savedUser);
+                try {
+                    // Fetch latest profile to ensure location/city is up to date (Bilaspur)
+                    const response = await axios.get(`${API_BASE_URL}/api/auth/profile/${parsed.id || parsed._id}`);
+                    const latestUser = response.data;
+                    setUser(latestUser);
+                    localStorage.setItem('lifelink_user', JSON.stringify(latestUser));
+                } catch (err) {
+                    // Fallback to saved user if fetch fails
+                    setUser(parsed);
+                }
+            }
+            setLoading(false);
+        };
+        checkAuth();
     }, []);
 
     const login = async (email, password) => {

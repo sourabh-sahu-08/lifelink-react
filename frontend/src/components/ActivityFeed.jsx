@@ -30,7 +30,7 @@ const ActivityFeed = ({ limit = 3 }) => {
             <AnimatePresence mode="popLayout">
                 {Array.isArray(activities) && activities.map((activity, i) => (
                     <motion.div
-                        key={activity.id}
+                        key={activity._id}
                         layout
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}

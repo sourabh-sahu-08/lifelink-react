@@ -5,11 +5,18 @@ import { useOutletContext } from 'react-router-dom';
 import ActivityFeed from '../components/ActivityFeed';
 import ManageInventoryModal from '../components/ManageInventoryModal';
 import Skeleton from '../components/Skeleton';
+import ChatDialog from '../components/ChatDialog';
+import CallModal from '../components/CallModal';
+import RecentContacts from '../components/RecentContacts';
+import BloodRequestsList from '../components/BloodRequestsList';
+import BloodSupplyForm from '../components/BloodSupplyForm';
+import GISMap from '../components/GISMap';
 import API_BASE_URL from '../config/apiConfig';
 
 const HospitalDashboard = () => {
     const { triggerNewRequest, refreshKey, user } = useOutletContext();
     const [isInventoryModalOpen, setIsInventoryModalOpen] = useState(false);
+    const [mapMarkers, setMapMarkers] = useState([]);
     const [stats, setStats] = useState({
         activeRequests: 0,
         donorsResponded: 0,
@@ -20,17 +27,40 @@ const HospitalDashboard = () => {
     const [pendingDonations, setPendingDonations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [fulfillingId, setFulfillingId] = useState(null);
+    const [selectedDonor, setSelectedDonor] = useState(null);
+    const [isChatOpen, setIsChatOpen] = useState(false);
+    const [isCallOpen, setIsCallOpen] = useState(false);
+    const [showBloodSupplyForm, setShowBloodSupplyForm] = useState(false);
+    const [requestsRefreshKey, setRequestsRefreshKey] = useState(0);
+
+    const openChat = (donorName) => {
+        setSelectedDonor(donorName);
+        setIsChatOpen(true);
+    };
+
+    const openCall = (donorName) => {
+        setSelectedDonor(donorName);
+        setIsCallOpen(true);
+    };
 
     const fetchData = async () => {
         try {
-            const [statsRes, inventoryRes, pendingRes] = await Promise.all([
+            const [statsRes, inventoryRes, pendingRes, reqsRes, supplyRes] = await Promise.all([
                 axios.get(`${API_BASE_URL}/api/stats`),
                 axios.get(`${API_BASE_URL}/api/inventory`),
-                axios.get(`${API_BASE_URL}/api/hospital/pending/${encodeURIComponent(user?.name)}`)
+                axios.get(`${API_BASE_URL}/api/hospital/pending/${encodeURIComponent(user?.name)}`),
+                axios.get(`${API_BASE_URL}/api/blood-requests`),
+                axios.get(`${API_BASE_URL}/api/blood-supply`)
             ]);
             setStats(statsRes.data.hospitalStats);
             setInventory(inventoryRes.data);
             setPendingDonations(pendingRes.data);
+            
+            const markers = [
+                ...reqsRes.data.filter(r => r.location).map(r => ({ ...r.location, title: r.requesterName, type: 'Request', bloodType: r.bloodType, units: r.units })),
+                ...supplyRes.data.filter(s => s.location).map(s => ({ ...s.location, title: s.hospitalName, type: 'Supply', bloodType: s.bloodType, units: s.units }))
+            ];
+            setMapMarkers(markers);
         } catch (error) {
             console.error("Error fetching hospital data:", error);
         } finally {
@@ -73,25 +103,31 @@ const HospitalDashboard = () => {
             transition={{ duration: 0.5 }}
         >
             {/* Welcome Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 bg-white p-10 rounded-[2.5rem] border border-gray-100 shadow-2xl relative overflow-hidden">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10 bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-2xl relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-red-600/5 blur-[100px] rounded-full"></div>
                 <div className="relative z-10">
-                    <h1 className="text-4xl font-black text-gray-900 tracking-tight leading-none">Welcome, {user?.name || "Hospital"}</h1>
+                    <h1 className="text-3xl font-black text-gray-900 tracking-tight leading-none">Welcome, {user?.name || "Hospital"}</h1>
                     <p className="text-gray-400 font-bold uppercase tracking-[0.2em] text-[10px] mt-3 flex items-center">
                         <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
-                        {user?.city || "Delhi"} Regional Hub • Sector 7G
+                        {user?.city || "Bilaspur"} Regional Hub • Sector 7G
                     </p>
                 </div>
-                <div className="flex items-center space-x-4 relative z-10">
-                    <div className="text-right mr-4 border-r border-gray-100 pr-6 hidden sm:block">
+                <div className="flex flex-wrap items-center gap-3 relative z-10">
+                    <div className="text-right border-r border-gray-100 pr-4 hidden sm:block">
                         <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Global Rank</p>
                         <p className="text-xl font-black text-gray-900">#04 <span className="text-[10px] text-green-400">↑2</span></p>
                     </div>
                     <button
                         onClick={triggerNewRequest}
-                        className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-red-900/20 transition-all transform hover:scale-105 active:scale-95 flex items-center"
+                        className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-red-900/20 transition-all hover:scale-105 active:scale-95 flex items-center"
                     >
-                        <i className="fas fa-plus mr-3"></i> Create Emergency Request
+                        <i className="fas fa-plus mr-2"></i> Emergency Request
+                    </button>
+                    <button
+                        onClick={() => setShowBloodSupplyForm(true)}
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-blue-900/20 transition-all hover:scale-105 active:scale-95 flex items-center"
+                    >
+                        <i className="fas fa-hand-holding-medical mr-2"></i> Post Supply
                     </button>
                 </div>
             </div>
@@ -137,98 +173,12 @@ const HospitalDashboard = () => {
                             </div>
                         </div>
 
-                        <div className="relative h-[540px] bg-slate-50 overflow-hidden">
-                            {/* Alert Overlay */}
-                            <div className="absolute top-6 left-6 z-20 space-y-3 max-w-[200px]">
-                                {[
-                                    { msg: "O- Negative Low in Sector 4", color: "text-red-500" },
-                                    { msg: "3 Heroes arriving soon", color: "text-blue-500" }
-                                ].map((alert, i) => (
-                                    <motion.div
-                                        initial={{ x: -100, opacity: 0 }}
-                                        animate={{ x: 0, opacity: 1 }}
-                                        transition={{ delay: 0.5 + (i * 0.2) }}
-                                        key={i}
-                                        className="bg-white/80 backdrop-blur-md p-3 rounded-xl border border-white shadow-lg"
-                                    >
-                                        <p className={`text-[10px] font-black uppercase tracking-tight ${alert.color}`}>{alert.msg}</p>
-                                    </motion.div>
-                                ))}
-                            </div>
-
-                            {/* Abstract Map Background */}
-                            <div className="absolute inset-0 opacity-20 pointer-events-none">
-                                <svg width="100%" height="100%" viewBox="0 0 800 500" className="fill-gray-300">
-                                    <path d="M100,100 Q150,50 200,100 T300,100 T400,150 T500,100 T600,150 T700,50" stroke="currentColor" strokeWidth="2" fill="none" />
-                                    <circle cx="150" cy="120" r="2" /> <circle cx="450" cy="320" r="2" /> <circle cx="650" cy="120" r="2" />
-                                </svg>
-                            </div>
-
-                            {/* Radar Effect */}
-                            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                                <div className="w-[500px] h-[500px] border border-blue-500/10 rounded-full animate-[ping_4s_infinite]"></div>
-                                <div className="absolute inset-0 m-auto w-[300px] h-[300px] border border-blue-500/5 rounded-full animate-[ping_6s_infinite]"></div>
-                            </div>
-
-                            {/* Interactive Pings */}
-                            {[
-                                { x: '25%', y: '35%', type: 'O-', pulse: 'delay-1000', color: 'bg-red-500' },
-                                { x: '65%', y: '45%', type: 'B+', pulse: 'delay-300', color: 'bg-blue-500' },
-                                { x: '45%', y: '75%', type: 'A-', pulse: 'delay-500', color: 'bg-green-500' },
-                                { x: '80%', y: '25%', type: 'O+', pulse: 'delay-700', color: 'bg-red-500' },
-                                { x: '15%', y: '70%', type: 'AB+', pulse: 'delay-200', color: 'bg-purple-500' }
-                            ].map((ping, i) => (
-                                <motion.div
-                                    key={i}
-                                    initial={{ scale: 0 }}
-                                    animate={{ scale: 1 }}
-                                    className="absolute"
-                                    style={{ left: ping.x, top: ping.y }}
-                                >
-                                    <div className="relative flex items-center justify-center group/ping">
-                                        <div className={`absolute w-12 h-12 ${ping.color}/20 rounded-full animate-ping ${ping.pulse}`}></div>
-                                        <div className="relative w-5 h-5 bg-white rounded-full border-[3px] border-blue-600 shadow-lg group-hover/ping:scale-150 transition-transform cursor-pointer overflow-hidden z-10">
-                                            <div className={`w-full h-full ${ping.color} opacity-40`}></div>
-                                        </div>
-                                        <div className="absolute top-8 whitespace-nowrap bg-gray-900/90 backdrop-blur-md text-white px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest shadow-xl opacity-0 group-hover/ping:opacity-100 transition-all">
-                                            {ping.type} Donor • 1.2km
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            ))}
-
-                            {/* Hospital Hub */}
-                            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-125">
-                                <div className="relative">
-                                    <div className="absolute -inset-16 bg-red-600/10 rounded-full blur-3xl animate-pulse"></div>
-                                    <div className="relative w-16 h-16 bg-red-600 rounded-2xl shadow-2xl flex items-center justify-center border-4 border-white rotate-3 group-hover:rotate-0 transition-all duration-700">
-                                        <i className="fas fa-hospital text-2xl text-white"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Map Information HUD */}
-                            <div className="absolute bottom-10 left-10 right-10 flex justify-between items-end pointer-events-none">
-                                <div className="bg-white/90 backdrop-blur-2xl p-6 rounded-3xl border border-gray-100 shadow-2xl pointer-events-auto flex items-center space-x-8">
-                                    <div className="text-center">
-                                        <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest">Available Fleets</p>
-                                        <p className="text-2xl font-black text-blue-600">03</p>
-                                    </div>
-                                    <div className="w-[1px] h-10 bg-gray-100"></div>
-                                    <div className="text-center">
-                                        <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest">Active Transits</p>
-                                        <p className="text-2xl font-black text-red-600">01</p>
-                                    </div>
-                                </div>
-
-                                <div className="flex flex-col space-y-3 pointer-events-auto">
-                                    {['satellite', 'street-view', 'compass'].map(icon => (
-                                        <button key={icon} className="w-12 h-12 bg-white border border-gray-100 rounded-2xl shadow-xl flex items-center justify-center text-gray-400 hover:text-red-600 hover:shadow-2xl transition-all">
-                                            <i className={`fas fa-${icon}`}></i>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
+                        <div className="relative h-[450px] bg-slate-50 overflow-hidden">
+                            <GISMap 
+                                center={user?.location ? [user.location.lat, user.location.lng] : [22.0797, 82.1391]} 
+                                markers={mapMarkers}
+                                zoom={12}
+                            />
                         </div>
                     </div>
 
@@ -260,6 +210,20 @@ const HospitalDashboard = () => {
                 </div>
 
                 <div className="space-y-8">
+                    <div className="p-8 bg-gradient-to-br from-red-600 to-red-800 rounded-[2.5rem] text-white relative overflow-hidden group shadow-2xl shadow-red-200">
+                        <div className="absolute -right-10 -top-10 opacity-10 rotate-12 group-hover:scale-125 group-hover:-rotate-12 transition-all duration-700">
+                            <i className="fas fa-exclamation-triangle text-9xl"></i>
+                        </div>
+                        <h3 className="text-xl font-black uppercase tracking-widest mb-3">Urgent Need?</h3>
+                        <p className="text-red-100 text-xs mb-8 font-bold leading-relaxed uppercase tracking-tight">Broadcast a critical alert to all eligible donors within 50km instantly.</p>
+                        <button
+                            onClick={triggerNewRequest}
+                            className="w-full bg-white text-red-600 px-4 py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl transform hover:scale-105 active:scale-95 transition-all"
+                        >
+                            Broadcast Emergency
+                        </button>
+                    </div>
+
                     <div className="bg-white rounded-[2.5rem] shadow-xl border border-gray-100 overflow-hidden">
                         <div className="px-8 py-6 border-b border-gray-100 bg-gray-50/30 flex justify-between items-center">
                             <h2 className="text-xl font-black text-gray-900 uppercase tracking-tight">Blood Inventory</h2>
@@ -299,60 +263,7 @@ const HospitalDashboard = () => {
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-[2.5rem] shadow-xl border border-gray-100 p-8">
-                        <h3 className="font-black text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-8 flex items-center justify-between">
-                            <span><i className="fas fa-user-clock mr-3 text-red-500"></i> Pending Donors</span>
-                            <span className="bg-red-50 px-2 py-1 rounded text-red-600">{pendingDonations.length}</span>
-                        </h3>
-                        <div className="space-y-4">
-                            {pendingDonations.length === 0 ? (
-                                <p className="text-[10px] text-gray-400 font-bold uppercase text-center py-4">No pending arrivals</p>
-                            ) : (
-                                pendingDonations.map(don => (
-                                    <div key={don.id} className="p-4 bg-slate-50 rounded-2xl border border-gray-100 flex items-center justify-between group hover:bg-white hover:border-red-100 transition-all">
-                                        <div className="flex items-center space-x-4">
-                                            <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center font-black text-red-600 text-xs">
-                                                {don.donorName.split(' ')[0][0]}{don.donorName.split(' ')[1]?.[0] || ''}
-                                            </div>
-                                            <div>
-                                                <p className="text-sm font-black text-gray-900">{don.donorName}</p>
-                                                <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">{don.amount} • {don.date}</p>
-                                            </div>
-                                        </div>
-                                        <button
-                                            onClick={() => handleFulfill(don.id)}
-                                            disabled={fulfillingId === don.id}
-                                            className="px-4 py-2 bg-red-600 hover:bg-black text-white rounded-xl text-[9px] font-black uppercase tracking-widest shadow-lg shadow-red-100 transition-all disabled:opacity-50"
-                                        >
-                                            {fulfillingId === don.id ? <i className="fas fa-spinner fa-spin"></i> : "Collect"}
-                                        </button>
-                                    </div>
-                                ))
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="bg-white rounded-[2.5rem] shadow-xl border border-gray-100 p-8">
-                        <h3 className="font-black text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-8 flex items-center justify-between">
-                            <span><i className="fas fa-satellite-dish mr-3 text-blue-500 animate-pulse"></i> Live Network Activity</span>
-                            <span className="bg-blue-50 px-2 py-1 rounded text-blue-600">Live</span>
-                        </h3>
-                        <ActivityFeed limit={5} />
-                    </div>
-
-                    <div className="p-8 bg-gradient-to-br from-red-600 to-red-800 rounded-[2.5rem] text-white relative overflow-hidden group shadow-2xl shadow-red-200">
-                        <div className="absolute -right-10 -top-10 opacity-10 rotate-12 group-hover:scale-125 group-hover:-rotate-12 transition-all duration-700">
-                            <i className="fas fa-exclamation-triangle text-9xl"></i>
-                        </div>
-                        <h3 className="text-xl font-black uppercase tracking-widest mb-3">Urgent Need?</h3>
-                        <p className="text-red-100 text-xs mb-8 font-bold leading-relaxed uppercase tracking-tight">Broadcast a critical alert to all eligible donors within 50km instantly.</p>
-                        <button
-                            onClick={triggerNewRequest}
-                            className="w-full bg-white text-red-600 px-4 py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl transform hover:scale-105 active:scale-95 transition-all"
-                        >
-                            Broadcast Emergency
-                        </button>
-                    </div>
+                    <RecentContacts />
                 </div>
             </div>
 
@@ -365,6 +276,10 @@ const HospitalDashboard = () => {
                 inventory={inventory}
                 onRefresh={fetchData}
             />
+            
+            <ChatDialog isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} recipientName={selectedDonor || "Donor"} recipientId={null} />
+            <CallModal isOpen={isCallOpen} onClose={() => setIsCallOpen(false)} recipientName={selectedDonor || "Donor"} phoneFallback="112" />
+            <BloodSupplyForm isOpen={showBloodSupplyForm} onClose={() => setShowBloodSupplyForm(false)} onSuccess={() => setRequestsRefreshKey(k => k + 1)} />
         </motion.div>
     );
 };

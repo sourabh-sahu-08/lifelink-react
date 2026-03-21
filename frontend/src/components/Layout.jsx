@@ -5,6 +5,7 @@ import RequestModal from './RequestModal.jsx';
 import ResponseModal from './ResponseModal.jsx';
 import { ToastProvider } from '../context/ToastContext.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
+import Chatbot from './Chatbot.jsx';
 
 const Layout = () => {
     const { user } = useAuth();
@@ -49,6 +50,8 @@ const Layout = () => {
                     request={selectedRequest}
                     onRefresh={handleRefresh}
                 />
+                
+                <Chatbot />
             </div>
         </ToastProvider>
     );

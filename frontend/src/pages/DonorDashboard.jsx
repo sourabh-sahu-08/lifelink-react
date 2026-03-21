@@ -5,6 +5,11 @@ import { useOutletContext } from 'react-router-dom';
 import Skeleton from '../components/Skeleton';
 import { useToast } from '../context/ToastContext';
 import ActivityFeed from '../components/ActivityFeed';
+import RecentContacts from '../components/RecentContacts';
+import BloodRequestForm from '../components/BloodRequestForm';
+import BloodSupplyList from '../components/BloodSupplyList';
+import BloodRequestsList from '../components/BloodRequestsList';
+import GISMap from '../components/GISMap';
 import API_BASE_URL from '../config/apiConfig';
 
 const DonorDashboard = () => {
@@ -14,8 +19,10 @@ const DonorDashboard = () => {
     const [userAnswers, setUserAnswers] = useState({});
     const [quizResult, setQuizResult] = useState(null);
     const [stats, setStats] = useState(null);
-    const [requests, setRequests] = useState([]);
+    const [mapMarkers, setMapMarkers] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showBloodRequestForm, setShowBloodRequestForm] = useState(false);
+    const [supplyRefreshKey, setSupplyRefreshKey] = useState(0);
     const { addToast } = useToast();
 
     const eligibilityQuestions = [
@@ -54,12 +61,18 @@ const DonorDashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [statsRes, requestsRes] = await Promise.all([
+                const [statsRes, reqsRes, supplyRes] = await Promise.all([
                     axios.get(`${API_BASE_URL}/api/stats`),
-                    axios.get(`${API_BASE_URL}/api/requests`)
+                    axios.get(`${API_BASE_URL}/api/blood-requests`),
+                    axios.get(`${API_BASE_URL}/api/blood-supply`)
                 ]);
                 setStats(statsRes.data.donorStats);
-                setRequests(requestsRes.data);
+                
+                const markers = [
+                    ...reqsRes.data.filter(r => r.location).map(r => ({ ...r.location, title: r.requesterName, type: 'Request', bloodType: r.bloodType, units: r.units })),
+                    ...supplyRes.data.filter(s => s.location).map(s => ({ ...s.location, title: s.hospitalName, type: 'Supply', bloodType: s.bloodType, units: s.units }))
+                ];
+                setMapMarkers(markers);
             } catch (error) {
                 console.error("Error fetching dashboard data:", error);
             } finally {
@@ -158,7 +171,7 @@ const DonorDashboard = () => {
                                 </div>
                                 <p className="text-gray-400 text-xs font-bold uppercase tracking-widest flex items-center">
                                     <i className="fas fa-map-marker-alt mr-2 text-red-500"></i>
-                                    {user?.city || "Delhi, India"} • Member since 2024
+                                    {user?.city || "Bilaspur"} • Member since 2024
                                 </p>
                             </div>
                         </div>
@@ -199,6 +212,42 @@ const DonorDashboard = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
                 <div className="lg:col-span-2 space-y-8">
+                    {/* Need Blood? Section - Unique to Donor */}
+                    <div className="bg-gradient-to-br from-rose-600 via-red-600 to-red-800 rounded-[2rem] shadow-2xl p-8 text-white relative overflow-hidden group border border-red-400/20">
+                        <div className="absolute -right-8 -bottom-8 opacity-10 group-hover:scale-125 transition-transform duration-700">
+                            <i className="fas fa-hand-holding-heart text-[10rem]"></i>
+                        </div>
+                        <div className="relative z-10 flex items-start justify-between gap-6">
+                            <div>
+                                <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-md">
+                                    <i className="fas fa-tint text-xl"></i>
+                                </div>
+                                <h3 className="text-2xl font-black tracking-tight">Need Blood?</h3>
+                                <p className="text-red-100 text-sm mt-2 leading-relaxed max-w-xs">Post an emergency blood request. Hospitals and supply networks will respond directly.</p>
+                            </div>
+                            <button onClick={() => setShowBloodRequestForm(true)}
+                                className="flex-shrink-0 bg-white text-red-600 px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-2xl hover:bg-red-50 transition-all hover:-translate-y-1 active:translate-y-0 whitespace-nowrap">
+                                <i className="fas fa-plus mr-2"></i>Request Blood
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Available Blood Supply from Hospitals */}
+                    <div className="bg-white rounded-[2rem] shadow-xl border border-gray-100 overflow-hidden">
+                        <div className="px-8 py-6 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
+                            <div>
+                                <h2 className="text-xl font-black text-gray-900 tracking-tight">Available Blood Supply</h2>
+                                <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-1">Offered by hospitals near you</p>
+                            </div>
+                            <div className="w-10 h-10 bg-blue-100 rounded-2xl flex items-center justify-center">
+                                <i className="fas fa-hospital text-blue-600 text-sm"></i>
+                            </div>
+                        </div>
+                        <div className="p-6">
+                            <BloodSupplyList refreshKey={supplyRefreshKey} />
+                        </div>
+                    </div>
+
                     {/* Eligibility Checker */}
                     <div className="bg-white rounded-[2rem] shadow-xl border border-gray-100 overflow-hidden group">
                         <div className="px-10 py-6 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center group-hover:bg-white transition-colors">
@@ -218,7 +267,7 @@ const DonorDashboard = () => {
                                     </h3>
                                     <p className="text-gray-500 font-medium mb-10 max-w-md mx-auto leading-relaxed">
                                         {quizResult === 'eligible' ?
-                                            'Your health assessment is clear. We will alert you the moment a critical need arises for B+ in Delhi.' :
+                                            'Your health assessment is clear. We will alert you the moment a critical need arises for B+ in Bilaspur.' :
                                             'Based on your responses, we recommend waiting a few more weeks before your next donation. Your safety is our priority.'
                                         }
                                     </p>
@@ -292,6 +341,23 @@ const DonorDashboard = () => {
                         </div>
                     </div>
 
+                    {/* Live Network Map */}
+                    <div className="bg-white rounded-[2rem] shadow-xl border border-gray-100 overflow-hidden mb-8">
+                        <div className="px-10 py-6 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
+                            <div>
+                                <h2 className="text-2xl font-black text-gray-900 tracking-tight">Geo-Sync Network</h2>
+                                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Live proximity of critical alerts & supplies</p>
+                            </div>
+                            <span className="bg-blue-100 text-blue-600 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em]">Active</span>
+                        </div>
+                        <div className="h-[400px]">
+                            <GISMap 
+                                center={user?.location ? [user.location.lat, user.location.lng] : [22.0797, 82.1391]} 
+                                markers={mapMarkers} 
+                            />
+                        </div>
+                    </div>
+
                     {/* Active Requests */}
                     <div className="bg-white rounded-[2rem] shadow-xl border border-gray-100 overflow-hidden">
                         <div className="px-10 py-6 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
@@ -299,47 +365,13 @@ const DonorDashboard = () => {
                             <span className="bg-red-100 text-red-600 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] animate-pulse">Live</span>
                         </div>
                         <div className="p-10 space-y-6">
-                            {Array.isArray(requests) && requests.map((request) => (
-                                <motion.div
-                                    key={request.id}
-                                    whileHover={{ x: 10 }}
-                                    className={`p-8 border-2 rounded-[2rem] relative overflow-hidden transition-all duration-300 ${request.bloodType === user?.bloodType ? 'border-red-500 bg-red-50 shadow-xl shadow-red-100' : request.urgency === 'Critical' ? 'bg-red-50/30 border-red-100 group' : 'border-gray-50 hover:border-blue-100 hover:bg-blue-50/10'}`}
-                                >
-                                    {request.bloodType === user?.bloodType && <div className="absolute top-0 left-0 p-3 bg-red-600 text-white text-[10px] font-black rounded-br-2xl uppercase tracking-[0.2em] z-10 flex items-center"><i className="fas fa-star mr-2"></i> Perfect Match</div>}
-                                    {request.urgency === 'Critical' && <div className="absolute top-0 right-0 p-3 bg-red-600 text-white text-[10px] font-black rounded-bl-2xl uppercase tracking-[0.2em]">Priority</div>}
-                                    <div className="flex flex-col xl:flex-row justify-between items-center gap-8">
-                                        <div className="flex items-center w-full">
-                                            <div className={`blood-type-badge ${request.bloodType.includes('O') ? 'type-o' : request.bloodType.includes('A') ? 'type-a' : 'type-b'} h-20 w-20 text-xl font-black shadow-2xl flex-shrink-0`}>{request.bloodType}</div>
-                                            <div className="ml-8 flex-1">
-                                                <div className="flex items-center">
-                                                    <h3 className="text-2xl font-black text-gray-900 tracking-tight">{request.hospital}</h3>
-                                                    <span className="ml-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">{request.distance} away</span>
-                                                </div>
-                                                <p className="text-gray-500 font-bold text-sm mt-2">{request.reason}</p>
-                                                <div className="flex items-center mt-4 space-x-6">
-                                                    <div className="flex items-center text-[10px] font-black uppercase tracking-widest text-red-600">
-                                                        <i className="fas fa-tint mr-2"></i> {request.units} Units required
-                                                    </div>
-                                                    <div className="flex items-center text-[10px] font-black uppercase tracking-widest text-blue-500">
-                                                        <i className="fas fa-clock mr-2"></i> {request.time}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button
-                                            onClick={() => triggerResponse(request)}
-                                            className={`w-full xl:w-auto px-12 py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl transition-all transform active:scale-95 ${request.urgency === 'Critical' ? 'bg-red-600 text-white hover:bg-black hover:shadow-red-200' : 'bg-blue-600 text-white hover:bg-black'}`}
-                                        >
-                                            Respond
-                                        </button>
-                                    </div>
-                                </motion.div>
-                            ))}
+                            <BloodRequestsList refreshKey={supplyRefreshKey} />
                         </div>
                     </div>
                 </div>
 
                 <div className="space-y-8">
+                    <RecentContacts />
                     {/* Impact Stats */}
                     <div className="bg-white rounded-[2rem] shadow-xl border border-gray-100 p-10 relative overflow-hidden group">
                         <div className="absolute -right-10 -bottom-10 opacity-5 rotate-12 transition-transform duration-700 group-hover:scale-150 text-gray-400">
@@ -374,31 +406,6 @@ const DonorDashboard = () => {
                         </button>
                     </div>
 
-                    {/* Community Leaderboard */}
-                    <div className="bg-white rounded-[2rem] shadow-xl border border-gray-100 p-10 relative overflow-hidden group">
-                        <h2 className="text-2xl font-black text-gray-900 mb-8 tracking-tight flex items-center">
-                            <i className="fas fa-trophy text-yellow-500 mr-4"></i>
-                            Community Rank
-                        </h2>
-                        <div className="space-y-4">
-                            {[
-                                { name: "Rohit Kumar", rank: 1, points: "2,450", avatar: "RK" },
-                                { name: "Pratishtha D.", rank: 2, points: "2,100", avatar: "PD" },
-                                { name: "Amit Patel", rank: 3, points: "1,850", avatar: "AP" }
-                            ].map((user, i) => (
-                                <div key={i} className={`flex items-center justify-between p-4 rounded-2xl border ${user.name.includes('Pratishtha') ? 'bg-blue-50 border-blue-100 shadow-sm' : 'border-gray-50'}`}>
-                                    <div className="flex items-center">
-                                        <span className={`w-6 h-6 rounded-lg text-[10px] font-black flex items-center justify-center mr-4 ${user.rank === 1 ? 'bg-yellow-100 text-yellow-700' : user.rank === 2 ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'}`}>
-                                            #{user.rank}
-                                        </span>
-                                        <div className="w-10 h-10 rounded-xl bg-gray-200 flex items-center justify-center font-black text-xs mr-3">{user.avatar}</div>
-                                        <span className="font-black text-sm text-gray-800">{user.name}</span>
-                                    </div>
-                                    <span className="font-black text-xs text-gray-400">{user.points} pts</span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
 
                     {/* Community Rewards */}
                     <div className="bg-gradient-to-br from-indigo-700 via-indigo-600 to-purple-800 rounded-[2rem] shadow-2xl p-10 text-white relative overflow-hidden group border-4 border-indigo-400/20">
@@ -434,70 +441,53 @@ const DonorDashboard = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm"
-                        onClick={() => setShowCertificate(false)}
+                        className="fixed inset-0 z-[100] flex items-center justify-center p-4 backdrop-blur-xl bg-black/40"
                     >
                         <motion.div
-                            initial={{ scale: 0.9, y: 50 }}
+                            initial={{ scale: 0.9, y: 20 }}
                             animate={{ scale: 1, y: 0 }}
-                            exit={{ scale: 0.9, y: 50 }}
-                            className="max-w-xl w-full bg-white rounded-[3rem] p-12 relative shadow-2xl overflow-hidden border-8 border-double border-red-100"
-                            onClick={e => e.stopPropagation()}
+                            exit={{ scale: 0.9, y: 20 }}
+                            className="bg-white w-full max-w-2xl rounded-[3rem] p-12 relative overflow-hidden shadow-2xl"
                         >
-                            <div className="absolute top-0 right-0 p-8">
-                                <button onClick={() => setShowCertificate(false)} className="text-gray-300 hover:text-red-600 transition-colors">
-                                    <i className="fas fa-times text-2xl"></i>
-                                </button>
+                            <div className="absolute -right-20 -top-20 opacity-5 rotate-12 text-gray-900">
+                                <i className="fas fa-certificate text-[20rem]"></i>
                             </div>
+                            <button onClick={() => setShowCertificate(false)} className="absolute top-8 right-8 w-10 h-10 bg-gray-100 text-gray-400 rounded-full hover:bg-red-50 hover:text-red-500 transition-all flex items-center justify-center">
+                                <i className="fas fa-times"></i>
+                            </button>
 
-                            <div className="text-center relative z-10">
-                                <div className="mb-8 flex justify-center">
-                                    <div className="w-24 h-24 bg-red-600 rounded-3xl flex items-center justify-center shadow-2xl rotate-12">
-                                        <i className="fas fa-certificate text-4xl text-white"></i>
-                                    </div>
+                            <div className="relative z-10 text-center">
+                                <div className="mx-auto w-24 h-24 bg-red-50 rounded-full flex items-center justify-center mb-6">
+                                    <i className="fas fa-award text-4xl text-red-500"></i>
                                 </div>
-                                <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-red-600 mb-6">Official Recognition</h2>
-                                <h1 className="text-3xl font-black text-gray-900 tracking-tighter mb-4 capitalize">
-                                    Certificate of Heroism
-                                </h1>
-                                <p className="text-gray-400 font-medium leading-relaxed italic mb-8">
-                                    This certificate is awarded to <span className="text-gray-900 font-black not-italic">{user.name}</span> for their selfless contribution to saving lives through blood donation.
+                                <h4 className="text-[10px] font-black tracking-[0.3em] text-gray-400 uppercase mb-4">Official LifeLink Citation</h4>
+                                <h3 className="text-4xl font-black text-gray-900 mb-8 font-serif italic">Hero of the Bloodline</h3>
+                                <p className="text-gray-500 mb-10 text-sm max-w-md mx-auto leading-relaxed border-y border-gray-100 py-6">
+                                    This certifies that <strong className="text-gray-900 font-black">{user?.name}</strong> has demonstrated extraordinary commitment to humanity by saving {stats?.livesSaved} lives through selfless blood donation.
                                 </p>
-
-                                <div className="bg-slate-50 p-8 rounded-[2rem] border border-gray-100 grid grid-cols-3 gap-6 mb-8">
-                                    <div>
-                                        <p className="text-[8px] font-black text-gray-400 uppercase mb-2">Donations</p>
-                                        <p className="text-xl font-black text-gray-900">{stats?.donations}</p>
-                                    </div>
-                                    <div className="border-x border-gray-200 px-4">
-                                        <p className="text-[8px] font-black text-gray-400 uppercase mb-2">Lives Won</p>
-                                        <p className="text-xl font-black text-red-600">{(stats?.livesSaved * 2.5).toFixed(0)}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-[8px] font-black text-gray-400 uppercase mb-2">Impact</p>
-                                        <p className="text-xl font-black text-gray-900">Elite</p>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-center justify-center space-x-12 mt-12 opacity-50 grayscale">
-                                    <div className="text-center">
-                                        <div className="w-16 h-[1px] bg-gray-400 mx-auto mb-2"></div>
-                                        <p className="text-[8px] font-black uppercase tracking-widest">Medical Officer</p>
+                                <div className="flex justify-between items-end px-10">
+                                    <div className="text-left">
+                                        <div className="w-32 h-1 bg-gray-200 mb-2"></div>
+                                        <p className="text-[9px] font-black uppercase tracking-widest text-gray-400">Chief Medical Officer</p>
                                     </div>
                                     <div className="text-center">
-                                        <div className="w-16 h-[1px] bg-gray-400 mx-auto mb-2"></div>
-                                        <p className="text-[8px] font-black uppercase tracking-widest">LifeLink Global</p>
+                                        <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center text-white font-black text-xs shadow-lg transform -rotate-12 outline-dashed outline-red-200 outline-offset-4">
+                                            SEAL
+                                        </div>
+                                    </div>
+                                    <div className="text-right">
+                                        <div className="w-32 h-1 bg-gray-200 mb-2 ml-auto"></div>
+                                        <p className="text-[9px] font-black uppercase tracking-widest text-gray-400">{new Date().getFullYear()} Validation</p>
                                     </div>
                                 </div>
                             </div>
-
-                            {/* Decorative Elements */}
-                            <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-red-600 opacity-[0.03] rounded-full blur-3xl"></div>
-                            <div className="absolute -right-20 -top-20 w-64 h-64 bg-blue-600 opacity-[0.03] rounded-full blur-3xl"></div>
                         </motion.div>
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            <BloodRequestForm isOpen={showBloodRequestForm} onClose={() => setShowBloodRequestForm(false)} onSuccess={() => setSupplyRefreshKey(k => k + 1)} />
+
         </motion.div>
     );
 };

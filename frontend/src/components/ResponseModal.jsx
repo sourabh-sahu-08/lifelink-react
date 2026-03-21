@@ -4,10 +4,14 @@ import axios from 'axios';
 import { useToast } from '../context/ToastContext';
 import { useAuth } from '../context/AuthContext';
 import API_BASE_URL from '../config/apiConfig';
+import ChatDialog from './ChatDialog';
+import CallModal from './CallModal';
 
 const ResponseModal = ({ isOpen, onClose, request, onRefresh }) => {
     const [step, setStep] = useState(1);
     const [submitting, setSubmitting] = useState(false);
+    const [isChatOpen, setIsChatOpen] = useState(false);
+    const [isCallOpen, setIsCallOpen] = useState(false);
     const { addToast } = useToast();
     const { user } = useAuth();
 
@@ -32,6 +36,7 @@ const ResponseModal = ({ isOpen, onClose, request, onRefresh }) => {
     };
 
     return (
+        <>
         <AnimatePresence>
             {isOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -106,9 +111,17 @@ const ResponseModal = ({ isOpen, onClose, request, onRefresh }) => {
                                 <p className="text-gray-500 text-sm mb-8 leading-relaxed">
                                     Hospital has been notified of your response. Please reach the blood bank within 30 minutes.
                                 </p>
+                                <div className="flex gap-4 mb-6">
+                                    <button onClick={() => setIsCallOpen(true)} className="flex-1 bg-green-500 text-white py-4 rounded-2xl font-black uppercase tracking-widest shadow-lg hover:bg-green-600 transition-all flex items-center justify-center">
+                                        <i className="fas fa-phone mr-2 text-xl"></i> Call
+                                    </button>
+                                    <button onClick={() => setIsChatOpen(true)} className="flex-1 bg-blue-500 text-white py-4 rounded-2xl font-black uppercase tracking-widest shadow-lg hover:bg-blue-600 transition-all flex items-center justify-center">
+                                        <i className="fas fa-comment mr-2 text-xl"></i> Chat
+                                    </button>
+                                </div>
                                 <button
-                                    onClick={() => { onClose(); setStep(1); }}
-                                    className="w-full bg-gray-900 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl hover:bg-black transition-all"
+                                    onClick={() => { onClose(); setStep(1); setIsChatOpen(false); setIsCallOpen(false); }}
+                                    className="w-full bg-gray-900 text-white py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl hover:bg-black transition-all"
                                 >
                                     Got it
                                 </button>
@@ -118,6 +131,9 @@ const ResponseModal = ({ isOpen, onClose, request, onRefresh }) => {
                 </div>
             )}
         </AnimatePresence>
+        <ChatDialog isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} recipientName={request?.hospital || "Hospital"} recipientId={request?.hospitalId} />
+        <CallModal isOpen={isCallOpen} onClose={() => setIsCallOpen(false)} recipientName={request?.hospital || "Hospital"} phoneFallback="112" />
+        </>
     );
 };
 
