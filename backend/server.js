@@ -1,7 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const path = require('path');
 const { Groq } = require('groq-sdk');
+
 
 // Connect DB
 const connectDB = require('./config/db');
@@ -18,7 +20,8 @@ const Message = require('./models/Message');
 const BloodRequest = require('./models/BloodRequest');
 const BloodSupply = require('./models/BloodSupply');
 
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, '.env') });
+
 
 const app = express();
 const PORT = process.env.PORT || 5001;
