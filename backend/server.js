@@ -43,7 +43,13 @@ function deg2rad(deg) {
     return deg * (Math.PI / 180)
 }
 
-app.use(cors());
+app.use(cors({
+    origin: ['https://lifelink-react.vercel.app', 'http://localhost:5173'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    credentials: true
+}));
+
 app.use(express.json());
 
 // Initialize connection and seed inventory if empty
