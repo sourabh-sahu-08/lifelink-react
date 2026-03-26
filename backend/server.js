@@ -612,6 +612,19 @@ app.post('/api/blood-supply/:id/claim', async (req, res) => {
     } catch(err) { res.status(500).json({ error: err.message }); }
 });
 
+// Static Files & Catch-all for SPA
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../frontend/dist')));
+    
+    app.get('*', (req, res) => {
+        // If the request is for an API route that wasn't matched above, it might be a 404
+        if (req.originalUrl.startsWith('/api/')) {
+            return res.status(404).json({ message: "API endpoint not found" });
+        }
+        res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
+    });
+}
+
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });

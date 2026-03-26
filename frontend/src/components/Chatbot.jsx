@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import API_BASE_URL from '../config/apiConfig';
 
 const SUGGESTIONS = [
     "Am I eligible to donate?",
@@ -75,7 +76,7 @@ const Chatbot = () => {
             // Include up to last 4 messages for context (excluding the new one)
             const history = messages.slice(-4).map(m => ({ text: m.text, sender: m.sender }));
             
-            const response = await fetch('http://localhost:5001/api/chat', {
+            const response = await fetch(`${API_BASE_URL}/api/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message: text, history })

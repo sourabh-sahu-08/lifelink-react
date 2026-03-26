@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext.jsx';
+import API_BASE_URL from '../config/apiConfig';
 
 const ChatDialog = ({ isOpen, onClose, recipientName, recipientId }) => {
     const { user } = useAuth();
@@ -19,7 +20,7 @@ const ChatDialog = ({ isOpen, onClose, recipientName, recipientId }) => {
             const initChat = async () => {
                 try {
                     const senderIdentifier = user.name || user.email; // Fallback
-                    const res = await fetch('http://localhost:5001/api/conversations', {
+                    const res = await fetch(`${API_BASE_URL}/api/conversations`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ sender: senderIdentifier, receiver: recipientName })
@@ -28,7 +29,7 @@ const ChatDialog = ({ isOpen, onClose, recipientName, recipientId }) => {
                     setConversationId(conv._id);
                     
                     // Fetch existing messages
-                    const msgRes = await fetch(`http://localhost:5001/api/messages/${conv._id}`);
+                    const msgRes = await fetch(`${API_BASE_URL}/api/messages/${conv._id}`);
                     const dbMessages = await msgRes.json();
                     setMessages(dbMessages);
                     scrollToBottom();
@@ -42,7 +43,7 @@ const ChatDialog = ({ isOpen, onClose, recipientName, recipientId }) => {
     useEffect(() => {
         if (!isOpen || !conversationId) return;
         const interval = setInterval(async () => {
-            const res = await fetch(`http://localhost:5001/api/messages/${conversationId}`);
+            const res = await fetch(`${API_BASE_URL}/api/messages/${conversationId}`);
             if(res.ok) {
                 const data = await res.json();
                 setMessages(data);
@@ -69,7 +70,7 @@ const ChatDialog = ({ isOpen, onClose, recipientName, recipientId }) => {
         setInput('');
 
         try {
-            await fetch('http://localhost:5001/api/messages', {
+            await fetch(`${API_BASE_URL}/api/messages`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newMsg)
