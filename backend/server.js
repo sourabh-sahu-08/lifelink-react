@@ -46,11 +46,14 @@ function deg2rad(deg) {
     return deg * (Math.PI / 180)
 }
 
-const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173'];
 app.options('*', cors()); 
 app.use(cors({
     origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin) || (typeof origin === 'string' && origin.match(/https:\/\/.*\.vercel\.app$/))) {
+        // Allow any localhost origin
+        const isLocalhost = origin && (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:'));
+        const isVercel = origin && (typeof origin === 'string' && origin.match(/https:\/\/.*\.vercel\.app$/));
+        
+        if (!origin || isLocalhost || isVercel) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
@@ -65,7 +68,14 @@ app.use(cors({
 
 
 
+
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url} - Origin: ${req.get('origin')}`);
+    next();
+});
+
 app.use(express.json());
+
 
 // Initialize connection and seed inventory if empty
 connectDB().then(async () => {
