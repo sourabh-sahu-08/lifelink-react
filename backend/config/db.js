@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const connectDB = async () => {
     try {
         const uri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/lifelink';
-        console.log('Attempting to connect to MongoDB with URI:', uri.split('@')[1] ? `mongodb://***:***@` + uri.split('@')[1] : uri);
         const conn = await mongoose.connect(uri, {
             serverSelectionTimeoutMS: 5000, // 5 seconds timeout
         });
