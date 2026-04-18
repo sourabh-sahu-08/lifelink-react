@@ -43,7 +43,7 @@ const Profile = ({ user }) => {
         name: user.name,
         email: user.email,
         phone: user.phone || "+91 XXXXX XXXXX",
-        location: user.location || user.city || "Unknown",
+        location: typeof user.location === 'object' ? (user.city || `${user.location.lat}, ${user.location.lng}`) : (user.location || user.city || "Unknown"),
         bloodType: user.bloodType || "N/A",
         joinedDate: "Jan 2024"
     };

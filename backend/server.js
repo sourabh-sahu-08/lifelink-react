@@ -174,7 +174,17 @@ app.post('/api/auth/login', async (req, res) => {
 
 app.get('/api/auth/profile/:id', async (req, res) => {
     try {
-        const user = await User.findById(req.params.id);
+        const val = req.params.id;
+        let query = {};
+        if (mongoose.Types.ObjectId.isValid(val)) {
+            query = { _id: val };
+        } else if (!isNaN(val)) {
+            query = { id: parseInt(val) };
+        } else {
+            return res.status(400).json({ message: "Invalid ID format" });
+        }
+
+        const user = await User.findOne(query);
         if (user) {
             res.json({
                 id: user._id,
