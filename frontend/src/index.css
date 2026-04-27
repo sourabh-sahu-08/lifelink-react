@@ -43,21 +43,33 @@
   }
 
   /* Utility Classes */
-  .glass-effect {
-    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-xl border border-white/30 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)];
+  }
+
+  .glass-input {
+    @apply bg-white/40 backdrop-blur-sm border border-white/50 focus:bg-white/80 transition-all duration-300;
+  }
+
+  .animated-gradient {
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradient-animation 15s ease infinite;
   }
 
   .gradient-text {
-    @apply bg-gradient-to-br from-[#667eea] to-[#764ba2] bg-clip-text text-transparent;
-  }
-
-  .hero-card-gradient {
-    @apply bg-gradient-to-br from-[#667eea] to-[#764ba2];
+    @apply bg-gradient-to-br from-red-600 to-rose-400 bg-clip-text text-transparent;
   }
 
   .emergency-pulse {
     animation: pulse 2s infinite;
   }
+}
+
+@keyframes gradient-animation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 @keyframes pulse {
