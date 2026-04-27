@@ -119,9 +119,12 @@ const Signup = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Full Name / Hospital Name</label>
+                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
+                                <i className="fas fa-user text-[8px]"></i>
+                                Full Name / Hospital Name
+                            </label>
                             <div className="relative group">
-                                <i className="fas fa-id-card absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
+                                <i className="fas fa-user absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
                                 <input
                                     type="text"
                                     required
@@ -134,7 +137,10 @@ const Signup = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Email Address</label>
+                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
+                                <i className="fas fa-envelope text-[8px]"></i>
+                                Email Address
+                            </label>
                             <div className="relative group">
                                 <i className="fas fa-envelope absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
                                 <input
@@ -149,7 +155,10 @@ const Signup = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Password (Hard & Max 6)</label>
+                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
+                                <i className="fas fa-key text-[8px]"></i>
+                                Password (Hard & Max 6)
+                            </label>
                             <div className="relative group">
                                 <i className="fas fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
                                 <input
@@ -165,7 +174,10 @@ const Signup = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Confirm Password</label>
+                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
+                                <i className="fas fa-check-double text-[8px]"></i>
+                                Confirm Password
+                            </label>
                             <div className="relative group">
                                 <i className="fas fa-shield-alt absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
                                 <input
@@ -181,7 +193,10 @@ const Signup = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Phone Number</label>
+                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
+                                <i className="fas fa-phone-alt text-[8px]"></i>
+                                Phone Number
+                            </label>
                             <div className="relative group">
                                 <i className="fas fa-phone absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
                                 <input
@@ -196,7 +211,10 @@ const Signup = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">City</label>
+                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
+                                <i className="fas fa-city text-[8px]"></i>
+                                City
+                            </label>
                             <div className="relative group">
                                 <i className="fas fa-map-marker-alt absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
                                 <input
@@ -212,7 +230,10 @@ const Signup = () => {
 
                         {formData.role === 'donor' && (
                             <div className="md:col-span-2 space-y-2">
-                                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Blood Type</label>
+                                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
+                                    <i className="fas fa-burn text-[8px]"></i>
+                                    Blood Type
+                                </label>
                                 <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
                                     {bloodTypes.map(type => (
                                         <button

@@ -88,7 +88,10 @@ const Login = () => {
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Email Address</label>
+                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
+                                <i className="fas fa-envelope text-[8px]"></i>
+                                Email Address
+                            </label>
                             <div className="relative group">
                                 <i className="fas fa-envelope absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
                                 <input
@@ -103,7 +106,10 @@ const Login = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Password</label>
+                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
+                                <i className="fas fa-key text-[8px]"></i>
+                                Password
+                            </label>
                             <div className="relative group">
                                 <i className="fas fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
                                 <input
