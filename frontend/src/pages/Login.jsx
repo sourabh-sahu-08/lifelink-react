@@ -90,13 +90,13 @@ const Login = () => {
                         <div className="space-y-2">
                             <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Email Address</label>
                             <div className="relative group">
-                                <i className="fas fa-envelope absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500 transition-colors"></i>
+                                <i className="fas fa-envelope absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
                                 <input
                                     type="email"
                                     required
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none"
+                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none relative z-10"
                                     placeholder="name@example.com"
                                 />
                             </div>
@@ -105,20 +105,23 @@ const Login = () => {
                         <div className="space-y-2">
                             <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Password</label>
                             <div className="relative group">
-                                <i className="fas fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500 transition-colors"></i>
+                                <i className="fas fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
                                 <input
                                     type="password"
                                     required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none"
+                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none relative z-10"
                                     placeholder="••••••••"
                                 />
                             </div>
                         </div>
 
                         <div className="text-right">
-                            <a href="#" className="text-[10px] font-black text-red-600 uppercase tracking-widest hover:text-red-700 transition-colors">Forgot Password?</a>
+                            <a href="#" className="text-[10px] font-black text-red-600 uppercase tracking-widest hover:text-red-700 transition-colors flex items-center justify-end gap-1">
+                                <i className="fas fa-question-circle"></i>
+                                Forgot Password?
+                            </a>
                         </div>
 
                         <motion.button
@@ -126,13 +129,18 @@ const Login = () => {
                             disabled={submitting}
                             whileHover={{ scale: 1.01 }}
                             whileTap={{ scale: 0.99 }}
-                            className="w-full bg-gradient-to-r from-red-600 to-rose-500 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-2xl shadow-red-500/30 hover:shadow-red-500/40 transition-all disabled:opacity-50 mt-4"
+                            className="w-full bg-gradient-to-r from-red-600 to-rose-500 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-2xl shadow-red-500/30 hover:shadow-red-500/40 transition-all disabled:opacity-50 mt-4 flex items-center justify-center gap-3"
                         >
                             {submitting ? (
                                 <>
                                     <i className="fas fa-spinner fa-spin mr-2"></i> Authenticating...
                                 </>
-                            ) : 'Sign In'}
+                            ) : (
+                                <>
+                                    <i className="fas fa-sign-in-alt text-xl"></i>
+                                    Sign In
+                                </>
+                            )}
                         </motion.button>
                     </form>
 

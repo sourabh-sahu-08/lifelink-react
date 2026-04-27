@@ -121,13 +121,13 @@ const Signup = () => {
                         <div className="space-y-2">
                             <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Full Name / Hospital Name</label>
                             <div className="relative group">
-                                <i className="fas fa-id-card absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500 transition-colors"></i>
+                                <i className="fas fa-id-card absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
                                 <input
                                     type="text"
                                     required
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none"
+                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none relative z-10"
                                     placeholder="Enter name"
                                 />
                             </div>
@@ -136,13 +136,13 @@ const Signup = () => {
                         <div className="space-y-2">
                             <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Email Address</label>
                             <div className="relative group">
-                                <i className="fas fa-envelope absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500 transition-colors"></i>
+                                <i className="fas fa-envelope absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
                                 <input
                                     type="email"
                                     required
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none"
+                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none relative z-10"
                                     placeholder="name@example.com"
                                 />
                             </div>
@@ -151,14 +151,14 @@ const Signup = () => {
                         <div className="space-y-2">
                             <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Password (Hard & Max 6)</label>
                             <div className="relative group">
-                                <i className="fas fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500 transition-colors"></i>
+                                <i className="fas fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
                                 <input
                                     type="password"
                                     required
                                     maxLength={6}
                                     value={formData.password}
                                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none"
+                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none relative z-10"
                                     placeholder="••••••"
                                 />
                             </div>
@@ -167,14 +167,14 @@ const Signup = () => {
                         <div className="space-y-2">
                             <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Confirm Password</label>
                             <div className="relative group">
-                                <i className="fas fa-shield-alt absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500 transition-colors"></i>
+                                <i className="fas fa-shield-alt absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
                                 <input
                                     type="password"
                                     required
                                     maxLength={6}
                                     value={formData.confirmPassword}
                                     onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none"
+                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none relative z-10"
                                     placeholder="••••••"
                                 />
                             </div>
@@ -183,13 +183,13 @@ const Signup = () => {
                         <div className="space-y-2">
                             <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Phone Number</label>
                             <div className="relative group">
-                                <i className="fas fa-phone absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500 transition-colors"></i>
+                                <i className="fas fa-phone absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
                                 <input
                                     type="tel"
                                     required
                                     value={formData.phone}
                                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none"
+                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none relative z-10"
                                     placeholder="10-digit number"
                                 />
                             </div>
@@ -198,13 +198,13 @@ const Signup = () => {
                         <div className="space-y-2">
                             <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">City</label>
                             <div className="relative group">
-                                <i className="fas fa-map-marker-alt absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500 transition-colors"></i>
+                                <i className="fas fa-map-marker-alt absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
                                 <input
                                     type="text"
                                     required
                                     value={formData.city}
                                     onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none"
+                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none relative z-10"
                                     placeholder="Enter city"
                                 />
                             </div>
@@ -219,8 +219,9 @@ const Signup = () => {
                                             key={type}
                                             type="button"
                                             onClick={() => setFormData({ ...formData, bloodType: type })}
-                                            className={`py-3 rounded-xl font-bold text-xs transition-all duration-300 ${formData.bloodType === type ? 'bg-red-600 text-white shadow-lg scale-110' : 'bg-white/40 hover:bg-white/60 text-gray-700 border border-white/20'}`}
+                                            className={`py-3 rounded-xl font-bold text-xs transition-all duration-300 flex flex-col items-center justify-center gap-1 ${formData.bloodType === type ? 'bg-red-600 text-white shadow-lg scale-110' : 'bg-white/40 hover:bg-white/60 text-gray-700 border border-white/20'}`}
                                         >
+                                            <i className={`fas fa-tint ${formData.bloodType === type ? 'text-white' : 'text-red-500'}`}></i>
                                             {type}
                                         </button>
                                     ))}
@@ -234,13 +235,18 @@ const Signup = () => {
                                 disabled={submitting}
                                 whileHover={{ scale: 1.01 }}
                                 whileTap={{ scale: 0.99 }}
-                                className="w-full bg-gradient-to-r from-red-600 to-rose-500 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-2xl shadow-red-500/30 hover:shadow-red-500/40 transition-all disabled:opacity-50"
+                                className="w-full bg-gradient-to-r from-red-600 to-rose-500 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-2xl shadow-red-500/30 hover:shadow-red-500/40 transition-all disabled:opacity-50 flex items-center justify-center gap-3"
                             >
                                 {submitting ? (
                                     <>
                                         <i className="fas fa-spinner fa-spin mr-2"></i> Initializing...
                                     </>
-                                ) : 'Create Hero Account'}
+                                ) : (
+                                    <>
+                                        <i className="fas fa-user-plus text-xl"></i>
+                                        Create Hero Account
+                                    </>
+                                )}
                             </motion.button>
                         </div>
                     </form>
