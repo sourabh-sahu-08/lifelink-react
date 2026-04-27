@@ -73,15 +73,17 @@ const Login = () => {
                         <button
                             type="button"
                             onClick={() => setRole('donor')}
-                            className={`flex-1 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 ${role === 'donor' ? 'bg-white shadow-lg text-red-600 scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
+                            className={`flex-1 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 ${role === 'donor' ? 'bg-white shadow-lg text-red-600 scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
                         >
+                            <i className="fas fa-user-circle"></i>
                             Donor Login
                         </button>
                         <button
                             type="button"
                             onClick={() => setRole('hospital')}
-                            className={`flex-1 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 ${role === 'hospital' ? 'bg-white shadow-lg text-red-600 scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
+                            className={`flex-1 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 ${role === 'hospital' ? 'bg-white shadow-lg text-red-600 scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
                         >
+                            <i className="fas fa-hospital-alt"></i>
                             Hospital Portal
                         </button>
                     </div>

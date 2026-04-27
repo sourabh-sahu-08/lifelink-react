@@ -105,16 +105,18 @@ const Signup = () => {
                             <button
                                 type="button"
                                 onClick={() => setFormData({ ...formData, role: 'donor' })}
-                                className={`flex-1 py-3.5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 ${formData.role === 'donor' ? 'bg-white shadow-lg text-red-600 scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
+                                className={`flex-1 py-3.5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 ${formData.role === 'donor' ? 'bg-white shadow-lg text-red-600 scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
                             >
-                                <i className="fas fa-user-heart mr-2"></i> Donor
+                                <i className="fas fa-user-heart"></i>
+                                Donor
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setFormData({ ...formData, role: 'hospital' })}
-                                className={`flex-1 py-3.5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 ${formData.role === 'hospital' ? 'bg-white shadow-lg text-red-600 scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
+                                className={`flex-1 py-3.5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 ${formData.role === 'hospital' ? 'bg-white shadow-lg text-red-600 scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
                             >
-                                <i className="fas fa-hospital mr-2"></i> Hospital
+                                <i className="fas fa-hospital"></i>
+                                Hospital
                             </button>
                         </div>
 
