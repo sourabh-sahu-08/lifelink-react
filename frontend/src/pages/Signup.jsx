@@ -20,6 +20,9 @@ const Signup = () => {
     const navigate = useNavigate();
     const { addToast } = useToast();
 
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
     const validateForm = () => {
         const { email, phone, password, confirmPassword } = formData;
         
@@ -38,11 +41,11 @@ const Signup = () => {
         }
 
         // Password complexity (Hard: Upper, Lower, Number, Special)
-        // AND Max 6 characters
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{1,6}$/;
+        // AND Min 6 characters
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
         if (!passwordRegex.test(password)) {
-            if (password.length > 6) {
-                addToast('Password must be maximum 6 characters', 'error');
+            if (password.length < 6) {
+                addToast('Password must be at least 6 characters', 'error');
             } else {
                 addToast('Password must be "hard" (Include uppercase, lowercase, number, and special character)', 'error');
             }
@@ -159,19 +162,25 @@ const Signup = () => {
                         <div className="space-y-2">
                             <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
                                 <i className="fas fa-key text-[8px]"></i>
-                                Password (Hard & Max 6)
+                                Password (Hard & Min 6)
                             </label>
                             <div className="relative group">
                                 <i className="fas fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     required
-                                    maxLength={6}
                                     value={formData.password}
                                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none relative z-10"
+                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-12 font-bold text-gray-700 outline-none relative z-10"
                                     placeholder="••••••"
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-600 z-30 transition-colors"
+                                >
+                                    <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                                </button>
                             </div>
                         </div>
 
@@ -183,14 +192,20 @@ const Signup = () => {
                             <div className="relative group">
                                 <i className="fas fa-shield-alt absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
                                 <input
-                                    type="password"
+                                    type={showConfirmPassword ? "text" : "password"}
                                     required
-                                    maxLength={6}
                                     value={formData.confirmPassword}
                                     onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none relative z-10"
+                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-12 font-bold text-gray-700 outline-none relative z-10"
                                     placeholder="••••••"
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-600 z-30 transition-colors"
+                                >
+                                    <i className={`fas ${showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                                </button>
                             </div>
                         </div>
 
