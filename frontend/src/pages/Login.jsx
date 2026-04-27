@@ -13,8 +13,27 @@ const Login = () => {
     const navigate = useNavigate();
     const { addToast } = useToast();
 
+    const validateForm = () => {
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            addToast('Please enter a valid email address', 'error');
+            return false;
+        }
+
+        if (!password) {
+            addToast('Password is required', 'error');
+            return false;
+        }
+
+        return true;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!validateForm()) return;
+
         setSubmitting(true);
         const result = await login(email, password);
         if (result.success) {
@@ -27,33 +46,41 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+        <div className="min-h-screen animated-gradient flex items-center justify-center p-4 relative overflow-hidden">
+            {/* Abstract decorative elements */}
+            <div className="absolute top-[-10%] right-[-10%] w-72 h-72 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-red-500/10 rounded-full blur-3xl"></div>
+
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-md overflow-hidden border border-gray-100"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                className="glass-card w-full max-w-md overflow-hidden relative z-10 rounded-[2.5rem]"
             >
                 <div className="p-10">
                     <div className="text-center mb-10">
-                        <div className="w-16 h-16 bg-red-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-red-100 rotate-3">
-                            <i className="fas fa-tint text-white text-3xl"></i>
-                        </div>
-                        <h1 className="text-3xl font-black text-gray-900 tracking-tight">Welcome Back</h1>
-                        <p className="text-gray-400 font-bold uppercase tracking-widest text-[10px] mt-2">Continue your life-saving journey</p>
+                        <motion.div 
+                            whileHover={{ rotate: -10, scale: 1.1 }}
+                            className="w-20 h-20 bg-gradient-to-br from-red-600 to-rose-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-red-500/20 rotate-3"
+                        >
+                            <i className="fas fa-tint text-white text-4xl"></i>
+                        </motion.div>
+                        <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-2">Welcome <span className="gradient-text">Back</span></h1>
+                        <p className="text-gray-500 font-medium uppercase tracking-[0.2em] text-[10px]">Continue your life-saving journey</p>
                     </div>
 
-                    <div className="flex p-1 bg-gray-50 rounded-2xl mb-8">
+                    <div className="flex p-1.5 bg-gray-200/30 backdrop-blur-md rounded-2xl mb-8 border border-white/20">
                         <button
                             type="button"
                             onClick={() => setRole('donor')}
-                            className={`flex-1 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${role === 'donor' ? 'bg-white shadow-md text-red-600' : 'text-gray-400'}`}
+                            className={`flex-1 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 ${role === 'donor' ? 'bg-white shadow-lg text-red-600 scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
                         >
                             Donor Login
                         </button>
                         <button
                             type="button"
                             onClick={() => setRole('hospital')}
-                            className={`flex-1 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${role === 'hospital' ? 'bg-white shadow-md text-red-600' : 'text-gray-400'}`}
+                            className={`flex-1 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 ${role === 'hospital' ? 'bg-white shadow-lg text-red-600 scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
                         >
                             Hospital Portal
                         </button>
@@ -61,54 +88,56 @@ const Login = () => {
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4">Email Address</label>
-                            <div className="relative">
-                                <i className="fas fa-envelope absolute left-5 top-1/2 -translate-y-1/2 text-gray-300"></i>
+                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Email Address</label>
+                            <div className="relative group">
+                                <i className="fas fa-envelope absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500 transition-colors"></i>
                                 <input
                                     type="email"
                                     required
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 focus:border-red-500 focus:bg-white transition-all outline-none"
+                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none"
                                     placeholder="name@example.com"
                                 />
                             </div>
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-4">Password</label>
-                            <div className="relative">
-                                <i className="fas fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-gray-300"></i>
+                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Password</label>
+                            <div className="relative group">
+                                <i className="fas fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500 transition-colors"></i>
                                 <input
                                     type="password"
                                     required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 focus:border-red-500 focus:bg-white transition-all outline-none"
+                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none"
                                     placeholder="••••••••"
                                 />
                             </div>
                         </div>
 
                         <div className="text-right">
-                            <a href="#" className="text-[10px] font-black text-red-600 uppercase tracking-widest hover:text-red-700">Forgot Password?</a>
+                            <a href="#" className="text-[10px] font-black text-red-600 uppercase tracking-widest hover:text-red-700 transition-colors">Forgot Password?</a>
                         </div>
 
-                        <button
+                        <motion.button
                             type="submit"
                             disabled={submitting}
-                            className="w-full bg-red-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-red-100 hover:bg-red-700 transition-all transform active:scale-[0.98] disabled:opacity-50 mt-4"
+                            whileHover={{ scale: 1.01 }}
+                            whileTap={{ scale: 0.99 }}
+                            className="w-full bg-gradient-to-r from-red-600 to-rose-500 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-2xl shadow-red-500/30 hover:shadow-red-500/40 transition-all disabled:opacity-50 mt-4"
                         >
                             {submitting ? (
                                 <>
-                                    <i className="fas fa-spinner fa-spin mr-2"></i> Signing In...
+                                    <i className="fas fa-spinner fa-spin mr-2"></i> Authenticating...
                                 </>
                             ) : 'Sign In'}
-                        </button>
+                        </motion.button>
                     </form>
 
                     <div className="mt-10 text-center">
-                        <p className="text-gray-400 font-bold text-xs">
+                        <p className="text-gray-500 font-bold text-xs">
                             Don't have an account? <Link to="/signup" className="text-red-600 hover:underline">Create Account</Link>
                         </p>
                     </div>
