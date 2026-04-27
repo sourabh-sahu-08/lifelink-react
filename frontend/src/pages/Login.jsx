@@ -13,6 +13,8 @@ const Login = () => {
     const navigate = useNavigate();
     const { addToast } = useToast();
 
+    const [showPassword, setShowPassword] = useState(false);
+
     const validateForm = () => {
         // Email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -21,8 +23,8 @@ const Login = () => {
             return false;
         }
 
-        if (!password) {
-            addToast('Password is required', 'error');
+        if (!password || password.length < 6) {
+            addToast('Password must be at least 6 characters', 'error');
             return false;
         }
 
@@ -115,13 +117,20 @@ const Login = () => {
                             <div className="relative group">
                                 <i className="fas fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none relative z-10"
+                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-12 font-bold text-gray-700 outline-none relative z-10"
                                     placeholder="••••••••"
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-600 z-30 transition-colors"
+                                >
+                                    <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                                </button>
                             </div>
                         </div>
 
