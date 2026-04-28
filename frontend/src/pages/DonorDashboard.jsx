@@ -127,83 +127,107 @@ const DonorDashboard = () => {
             transition={{ duration: 0.5 }}
         >
             {/* Hero Card */}
-            <div className="modern-card mb-8 bg-white overflow-hidden shadow-2xl rounded-[2rem] border border-gray-100 relative group transition-all duration-500">
-                <div className="h-56 bg-gradient-to-br from-red-600 via-red-500 to-red-800 relative overflow-hidden">
+            <div className="glass-card mb-12 overflow-hidden rounded-[3rem] relative group">
+                <div className="h-64 bg-gradient-to-br from-red-600 via-rose-600 to-red-800 relative overflow-hidden">
                     <div className="absolute inset-0 bg-black/10"></div>
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(255,255,255,0.2),transparent)]"></div>
+                    
                     {/* Abstract background elements */}
-                    <div className="absolute -right-20 -top-20 w-80 h-80 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all duration-700"></div>
-                    <div className="absolute -left-20 -bottom-20 w-80 h-80 bg-white/5 rounded-full blur-3xl group-hover:bg-white/10 transition-all duration-700"></div>
+                    <div className="absolute -right-20 -top-20 w-96 h-96 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all duration-1000"></div>
+                    <div className="absolute -left-20 -bottom-20 w-96 h-96 bg-white/5 rounded-full blur-3xl group-hover:bg-white/10 transition-all duration-1000"></div>
 
-                    <div className="absolute top-8 right-8 bg-white/20 backdrop-blur-md p-3 rounded-2xl cursor-pointer hover:bg-white/30 transition-all">
-                        <i className="fas fa-share-alt text-white"></i>
+                    <div className="absolute top-10 right-10 flex gap-4">
+                        <div className="bg-white/10 backdrop-blur-md border border-white/20 p-3.5 rounded-2xl cursor-pointer hover:bg-white/20 transition-all hover:scale-110 active:scale-95">
+                            <i className="fas fa-share-alt text-white"></i>
+                        </div>
+                        <div className="bg-white/10 backdrop-blur-md border border-white/20 p-3.5 rounded-2xl cursor-pointer hover:bg-white/20 transition-all hover:scale-110 active:scale-95">
+                            <i className="fas fa-cog text-white"></i>
+                        </div>
                     </div>
                 </div>
 
-                <div className="px-10 pb-10 relative">
-                    <div className="absolute -top-24 left-10">
+                <div className="px-12 pb-12 relative">
+                    <div className="absolute -top-28 left-12">
                         <div className="relative">
-                            <div className="h-44 w-44 rounded-[2.5rem] border-[10px] border-white shadow-2xl overflow-hidden bg-white">
+                            <div className="h-48 w-48 rounded-[3rem] border-[12px] border-white shadow-2xl overflow-hidden bg-white group-hover:shadow-red-500/10 transition-all duration-500">
                                 <img
-                                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                    src={`https://ui-avatars.com/api/?name=${user?.name}&background=random&size=512`}
+                                    className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                                    src={`https://ui-avatars.com/api/?name=${user?.name}&background=fecaca&color=b91c1c&size=512`}
                                     alt="Donor"
                                 />
                             </div>
-                            <div className="absolute -bottom-2 -right-2 bg-green-500 w-10 h-10 rounded-2xl border-4 border-white flex items-center justify-center shadow-lg">
-                                <i className="fas fa-check text-white text-xs"></i>
+                            <div className="absolute -bottom-2 -right-2 bg-green-500 w-12 h-12 rounded-2xl border-4 border-white flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform">
+                                <i className="fas fa-check text-white text-sm"></i>
                             </div>
                         </div>
                     </div>
 
-                    <div className="pt-24 flex flex-col md:flex-row justify-between items-start gap-8">
-                        <div>
-                            <div className="flex items-center space-x-4">
-                                <h1 className="text-4xl font-black text-gray-900 tracking-tight">{user?.name}</h1>
-                                <span className="blood-type-badge type-b text-xl px-4 py-1.5 h-auto rounded-xl shadow-lg shadow-red-100">{user?.bloodType}</span>
+                    <div className="pt-28 flex flex-col xl:flex-row justify-between items-start gap-10">
+                        <div className="flex-1">
+                            <div className="flex items-center flex-wrap gap-4">
+                                <h1 className="text-5xl font-black text-slate-900 tracking-tighter">{user?.name}</h1>
+                                <span className="blood-type-badge type-b text-2xl px-6 py-2 h-auto rounded-2xl shadow-xl shadow-red-100">
+                                    {user?.bloodType}
+                                </span>
                             </div>
-                            <div className="flex items-center mt-3 space-x-4">
-                                <div className="flex items-center bg-yellow-400/10 px-3 py-1.5 rounded-xl border border-yellow-200">
+                            
+                            <div className="flex flex-wrap items-center mt-5 gap-6">
+                                <div className="flex items-center bg-yellow-400/10 px-4 py-2 rounded-2xl border border-yellow-200/50 shadow-sm">
                                     <div className="flex text-yellow-500 text-xs">
                                         {[1, 2, 3, 4].map(i => <i key={i} className="fas fa-star mr-0.5"></i>)}
                                         <i className="fas fa-star-half-alt"></i>
                                     </div>
-                                    <span className="ml-2 text-xs font-black text-yellow-700">4.7 TOP DONOR</span>
+                                    <span className="ml-2.5 text-[10px] font-black text-yellow-700 tracking-widest uppercase">Top Rated Donor</span>
                                 </div>
-                                <p className="text-gray-400 text-xs font-bold uppercase tracking-widest flex items-center">
-                                    <i className="fas fa-map-marker-alt mr-2 text-red-500"></i>
-                                    {user?.city || "Bilaspur"} • Member since 2024
-                                </p>
+                                <div className="flex items-center text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">
+                                    <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center mr-3">
+                                        <i className="fas fa-map-marker-alt text-red-500"></i>
+                                    </div>
+                                    {user?.city || "Bilaspur"} • Active Since 2024
+                                </div>
                             </div>
                         </div>
 
-                        <div className="flex flex-wrap gap-3 mt-6">
+                        <div className="flex flex-wrap gap-3 max-w-md">
                             {achievements.map(achieve => (
-                                <div key={achieve.id} className={`px-4 py-2 rounded-2xl flex items-center space-x-2 border transition-all ${achieve.condition ? `${achieve.bg} border-${achieve.color.split('-')[1]}-100` : 'bg-gray-50 border-gray-100 grayscale opacity-40'}`}>
-                                    <i className={`fas fa-${achieve.icon} ${achieve.condition ? achieve.color : 'text-gray-400'} text-xs`}></i>
-                                    <span className={`text-[9px] font-black uppercase tracking-widest ${achieve.condition ? 'text-gray-800' : 'text-gray-400'}`}>{achieve.title}</span>
+                                <div 
+                                    key={achieve.id} 
+                                    className={`px-5 py-3 rounded-2xl flex items-center space-x-3 border transition-all duration-300 ${
+                                        achieve.condition 
+                                            ? `${achieve.bg} border-${achieve.color.split('-')[1]}-100 shadow-sm hover:shadow-md hover:-translate-y-1` 
+                                            : 'bg-slate-50 border-slate-100 grayscale opacity-40'
+                                    }`}
+                                >
+                                    <i className={`fas fa-${achieve.icon} ${achieve.condition ? achieve.color : 'text-slate-400'} text-xs`}></i>
+                                    <span className={`text-[10px] font-black uppercase tracking-widest ${achieve.condition ? 'text-slate-800' : 'text-slate-400'}`}>
+                                        {achieve.title}
+                                    </span>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="bg-slate-50 p-6 rounded-3xl border border-gray-100 text-center min-w-[160px] shadow-inner group-hover:bg-white transition-colors duration-500 mt-6 lg:mt-0 lg:absolute lg:top-0 lg:right-0">
-                            <div className="text-4xl font-black gradient-text tracking-tighter">{stats?.cityRank}</div>
-                            <div className="text-[10px] text-gray-400 uppercase tracking-[0.2em] font-black mt-2">City Rank</div>
+                        <div className="bg-gradient-to-br from-slate-50 to-white p-8 rounded-[2.5rem] border border-slate-100 text-center min-w-[180px] shadow-inner group-hover:shadow-xl group-hover:-translate-y-2 transition-all duration-500 xl:absolute xl:top-0 xl:right-0">
+                            <div className="text-5xl font-black gradient-text tracking-tighter leading-none mb-2">{stats?.cityRank}</div>
+                            <div className="text-[10px] text-slate-400 uppercase tracking-[0.3em] font-black">City Ranking</div>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mt-16">
                         {[
-                            { label: 'Donations', value: stats?.donations, icon: 'tint', color: 'text-red-600', bg: 'bg-red-50' },
-                            { label: 'Lives Saved', value: stats?.livesSaved, icon: 'heart', color: 'text-pink-600', bg: 'bg-pink-50' },
-                            { label: 'Avg Speed', value: `${stats?.avgResponse}m`, icon: 'bolt', color: 'text-yellow-600', bg: 'bg-yellow-50' },
-                            { label: 'Success', value: stats?.responseRate, icon: 'crown', color: 'text-purple-600', bg: 'bg-purple-50' },
+                            { label: 'Donations', value: stats?.donations, icon: 'tint', color: 'text-red-600', bg: 'bg-red-50', border: 'border-red-100' },
+                            { label: 'Lives Saved', value: stats?.livesSaved, icon: 'heart', color: 'text-rose-600', bg: 'bg-rose-50', border: 'border-rose-100' },
+                            { label: 'Avg Speed', value: `${stats?.avgResponse}m`, icon: 'bolt', color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-100' },
+                            { label: 'Impact Rank', value: stats?.responseRate, icon: 'award', color: 'text-indigo-600', bg: 'bg-indigo-50', border: 'border-indigo-100' },
                         ].map((stat, i) => (
-                            <div key={i} className={`p-6 ${stat.bg} rounded-3xl border border-transparent hover:border-white hover:shadow-xl transition-all duration-300 group/stat`}>
-                                <div className={`w-10 h-10 ${stat.bg.replace('50', '100')} rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover/stat:rotate-12`}>
-                                    <i className={`fas fa-${stat.icon} ${stat.color}`}></i>
+                            <div 
+                                key={i} 
+                                className={`p-8 ${stat.bg} ${stat.border} rounded-[2.5rem] border hover:bg-white hover:shadow-2xl hover:scale-105 transition-all duration-500 group/stat`}
+                            >
+                                <div className={`w-14 h-14 ${stat.bg.replace('50', '100')} rounded-[1.5rem] flex items-center justify-center mb-6 transition-transform group-hover/stat:rotate-12 shadow-sm`}>
+                                    <i className={`fas fa-${stat.icon} ${stat.color} text-xl`}></i>
                                 </div>
-                                <div className="text-3xl font-black text-gray-900 group-hover/stat:scale-105 transition-transform origin-left">{stat.value}</div>
-                                <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">{stat.label}</div>
+                                <div className="text-4xl font-black text-slate-900 group-hover/stat:scale-110 transition-transform origin-left tracking-tight">{stat.value}</div>
+                                <div className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mt-2">{stat.label}</div>
                             </div>
                         ))}
                     </div>
@@ -213,98 +237,98 @@ const DonorDashboard = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
                 <div className="lg:col-span-2 space-y-8">
                     {/* Need Blood? Section - Unique to Donor */}
-                    <div className="bg-gradient-to-br from-rose-600 via-red-600 to-red-800 rounded-[2rem] shadow-2xl p-8 text-white relative overflow-hidden group border border-red-400/20">
+                    <div className="bg-gradient-to-br from-rose-600 via-red-600 to-red-800 rounded-[2.5rem] shadow-2xl p-10 text-white relative overflow-hidden group border border-red-400/20">
                         <div className="absolute -right-8 -bottom-8 opacity-10 group-hover:scale-125 transition-transform duration-700">
                             <i className="fas fa-hand-holding-heart text-[10rem]"></i>
                         </div>
-                        <div className="relative z-10 flex items-start justify-between gap-6">
-                            <div>
-                                <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-md">
-                                    <i className="fas fa-tint text-xl"></i>
+                        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+                            <div className="text-center md:text-left">
+                                <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-md mx-auto md:mx-0">
+                                    <i className="fas fa-tint text-2xl"></i>
                                 </div>
-                                <h3 className="text-2xl font-black tracking-tight">Need Blood?</h3>
-                                <p className="text-red-100 text-sm mt-2 leading-relaxed max-w-xs">Post an emergency blood request. Hospitals and supply networks will respond directly.</p>
+                                <h3 className="text-3xl font-black tracking-tight">Need Blood?</h3>
+                                <p className="text-red-100 text-sm mt-3 leading-relaxed max-w-xs">Post an emergency blood request. Hospitals and supply networks will respond directly.</p>
                             </div>
                             <button onClick={() => setShowBloodRequestForm(true)}
-                                className="flex-shrink-0 bg-white text-red-600 px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-2xl hover:bg-red-50 transition-all hover:-translate-y-1 active:translate-y-0 whitespace-nowrap">
+                                className="btn-secondary px-10 py-5 text-red-600 hover:text-red-700 w-full md:w-auto">
                                 <i className="fas fa-plus mr-2"></i>Request Blood
                             </button>
                         </div>
                     </div>
 
                     {/* Available Blood Supply from Hospitals */}
-                    <div className="bg-white rounded-[2rem] shadow-xl border border-gray-100 overflow-hidden">
-                        <div className="px-8 py-6 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
+                    <div className="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 overflow-hidden group">
+                        <div className="px-10 py-8 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between group-hover:bg-white transition-colors">
                             <div>
-                                <h2 className="text-xl font-black text-gray-900 tracking-tight">Available Blood Supply</h2>
-                                <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-1">Offered by hospitals near you</p>
+                                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Geo-Supply Network</h2>
+                                <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] mt-2">Hospital Reserves Near You</p>
                             </div>
-                            <div className="w-10 h-10 bg-blue-100 rounded-2xl flex items-center justify-center">
-                                <i className="fas fa-hospital text-blue-600 text-sm"></i>
+                            <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center border border-blue-100">
+                                <i className="fas fa-hospital text-blue-600 text-lg"></i>
                             </div>
                         </div>
-                        <div className="p-6">
+                        <div className="p-8">
                             <BloodSupplyList refreshKey={supplyRefreshKey} />
                         </div>
                     </div>
 
                     {/* Eligibility Checker */}
-                    <div className="bg-white rounded-[2rem] shadow-xl border border-gray-100 overflow-hidden group">
-                        <div className="px-10 py-6 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center group-hover:bg-white transition-colors">
+                    <div className="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 overflow-hidden group">
+                        <div className="px-10 py-8 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center group-hover:bg-white transition-colors">
                             <div>
-                                <h2 className="text-2xl font-black text-gray-900 tracking-tight">Eligibility Checker</h2>
-                                <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-1">Status: {quizResult ? quizResult.toUpperCase() : 'PENDING'}</p>
+                                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Health Assessment</h2>
+                                <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] mt-2">Status: {quizResult ? quizResult.toUpperCase() : 'PENDING'}</p>
                             </div>
-                            <div className={`p-4 rounded-2xl ${quizResult === 'eligible' ? 'bg-green-100 text-green-600' : quizResult === 'ineligible' ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'}`}>
+                            <div className={`p-4 rounded-2xl ${quizResult === 'eligible' ? 'bg-green-50 text-green-600 border border-green-100' : quizResult === 'ineligible' ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-blue-50 text-blue-600 border border-blue-100'}`}>
                                 <i className={`fas fa-${quizResult === 'eligible' ? 'check-circle' : quizResult === 'ineligible' ? 'times-circle' : 'stethoscope'} text-xl`}></i>
                             </div>
                         </div>
                         <div className="p-10">
                             {quizResult ? (
-                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-6">
-                                    <h3 className="text-3xl font-black text-gray-900 mb-4">
-                                        {quizResult === 'eligible' ? 'You are ready to save lives!' : 'Wait for a better time'}
+                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-8">
+                                    <h3 className="text-4xl font-black text-slate-900 mb-4 tracking-tight">
+                                        {quizResult === 'eligible' ? 'Ready to Save Lives!' : 'Wait for a Better Time'}
                                     </h3>
-                                    <p className="text-gray-500 font-medium mb-10 max-w-md mx-auto leading-relaxed">
+                                    <p className="text-slate-500 font-medium mb-10 max-w-md mx-auto leading-relaxed">
                                         {quizResult === 'eligible' ?
-                                            'Your health assessment is clear. We will alert you the moment a critical need arises for B+ in Bilaspur.' :
-                                            'Based on your responses, we recommend waiting a few more weeks before your next donation. Your safety is our priority.'
+                                            'Your health assessment is clear. We will alert you the moment a critical need arises for your blood type.' :
+                                            'Based on your responses, we recommend waiting a few more weeks. Your safety and the patient\'s health are our priority.'
                                         }
                                     </p>
                                     <button
                                         onClick={() => { setQuizResult(null); setShowQuiz(true); setQuizIndex(0); setUserAnswers({}); }}
-                                        className="bg-gray-900 text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-black transition-all shadow-xl shadow-gray-200"
+                                        className="btn-secondary px-12 py-5"
                                     >
                                         Re-take Assessment
                                     </button>
                                 </motion.div>
                             ) : showQuiz ? (
                                 <div className="slide-in">
-                                    <div className="mb-8">
-                                        <div className="flex justify-between text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">
-                                            <span>Assessment Progress</span>
+                                    <div className="mb-10">
+                                        <div className="flex justify-between text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4">
+                                            <span>Progress</span>
                                             <span>{Math.round(((quizIndex + 1) / eligibilityQuestions.length) * 100)}%</span>
                                         </div>
-                                        <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                                        <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
                                             <motion.div
                                                 initial={{ width: 0 }}
                                                 animate={{ width: `${((quizIndex + 1) / eligibilityQuestions.length) * 100}%` }}
-                                                className="bg-red-600 h-full shadow-[0_0_10px_rgba(239,68,68,0.5)]"
+                                                className="bg-red-600 h-full shadow-[0_0_15px_rgba(239,68,68,0.4)]"
                                             ></motion.div>
                                         </div>
                                     </div>
-                                    <h3 className="text-2xl font-black text-gray-900 mb-4">{eligibilityQuestions[quizIndex].question}</h3>
-                                    <p className="text-sm text-gray-500 font-medium mb-8 border-l-4 border-red-500 pl-4">{eligibilityQuestions[quizIndex].description}</p>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
+                                    <h3 className="text-3xl font-black text-slate-900 mb-6 tracking-tight">{eligibilityQuestions[quizIndex].question}</h3>
+                                    <p className="text-sm text-slate-500 font-medium mb-10 border-l-4 border-red-500 pl-6 py-1 leading-relaxed">{eligibilityQuestions[quizIndex].description}</p>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
                                         {eligibilityQuestions[quizIndex].options.map((opt, i) => (
                                             <button
                                                 key={i}
                                                 onClick={() => handleQuizOption(eligibilityQuestions[quizIndex].id, opt.value)}
-                                                className={`p-6 rounded-3xl border-2 transition-all flex items-center justify-between group ${userAnswers[eligibilityQuestions[quizIndex].id] === opt.value ? 'border-red-600 bg-red-50 shadow-xl shadow-red-100' : 'border-gray-50 bg-gray-50 hover:border-gray-100 hover:bg-white'}`}
+                                                className={`p-8 rounded-[2rem] border-2 transition-all flex items-center justify-between group ${userAnswers[eligibilityQuestions[quizIndex].id] === opt.value ? 'border-red-600 bg-red-50 shadow-xl shadow-red-100' : 'border-slate-50 bg-slate-50 hover:border-slate-200 hover:bg-white'}`}
                                             >
-                                                <span className={`font-black text-sm uppercase tracking-widest ${userAnswers[eligibilityQuestions[quizIndex].id] === opt.value ? 'text-red-600' : 'text-gray-500'}`}>{opt.text}</span>
-                                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${userAnswers[eligibilityQuestions[quizIndex].id] === opt.value ? 'bg-red-600 border-red-600 text-white' : 'border-gray-300'}`}>
-                                                    {userAnswers[eligibilityQuestions[quizIndex].id] === opt.value && <i className="fas fa-check text-[10px]"></i>}
+                                                <span className={`font-black text-xs uppercase tracking-widest ${userAnswers[eligibilityQuestions[quizIndex].id] === opt.value ? 'text-red-600' : 'text-slate-500'}`}>{opt.text}</span>
+                                                <div className={`w-8 h-8 rounded-2xl border-2 flex items-center justify-center transition-all ${userAnswers[eligibilityQuestions[quizIndex].id] === opt.value ? 'bg-red-600 border-red-600 text-white shadow-lg shadow-red-200' : 'border-slate-300'}`}>
+                                                    {userAnswers[eligibilityQuestions[quizIndex].id] === opt.value && <i className="fas fa-check text-xs"></i>}
                                                 </div>
                                             </button>
                                         ))}
@@ -313,28 +337,28 @@ const DonorDashboard = () => {
                                         <button
                                             onClick={nextQuestion}
                                             disabled={!userAnswers[eligibilityQuestions[quizIndex].id]}
-                                            className="bg-red-600 text-white px-12 py-5 rounded-2xl font-black uppercase tracking-widest text-xs disabled:opacity-30 hover:bg-red-700 transition-all shadow-xl shadow-red-200"
+                                            className="btn-primary"
                                         >
                                             {quizIndex === eligibilityQuestions.length - 1 ? 'Finish Assessment' : 'Next Question'}
                                         </button>
                                     </div>
                                 </div>
                             ) : (
-                                <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-                                    <div className="flex items-center space-x-6">
-                                        <div className="bg-red-50 p-6 rounded-[2rem] shadow-inner">
-                                            <i className="fas fa-notes-medical text-red-500 text-3xl"></i>
+                                <div className="flex flex-col md:flex-row items-center justify-between gap-10">
+                                    <div className="flex items-center space-x-8">
+                                        <div className="bg-red-50 p-8 rounded-[2.5rem] shadow-inner border border-red-100">
+                                            <i className="fas fa-notes-medical text-red-500 text-4xl"></i>
                                         </div>
                                         <div>
-                                            <p className="text-xl font-black text-gray-900 leading-tight">Health Assessment Required</p>
-                                            <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-2">Required every 56 days for active status</p>
+                                            <p className="text-2xl font-black text-slate-900 tracking-tight">Active Status Check</p>
+                                            <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] mt-3 leading-relaxed">Safety assessment required for active membership</p>
                                         </div>
                                     </div>
                                     <button
                                         onClick={() => setShowQuiz(true)}
-                                        className="bg-red-600 text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-red-700 transition-all shadow-xl shadow-red-200 w-full md:w-auto"
+                                        className="btn-primary w-full md:w-auto"
                                     >
-                                        Start Check Up
+                                        Start Health Check
                                     </button>
                                 </div>
                             )}
@@ -342,15 +366,15 @@ const DonorDashboard = () => {
                     </div>
 
                     {/* Live Network Map */}
-                    <div className="bg-white rounded-[2rem] shadow-xl border border-gray-100 overflow-hidden mb-8">
-                        <div className="px-10 py-6 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
+                    <div className="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 overflow-hidden group">
+                        <div className="px-10 py-8 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center group-hover:bg-white transition-colors">
                             <div>
-                                <h2 className="text-2xl font-black text-gray-900 tracking-tight">Geo-Sync Network</h2>
-                                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Live proximity of critical alerts & supplies</p>
+                                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Geo-Sync Network</h2>
+                                <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] mt-2">Live Proximity Radar</p>
                             </div>
-                            <span className="bg-blue-100 text-blue-600 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em]">Active</span>
+                            <span className="bg-blue-50 text-blue-600 px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] border border-blue-100">Active</span>
                         </div>
-                        <div className="h-[400px]">
+                        <div className="h-[450px]">
                             <GISMap 
                                 center={user?.location ? [user.location.lat, user.location.lng] : [22.0797, 82.1391]} 
                                 markers={mapMarkers} 
@@ -359,48 +383,48 @@ const DonorDashboard = () => {
                     </div>
 
                     {/* Active Requests */}
-                    <div className="bg-white rounded-[2rem] shadow-xl border border-gray-100 overflow-hidden">
-                        <div className="px-10 py-6 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
-                            <h2 className="text-2xl font-black text-gray-900 tracking-tight">Active Critical Alerts</h2>
-                            <span className="bg-red-100 text-red-600 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] animate-pulse">Live</span>
+                    <div className="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 overflow-hidden group">
+                        <div className="px-10 py-8 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center group-hover:bg-white transition-colors">
+                            <h2 className="text-2xl font-black text-slate-900 tracking-tight">Critical Alerts</h2>
+                            <span className="bg-red-50 text-red-600 px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] animate-pulse border border-red-100">Live Feed</span>
                         </div>
-                        <div className="p-10 space-y-6">
+                        <div className="p-10">
                             <BloodRequestsList refreshKey={supplyRefreshKey} />
                         </div>
                     </div>
                 </div>
 
-                <div className="space-y-8">
+                <div className="space-y-10">
                     <RecentContacts />
                     {/* Impact Stats */}
-                    <div className="bg-white rounded-[2rem] shadow-xl border border-gray-100 p-10 relative overflow-hidden group">
-                        <div className="absolute -right-10 -bottom-10 opacity-5 rotate-12 transition-transform duration-700 group-hover:scale-150 text-gray-400">
-                            <i className="fas fa-award text-[12rem]"></i>
+                    <div className="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 p-10 relative overflow-hidden group">
+                        <div className="absolute -right-12 -bottom-12 opacity-5 rotate-12 transition-transform duration-1000 group-hover:scale-150 text-slate-900">
+                            <i className="fas fa-award text-[15rem]"></i>
                         </div>
-                        <h2 className="text-2xl font-black text-gray-900 mb-8 tracking-tight">Your Global Impact</h2>
-                        <div className="space-y-6">
+                        <h2 className="text-2xl font-black text-slate-900 mb-10 tracking-tight">Social Impact</h2>
+                        <div className="space-y-8">
                             {[
                                 { label: 'Lives Affected', value: (stats?.livesSaved * 2.5).toFixed(0), icon: 'users', color: 'text-blue-500', bg: 'bg-blue-50' },
-                                { label: 'Units Contributed', value: ((stats?.donations || 0) * 0.35).toFixed(1) + 'L', icon: 'tint', color: 'text-red-500', bg: 'bg-red-50' },
-                                { label: 'Next Eligible', value: stats?.nextEligible, icon: 'calendar-check', color: 'text-green-500', bg: 'bg-green-50' }
+                                { label: 'Volume Saved', value: ((stats?.donations || 0) * 0.35).toFixed(1) + 'L', icon: 'tint', color: 'text-red-500', bg: 'bg-red-50' },
+                                { label: 'Next Window', value: stats?.nextEligible, icon: 'calendar-check', color: 'text-green-500', bg: 'bg-green-50' }
                             ].map((impact, i) => (
-                                <div key={i} className="flex items-center justify-between p-5 rounded-[2rem] bg-gray-50/50 hover:bg-white hover:shadow-xl transition-all border border-transparent hover:border-gray-100">
+                                <div key={i} className="flex items-center justify-between p-6 rounded-[2rem] bg-slate-50/50 hover:bg-white hover:shadow-xl transition-all border border-transparent hover:border-slate-100 group/item">
                                     <div className="flex items-center">
-                                        <div className={`w-12 h-12 ${impact.bg} rounded-[1.2rem] flex items-center justify-center mr-5 shadow-sm`}>
-                                            <i className={`fas fa-${impact.icon} ${impact.color}`}></i>
+                                        <div className={`w-14 h-14 ${impact.bg} rounded-[1.5rem] flex items-center justify-center mr-6 shadow-sm group-hover/item:rotate-6 transition-transform`}>
+                                            <i className={`fas fa-${impact.icon} ${impact.color} text-lg`}></i>
                                         </div>
                                         <div>
-                                            <p className="text-xs font-black text-gray-900 uppercase tracking-tight">{impact.label}</p>
-                                            <p className="text-[10px] font-bold text-gray-400 mt-0.5">Verified contribution</p>
+                                            <p className="text-[10px] font-black text-slate-900 uppercase tracking-widest">{impact.label}</p>
+                                            <p className="text-[9px] font-bold text-slate-400 mt-1.5 uppercase tracking-tighter">Verified Contribution</p>
                                         </div>
                                     </div>
-                                    <span className={`font-black ${impact.color} text-xl tracking-tight`}>{impact.value}</span>
+                                    <span className={`font-black ${impact.color} text-2xl tracking-tighter`}>{impact.value}</span>
                                 </div>
                             ))}
                         </div>
                         <button
                             onClick={() => setShowCertificate(true)}
-                            className="w-full mt-8 border-2 border-dashed border-gray-200 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-red-600 hover:border-red-500 transition-all"
+                            className="w-full mt-10 border-2 border-dashed border-slate-200 py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 hover:text-red-600 hover:border-red-500 hover:bg-red-50 transition-all"
                         >
                             View Hero Certificate
                         </button>
@@ -408,26 +432,26 @@ const DonorDashboard = () => {
 
 
                     {/* Community Rewards */}
-                    <div className="bg-gradient-to-br from-indigo-700 via-indigo-600 to-purple-800 rounded-[2rem] shadow-2xl p-10 text-white relative overflow-hidden group border-4 border-indigo-400/20">
-                        <div className="absolute -right-6 -bottom-6 opacity-10 group-hover:scale-125 transition-transform duration-1000">
-                            <i className="fas fa-gift text-[10rem]"></i>
+                    <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-[2.5rem] shadow-2xl p-10 text-white relative overflow-hidden group border-4 border-slate-700/30">
+                        <div className="absolute -right-8 -bottom-8 opacity-10 group-hover:scale-125 transition-transform duration-1000">
+                            <i className="fas fa-gift text-[12rem]"></i>
                         </div>
                         <div className="relative z-10">
-                            <div className="bg-white/20 w-12 h-12 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-md">
-                                <i className="fas fa-stars text-xl"></i>
+                            <div className="bg-white/10 border border-white/20 w-14 h-14 rounded-2xl flex items-center justify-center mb-8 backdrop-blur-md">
+                                <i className="fas fa-stars text-xl text-yellow-400"></i>
                             </div>
-                            <h3 className="font-black text-3xl tracking-tight mb-4">Refer & Earn</h3>
-                            <p className="text-indigo-100 font-medium text-sm leading-relaxed mb-8">Invite your friends to join LifeLink. Earn exclusive health insurance benefits and local rewards for every successful donation.</p>
-                            <button className="bg-white text-indigo-700 px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-2xl hover:bg-slate-50 transition-all transform hover:-translate-y-1 active:translate-y-0 w-full group/btn">
-                                Share Link <i className="fas fa-arrow-right ml-2 group-hover/btn:translate-x-1 transition-transform"></i>
+                            <h3 className="font-black text-4xl tracking-tight mb-4 leading-none">Refer & Earn</h3>
+                            <p className="text-slate-300 font-medium text-sm leading-relaxed mb-10">Invite friends to LifeLink. Unlock health benefits and premium rewards for every referral.</p>
+                            <button className="bg-white text-slate-900 px-10 py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-2xl hover:bg-slate-50 transition-all transform hover:-translate-y-1 active:translate-y-0 w-full group/btn">
+                                Share Link <i className="fas fa-arrow-right ml-3 group-hover/btn:translate-x-1 transition-transform"></i>
                             </button>
                         </div>
                     </div>
 
                     {/* Recent News Card -> Live Feed */}
-                    <div className="bg-white rounded-[2.5rem] p-10 text-gray-900 relative overflow-hidden border border-gray-100 shadow-xl">
-                        <h3 className="font-black text-xs uppercase tracking-[0.3em] text-red-600 mb-6 flex items-center">
-                            <i className="fas fa-satellite-dish mr-3 animate-pulse"></i> Global Network Live
+                    <div className="bg-white rounded-[3rem] p-10 text-slate-900 relative overflow-hidden border border-slate-100 shadow-xl group">
+                        <h3 className="font-black text-[10px] uppercase tracking-[0.3em] text-red-600 mb-8 flex items-center">
+                            <i className="fas fa-satellite-dish mr-4 animate-pulse"></i> Global Network Live
                         </h3>
                         <ActivityFeed limit={4} />
                     </div>
