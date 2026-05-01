@@ -3,44 +3,23 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { Mail, Lock, Heart, ArrowRight } from 'lucide-react';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [role, setRole] = useState('donor');
     const [submitting, setSubmitting] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
     const { addToast } = useToast();
 
-    const [showPassword, setShowPassword] = useState(false);
-
-    const validateForm = () => {
-        // Email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            addToast('Please enter a valid email address', 'error');
-            return false;
-        }
-
-        if (!password || password.length < 6) {
-            addToast('Password must be at least 6 characters', 'error');
-            return false;
-        }
-
-        return true;
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (!validateForm()) return;
-
         setSubmitting(true);
         const result = await login(email, password);
         if (result.success) {
-            addToast(`Login successful! Welcome back.`, 'success');
-            navigate('/');
+            addToast('Welcome back to LifeLink!', 'success');
+            navigate('/dashboard');
         } else {
             addToast(result.message, 'error');
         }
@@ -48,97 +27,60 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen animated-gradient flex items-center justify-center p-4 relative overflow-hidden">
-            {/* Abstract decorative elements */}
-            <div className="absolute top-[-10%] right-[-10%] w-72 h-72 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
-            <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-red-500/10 rounded-full blur-3xl"></div>
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 relative overflow-hidden font-outfit">
+            {/* Soft decorative gradients */}
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-red-500/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/3"></div>
+            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-red-500/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/3"></div>
 
             <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-                className="glass-card w-full max-w-md overflow-hidden relative z-10 rounded-[2.5rem]"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="w-full max-w-md relative z-10"
             >
-                <div className="p-10">
+                <div className="bg-white rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 p-8 md:p-12">
                     <div className="text-center mb-10">
                         <motion.div 
-                            whileHover={{ rotate: -10, scale: 1.1 }}
-                            className="w-20 h-20 bg-gradient-to-br from-red-600 to-rose-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-red-500/20 rotate-3"
+                            whileHover={{ scale: 1.05 }}
+                            className="w-16 h-16 bg-red-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-red-200"
                         >
-                            <i className="fas fa-tint text-white text-4xl"></i>
+                            <Heart className="text-white w-8 h-8 fill-current" />
                         </motion.div>
-                        <h1 className="text-4xl font-bold text-gray-900 tracking-tight mb-2">Welcome <span className="gradient-text">Back</span></h1>
-                        <p className="text-gray-500 font-medium uppercase tracking-[0.2em] text-[10px]">Continue your life-saving journey</p>
-                    </div>
-
-                    <div className="flex p-1.5 bg-gray-200/30 backdrop-blur-md rounded-2xl mb-8 border border-white/20">
-                        <button
-                            type="button"
-                            onClick={() => setRole('donor')}
-                            className={`flex-1 py-3 rounded-xl font-semibold text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 ${role === 'donor' ? 'bg-white shadow-lg text-red-600 scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
-                        >
-                            <i className="fas fa-user-circle"></i>
-                            Donor Login
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setRole('hospital')}
-                            className={`flex-1 py-3 rounded-xl font-semibold text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 ${role === 'hospital' ? 'bg-white shadow-lg text-red-600 scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
-                        >
-                            <i className="fas fa-hospital-alt"></i>
-                            Hospital Portal
-                        </button>
+                        <h1 className="text-3xl font-bold text-slate-900 tracking-tight mb-2">Welcome Back</h1>
+                        <p className="text-slate-500 text-sm font-medium">Continue your life-saving mission.</p>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
-                                <i className="fas fa-envelope text-[8px]"></i>
-                                Email Address
-                            </label>
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
                             <div className="relative group">
-                                <i className="fas fa-envelope absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
+                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-red-600 transition-colors" />
                                 <input
                                     type="email"
                                     required
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none relative z-10"
+                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-sm text-slate-700 outline-none focus:bg-white focus:border-red-600/30 focus:ring-4 focus:ring-red-600/5 transition-all"
                                     placeholder="name@example.com"
                                 />
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
-                                <i className="fas fa-key text-[8px]"></i>
-                                Password
-                            </label>
+                        <div className="space-y-1.5">
+                            <div className="flex justify-between items-center px-1">
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Password</label>
+                                <Link to="/forgot-password" text="Forgot Password?" className="text-[10px] font-bold text-red-600 uppercase tracking-widest hover:underline">Forgot?</Link>
+                            </div>
                             <div className="relative group">
-                                <i className="fas fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-red-600 transition-colors" />
                                 <input
-                                    type={showPassword ? "text" : "password"}
+                                    type="password"
                                     required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-12 font-bold text-gray-700 outline-none relative z-10"
+                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-sm text-slate-700 outline-none focus:bg-white focus:border-red-600/30 focus:ring-4 focus:ring-red-600/5 transition-all"
                                     placeholder="••••••••"
                                 />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-600 z-30 transition-colors"
-                                >
-                                    <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-                                </button>
                             </div>
-                        </div>
-
-                        <div className="text-right">
-                            <a href="#" className="text-[10px] font-bold text-red-600 uppercase tracking-widest hover:text-red-700 transition-colors flex items-center justify-end gap-1">
-                                <i className="fas fa-question-circle"></i>
-                                Forgot Password?
-                            </a>
                         </div>
 
                         <motion.button
@@ -146,24 +88,24 @@ const Login = () => {
                             disabled={submitting}
                             whileHover={{ scale: 1.01 }}
                             whileTap={{ scale: 0.99 }}
-                            className="w-full bg-gradient-to-r from-red-600 to-rose-500 text-white py-5 rounded-2xl font-semibold uppercase tracking-widest shadow-2xl shadow-red-500/30 hover:shadow-red-500/40 transition-all disabled:opacity-50 mt-4 flex items-center justify-center gap-3"
+                            className="w-full bg-red-600 text-white py-4 rounded-2xl font-bold text-sm shadow-xl shadow-red-100 hover:bg-red-700 transition-all flex items-center justify-center gap-2"
                         >
-                            {submitting ? (
-                                <>
-                                    <i className="fas fa-spinner fa-spin mr-2"></i> Authenticating...
-                                </>
-                            ) : (
-                                <>
-                                    <i className="fas fa-sign-in-alt text-xl"></i>
-                                    Sign In
-                                </>
-                            )}
+                            {submitting ? 'Authenticating...' : 'Sign In'}
+                            <ArrowRight className="w-4 h-4" />
                         </motion.button>
                     </form>
 
-                    <div className="mt-10 text-center">
-                        <p className="text-gray-500 font-semibold text-xs">
-                            Don't have an account? <Link to="/signup" className="text-red-600 hover:underline">Create Account</Link>
+                    <div className="mt-10 pt-8 border-t border-slate-50">
+                        <button 
+                            type="button"
+                            className="w-full flex items-center justify-center gap-3 bg-white border border-slate-100 py-3.5 rounded-2xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all shadow-sm"
+                        >
+                            <i className="fab fa-google text-red-500"></i>
+                            Sign in with Google
+                        </button>
+                        
+                        <p className="mt-8 text-center text-slate-400 text-xs font-semibold">
+                            Don't have an account? <Link to="/signup" className="text-red-600 hover:underline">Register Now</Link>
                         </p>
                     </div>
                 </div>

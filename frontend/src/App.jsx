@@ -5,30 +5,18 @@ import { ToastProvider } from './context/ToastContext.jsx';
 import Layout from './components/Layout.jsx';
 import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
+import Dashboard from './pages/Dashboard.jsx';
 import DonorDashboard from './pages/DonorDashboard.jsx';
 import HospitalDashboard from './pages/HospitalDashboard.jsx';
 import Requests from './pages/Requests.jsx';
 import Profile from './pages/Profile.jsx';
-import Skeleton from './components/Skeleton.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 
-// Wrapper to switch views based on context
+// Wrapper to switch views based on context (LifeLink legacy)
 const DashboardSwitcher = () => {
     const { user } = useAuth();
     if (!user) return <Navigate to="/login" />;
-    return user.role === 'donor' ? <DonorDashboard /> : <HospitalDashboard />;
-};
-
-const ProfileWrapper = () => {
-    const { user } = useAuth();
-    if (!user) return <Navigate to="/login" />;
-    return <Profile user={user} />;
-};
-
-const ProtectedRoute = ({ children }) => {
-    const { user, loading } = useAuth();
-    if (loading) return <div className="h-screen w-screen flex items-center justify-center bg-slate-50"><Skeleton className="h-20 w-20 rounded-3xl" /></div>;
-    if (!user) return <Navigate to="/login" />;
-    return children;
+    return user.role === 'donor' || user.role === 'candidate' ? <DonorDashboard /> : <HospitalDashboard />;
 };
 
 function App() {
@@ -38,11 +26,19 @@ function App() {
                 <Routes>
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<Signup />} />
+                    
+                    {/* JobLuxe Modern Dashboard */}
+                    <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                    
+                    {/* LifeLink Legacy Routes */}
                     <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
                         <Route index element={<DashboardSwitcher />} />
                         <Route path="requests" element={<Requests />} />
-                        <Route path="profile" element={<ProfileWrapper />} />
+                        <Route path="profile" element={<Profile user={null} />} /> {/* Profile will use context */}
                     </Route>
+
+                    {/* Redirect unknown routes to dashboard */}
+                    <Route path="*" element={<Navigate to="/dashboard" replace />} />
                 </Routes>
             </AuthProvider>
         </ToastProvider>

@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 const { Groq } = require('groq-sdk');
 
 
@@ -20,6 +21,9 @@ const Conversation = require('./models/Conversation');
 const Message = require('./models/Message');
 const BloodRequest = require('./models/BloodRequest');
 const BloodSupply = require('./models/BloodSupply');
+
+// Auth Routes
+const authRoutes = require('./routes/authRoutes');
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 
@@ -76,6 +80,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+app.use(cookieParser());
 
 
 // Initialize connection and seed inventory if empty
@@ -108,102 +113,8 @@ try {
     console.warn("Failed to initialize Groq:", e);
 }
 
-// Authentication Routes
-app.post('/api/auth/signup', async (req, res) => {
-    try {
-        const { name, email, password, role, bloodType, city, phone } = req.body;
-        
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ message: "Email already exists" });
-        }
-
-        const newUser = new User({
-            name, email, password, role, bloodType, city, phone
-        });
-        await newUser.save();
-        
-        if (role === 'donor') {
-            const newDonor = new Donor({
-                name,
-                bloodType,
-                location: { lat: 22.0797, lng: 82.1391 }, // Default Bilaspur
-                donations: 0,
-                status: "Available",
-                lastDonation: "Never",
-                city
-            });
-            await newDonor.save();
-        }
-
-        res.status(201).json({ 
-            message: "User registered successfully", 
-            user: { id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role, location: newUser.location, city: newUser.city, bloodType: newUser.bloodType, phone: newUser.phone } 
-        });
-    } catch (err) {
-        res.status(500).json({message: err.message});
-    }
-});
-
-app.post('/api/auth/login', async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        // Plain text for demonstration as per original logic
-        const user = await User.findOne({ email, password });
-        
-        if (user) {
-            res.json({ 
-                message: "Login successful", 
-                user: { 
-                    id: user.id || user._id, 
-                    name: user.name, 
-                    email: user.email, 
-                    role: user.role, 
-                    bloodType: user.bloodType, 
-                    city: user.city,
-                    location: user.location,
-                    phone: user.phone
-                } 
-            });
-        } else {
-            res.status(401).json({ message: "Invalid credentials" });
-        }
-    } catch (err) {
-        res.status(500).json({message: err.message});
-    }
-});
-
-app.get('/api/auth/profile/:id', async (req, res) => {
-    try {
-        const val = req.params.id;
-        let query = {};
-        if (mongoose.Types.ObjectId.isValid(val)) {
-            query = { _id: val };
-        } else if (!isNaN(val)) {
-            query = { id: parseInt(val) };
-        } else {
-            return res.status(400).json({ message: "Invalid ID format" });
-        }
-
-        const user = await User.findOne(query);
-        if (user) {
-            res.json({
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                bloodType: user.bloodType,
-                city: user.city,
-                location: user.location,
-                phone: user.phone
-            });
-        } else {
-            res.status(404).json({ message: "User not found" });
-        }
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-});
+// Use Auth Routes
+app.use('/api/auth', authRoutes);
 
 // Routes
 app.get('/', (req, res) => {
