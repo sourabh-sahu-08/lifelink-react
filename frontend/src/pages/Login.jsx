@@ -95,16 +95,19 @@ const Login = () => {
                         </motion.button>
                     </form>
 
-                    <div className="mt-10 pt-8 border-t border-slate-50 text-center">
-                        <p className="text-slate-400 text-xs font-semibold">
+                    <div className="mt-10 pt-8 border-t border-slate-50">
+                        <button 
+                            type="button"
+                            className="w-full flex items-center justify-center gap-3 bg-white border border-slate-100 py-3.5 rounded-2xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all shadow-sm"
+                        >
+                            <i className="fab fa-google text-red-500"></i>
+                            Sign in with Google
+                        </button>
+                        
+                        <p className="mt-8 text-center text-slate-400 text-xs font-semibold">
                             Don't have an account? <Link to="/signup" className="text-red-600 hover:underline">Register Now</Link>
                         </p>
                     </div>
-                </div>
-
-                <div className="mt-8 flex items-center justify-center gap-6 grayscale opacity-30">
-                    <i className="fab fa-github text-xl"></i>
-                    <i className="fab fa-google text-xl"></i>
                 </div>
             </motion.div>
         </div>
