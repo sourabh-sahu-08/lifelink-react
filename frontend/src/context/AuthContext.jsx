@@ -19,10 +19,7 @@ export const AuthProvider = ({ children }) => {
                     setUser(response.data.user);
                 }
             } catch (err) {
-                // Silently handle 401 (Not logged in)
-                if (err.response?.status !== 401) {
-                    console.error("Auth check failed:", err);
-                }
+                // Not logged in or session expired - this is expected for guests
                 setUser(null);
             } finally {
                 setLoading(false);
