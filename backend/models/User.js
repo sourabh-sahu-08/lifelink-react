@@ -1,26 +1,53 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
-    id: { type: Number, required: false },
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    role: { type: String, required: true },
-    bloodType: { type: String },
-    city: { type: String },
-    location: {
-        lat: { type: Number, default: 22.0797 },
-        lng: { type: Number, default: 82.1391 }
+    name: { 
+        type: String, 
+        required: [true, 'Please add a name'] 
     },
-    phone: { type: String }
+    email: { 
+        type: String, 
+        required: [true, 'Please add an email'], 
+        unique: true,
+        match: [
+            /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+            'Please add a valid email'
+        ]
+    },
+    password: { 
+        type: String, 
+        required: [true, 'Please add a password'],
+        minlength: 6,
+        select: false
+    },
+    role: { 
+        type: String, 
+        enum: ['candidate', 'recruiter', 'admin'],
+        default: 'candidate'
+    },
+    profilePicture: {
+        type: String,
+        default: 'no-photo.jpg'
+    },
+    bio: String,
+    experience: String,
+    city: String,
+    phone: String
 }, { timestamps: true });
 
-// Auto-increment simple id for backward compatibility
-userSchema.pre('save', async function() {
-    if (this.isNew && !this.id) {
-        const lastUser = await this.constructor.findOne().sort('-id');
-        this.id = lastUser && lastUser.id ? lastUser.id + 1 : 1;
+// Encrypt password using bcrypt
+userSchema.pre('save', async function(next) {
+    if (!this.isModified('password')) {
+        next();
     }
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
 });
+
+// Match user entered password to hashed password in database
+userSchema.methods.matchPassword = async function(enteredPassword) {
+    return await bcrypt.compare(enteredPassword, this.password);
+};
 
 module.exports = mongoose.model('User', userSchema);
