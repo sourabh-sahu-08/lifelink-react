@@ -2,6 +2,9 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import API_BASE_URL from '../config/apiConfig';
 
+// Configure axios defaults for cross-origin cookie support
+axios.defaults.withCredentials = true;
+
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -10,21 +13,17 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const checkAuth = async () => {
-            const savedUser = localStorage.getItem('lifelink_user');
-            if (savedUser) {
-                const parsed = JSON.parse(savedUser);
-                try {
-                    // Fetch latest profile to ensure location/city is up to date (Bilaspur)
-                    const response = await axios.get(`${API_BASE_URL}/api/auth/profile/${parsed.id || parsed._id}`);
-                    const latestUser = response.data;
-                    setUser(latestUser);
-                    localStorage.setItem('lifelink_user', JSON.stringify(latestUser));
-                } catch (err) {
-                    // Fallback to saved user if fetch fails
-                    setUser(parsed);
+            try {
+                const response = await axios.get(`${API_BASE_URL}/api/auth/me`);
+                if (response.data.success) {
+                    setUser(response.data.user);
                 }
+            } catch (err) {
+                console.error("Auth check failed:", err);
+                setUser(null);
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
         };
         checkAuth();
     }, []);
@@ -32,30 +31,40 @@ export const AuthProvider = ({ children }) => {
     const login = async (email, password) => {
         try {
             const response = await axios.post(`${API_BASE_URL}/api/auth/login`, { email, password });
-            const userData = response.data.user;
-            setUser(userData);
-            localStorage.setItem('lifelink_user', JSON.stringify(userData));
-            return { success: true };
+            if (response.data.success) {
+                setUser(response.data);
+                return { success: true };
+            }
         } catch (error) {
-            return { success: false, message: error.response?.data?.message || 'Login failed' };
+            return { 
+                success: false, 
+                message: error.response?.data?.message || 'Login failed' 
+            };
         }
     };
 
-    const signup = async (formData) => {
+    const signup = async (userData) => {
         try {
-            const response = await axios.post(`${API_BASE_URL}/api/auth/signup`, formData);
-            const userData = response.data.user;
-            setUser(userData);
-            localStorage.setItem('lifelink_user', JSON.stringify(userData));
-            return { success: true };
+            const response = await axios.post(`${API_BASE_URL}/api/auth/signup`, userData);
+            if (response.data.success) {
+                setUser(response.data);
+                return { success: true };
+            }
         } catch (error) {
-            return { success: false, message: error.response?.data?.message || 'Signup failed' };
+            return { 
+                success: false, 
+                message: error.response?.data?.message || 'Signup failed' 
+            };
         }
     };
 
-    const logout = () => {
-        setUser(null);
-        localStorage.removeItem('lifelink_user');
+    const logout = async () => {
+        try {
+            await axios.get(`${API_BASE_URL}/api/auth/logout`);
+            setUser(null);
+        } catch (err) {
+            console.error("Logout failed:", err);
+        }
     };
 
     return (
