@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { Mail, Lock, User, Briefcase, Phone, MapPin, ArrowRight } from 'lucide-react';
+import { Mail, Lock, User, Phone, MapPin, ArrowRight, Heart, Droplets, Activity } from 'lucide-react';
 
 const Signup = () => {
     const [formData, setFormData] = useState({
@@ -11,7 +11,8 @@ const Signup = () => {
         email: '',
         password: '',
         confirmPassword: '',
-        role: 'candidate',
+        role: 'donor',
+        bloodType: 'O+',
         city: '',
         phone: ''
     });
@@ -20,16 +21,19 @@ const Signup = () => {
     const navigate = useNavigate();
     const { addToast } = useToast();
 
+    const bloodTypes = ['O-', 'O+', 'A-', 'A+', 'B-', 'B+', 'AB-', 'AB+'];
+
     const validateForm = () => {
-        const { email, name, password, confirmPassword } = formData;
+        const { email, name, password, confirmPassword, phone, city } = formData;
         
         if (!name) return addToast('Please enter your full name', 'error');
+        if (!city) return addToast('Please enter your city', 'error');
+        if (!phone || phone.length < 10) return addToast('Please enter a valid phone number', 'error');
         
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) return addToast('Please enter a valid email', 'error');
 
         if (password.length < 6) return addToast('Password must be at least 6 characters', 'error');
-
         if (password !== confirmPassword) return addToast('Passwords do not match', 'error');
 
         return true;
@@ -42,7 +46,7 @@ const Signup = () => {
         setSubmitting(true);
         const result = await signup(formData);
         if (result.success) {
-            addToast('Welcome to JobLuxe!', 'success');
+            addToast('Welcome to LifeLink!', 'success');
             navigate('/dashboard');
         } else {
             addToast(result.message, 'error');
@@ -53,55 +57,55 @@ const Signup = () => {
     return (
         <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 relative overflow-hidden font-outfit">
             {/* Soft decorative gradients */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-500/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/3"></div>
-            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-slate-500/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/3"></div>
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-red-500/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/3"></div>
+            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-rose-500/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/3"></div>
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="w-full max-w-md relative z-10"
+                className="w-full max-w-2xl relative z-10"
             >
-                <div className="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 p-8 md:p-10">
+                <div className="bg-white rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 p-8 md:p-12">
                     <div className="text-center mb-10">
                         <motion.div 
-                            whileHover={{ scale: 1.05 }}
-                            className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-indigo-200"
+                            whileHover={{ scale: 1.05, rotate: 5 }}
+                            className="w-16 h-16 bg-red-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-red-200"
                         >
-                            <Briefcase className="text-white w-6 h-6" />
+                            <Heart className="text-white w-8 h-8 fill-current" />
                         </motion.div>
-                        <h1 className="text-3xl font-bold text-slate-900 tracking-tight mb-2">Create Account</h1>
-                        <p className="text-slate-500 text-sm">Join the next generation of professionals.</p>
+                        <h1 className="text-4xl font-bold text-slate-900 tracking-tight mb-2">Join LifeLink</h1>
+                        <p className="text-slate-500 text-sm font-medium uppercase tracking-[0.2em]">Connecting donors to save lives</p>
                     </div>
 
-                    <div className="flex p-1 bg-slate-100 rounded-2xl mb-8">
+                    <div className="flex p-1.5 bg-slate-100 rounded-2xl mb-8">
                         <button
                             type="button"
-                            onClick={() => setFormData({ ...formData, role: 'candidate' })}
-                            className={`flex-1 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest transition-all duration-300 ${formData.role === 'candidate' ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-400'}`}
+                            onClick={() => setFormData({ ...formData, role: 'donor' })}
+                            className={`flex-1 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all duration-300 ${formData.role === 'donor' ? 'bg-white shadow-md text-red-600 scale-[1.02]' : 'text-slate-400 hover:text-slate-600'}`}
                         >
-                            Candidate
+                            Donor
                         </button>
                         <button
                             type="button"
-                            onClick={() => setFormData({ ...formData, role: 'recruiter' })}
-                            className={`flex-1 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest transition-all duration-300 ${formData.role === 'recruiter' ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-400'}`}
+                            onClick={() => setFormData({ ...formData, role: 'hospital' })}
+                            className={`flex-1 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all duration-300 ${formData.role === 'hospital' ? 'bg-white shadow-md text-red-600 scale-[1.02]' : 'text-slate-400 hover:text-slate-600'}`}
                         >
-                            Recruiter
+                            Hospital
                         </button>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-5">
+                    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                         <div className="space-y-1.5">
                             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Full Name</label>
                             <div className="relative group">
-                                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
+                                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-red-600 transition-colors" />
                                 <input
                                     type="text"
                                     required
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-sm text-slate-700 outline-none focus:bg-white focus:border-indigo-600/30 focus:ring-4 focus:ring-indigo-600/5 transition-all"
-                                    placeholder="Alex Johnson"
+                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-sm text-slate-700 outline-none focus:bg-white focus:border-red-600/30 focus:ring-4 focus:ring-red-600/5 transition-all"
+                                    placeholder="Enter full name"
                                 />
                             </div>
                         </div>
@@ -109,14 +113,14 @@ const Signup = () => {
                         <div className="space-y-1.5">
                             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
                             <div className="relative group">
-                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
+                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-red-600 transition-colors" />
                                 <input
                                     type="email"
                                     required
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-sm text-slate-700 outline-none focus:bg-white focus:border-indigo-600/30 focus:ring-4 focus:ring-indigo-600/5 transition-all"
-                                    placeholder="alex@example.com"
+                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-sm text-slate-700 outline-none focus:bg-white focus:border-red-600/30 focus:ring-4 focus:ring-red-600/5 transition-all"
+                                    placeholder="name@example.com"
                                 />
                             </div>
                         </div>
@@ -124,13 +128,13 @@ const Signup = () => {
                         <div className="space-y-1.5">
                             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Password</label>
                             <div className="relative group">
-                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-red-600 transition-colors" />
                                 <input
                                     type="password"
                                     required
                                     value={formData.password}
                                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-sm text-slate-700 outline-none focus:bg-white focus:border-indigo-600/30 focus:ring-4 focus:ring-indigo-600/5 transition-all"
+                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-sm text-slate-700 outline-none focus:bg-white focus:border-red-600/30 focus:ring-4 focus:ring-red-600/5 transition-all"
                                     placeholder="••••••••"
                                 />
                             </div>
@@ -139,38 +143,89 @@ const Signup = () => {
                         <div className="space-y-1.5">
                             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Confirm Password</label>
                             <div className="relative group">
-                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-red-600 transition-colors" />
                                 <input
                                     type="password"
                                     required
                                     value={formData.confirmPassword}
                                     onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-sm text-slate-700 outline-none focus:bg-white focus:border-indigo-600/30 focus:ring-4 focus:ring-indigo-600/5 transition-all"
+                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-sm text-slate-700 outline-none focus:bg-white focus:border-red-600/30 focus:ring-4 focus:ring-red-600/5 transition-all"
                                     placeholder="••••••••"
                                 />
                             </div>
                         </div>
+
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Phone Number</label>
+                            <div className="relative group">
+                                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-red-600 transition-colors" />
+                                <input
+                                    type="tel"
+                                    required
+                                    value={formData.phone}
+                                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-sm text-slate-700 outline-none focus:bg-white focus:border-red-600/30 focus:ring-4 focus:ring-red-600/5 transition-all"
+                                    placeholder="10-digit number"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">City</label>
+                            <div className="relative group">
+                                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-red-600 transition-colors" />
+                                <input
+                                    type="text"
+                                    required
+                                    value={formData.city}
+                                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-sm text-slate-700 outline-none focus:bg-white focus:border-red-600/30 focus:ring-4 focus:ring-red-600/5 transition-all"
+                                    placeholder="Enter city"
+                                />
+                            </div>
+                        </div>
+
+                        {formData.role === 'donor' && (
+                            <div className="md:col-span-2 space-y-3">
+                                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+                                    <Droplets className="w-3 h-3 text-red-500" />
+                                    Select Blood Type
+                                </label>
+                                <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
+                                    {bloodTypes.map(type => (
+                                        <button
+                                            key={type}
+                                            type="button"
+                                            onClick={() => setFormData({ ...formData, bloodType: type })}
+                                            className={`py-3 rounded-xl font-bold text-xs transition-all duration-300 border ${formData.bloodType === type ? 'bg-red-600 text-white border-red-600 shadow-lg scale-110' : 'bg-white text-slate-600 border-slate-100 hover:border-red-200'}`}
+                                        >
+                                            {type}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
                         <motion.button
                             type="submit"
                             disabled={submitting}
                             whileHover={{ scale: 1.01 }}
                             whileTap={{ scale: 0.99 }}
-                            className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-sm shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition-all flex items-center justify-center gap-2 mt-4"
+                            className="md:col-span-2 bg-red-600 text-white py-5 rounded-2xl font-bold text-sm shadow-xl shadow-red-100 hover:bg-red-700 transition-all flex items-center justify-center gap-3 mt-6"
                         >
-                            {submitting ? 'Creating account...' : 'Create Account'}
+                            {submitting ? 'Registering Hero...' : 'Create Account'}
                             <ArrowRight className="w-4 h-4" />
                         </motion.button>
                     </form>
 
-                    <div className="mt-8 text-center">
+                    <div className="mt-10 text-center">
                         <p className="text-slate-400 text-xs font-semibold">
-                            Already have an account? <Link to="/login" className="text-indigo-600 hover:underline">Sign In</Link>
+                            Already part of the network? <Link to="/login" className="text-red-600 hover:underline">Sign In</Link>
                         </p>
                     </div>
                 </div>
 
-                <div className="mt-8 flex items-center justify-center gap-6 grayscale opacity-40">
+                <div className="mt-8 flex items-center justify-center gap-6 grayscale opacity-30">
                     <i className="fab fa-github text-xl"></i>
                     <i className="fab fa-google text-xl"></i>
                 </div>
