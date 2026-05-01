@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { Mail, Lock, User, Briefcase, Phone, MapPin, ArrowRight, Github, Globe } from 'lucide-react';
+import { Mail, Lock, User, Briefcase, Phone, MapPin, ArrowRight } from 'lucide-react';
 
 const Signup = () => {
     const [formData, setFormData] = useState({
@@ -171,8 +171,8 @@ const Signup = () => {
                 </div>
 
                 <div className="mt-8 flex items-center justify-center gap-6 grayscale opacity-40">
-                    <Github className="w-5 h-5" />
-                    <Globe className="w-5 h-5" />
+                    <i className="fab fa-github text-xl"></i>
+                    <i className="fab fa-google text-xl"></i>
                 </div>
             </motion.div>
         </div>
