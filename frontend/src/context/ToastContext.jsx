@@ -41,7 +41,7 @@ export const ToastProvider = ({ children }) => {
                                 <i className={`fas fa-${toast.type === 'success' ? 'check' : toast.type === 'error' ? 'exclamation' : 'info'
                                     }`}></i>
                             </div>
-                            <p className="font-bold text-sm pr-8">{toast.message}</p>
+                            <p className="font-semibold text-sm pr-8">{toast.message}</p>
                             <button onClick={() => removeToast(toast.id)} className="ml-auto text-gray-400 hover:text-gray-600">
                                 <i className="fas fa-times"></i>
                             </button>

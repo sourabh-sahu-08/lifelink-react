@@ -59,22 +59,22 @@ const ResponseModal = ({ isOpen, onClose, request, onRefresh }) => {
                                     <div className="w-20 h-20 bg-red-100 rounded-3xl flex items-center justify-center mx-auto mb-4 border-4 border-red-50">
                                         <i className="fas fa-hospital text-3xl text-red-600"></i>
                                     </div>
-                                    <h2 className="text-2xl font-black text-gray-900 leading-tight">Confirm Response to<br />{request.hospital}</h2>
-                                    <p className="text-gray-500 text-xs font-bold uppercase tracking-widest mt-2">{request.reason}</p>
+                                    <h2 className="text-2xl font-bold text-gray-900 leading-tight">Confirm Response to<br />{request.hospital}</h2>
+                                    <p className="text-gray-500 text-xs font-semibold uppercase tracking-widest mt-2">{request.reason}</p>
                                 </div>
 
                                 <div className="bg-gray-50 rounded-2xl p-6 mb-8 border border-gray-100 space-y-4">
                                     <div className="flex justify-between items-center">
-                                        <span className="text-xs font-black text-gray-400 uppercase tracking-widest">Blood Type</span>
-                                        <span className="px-3 py-1 bg-red-600 text-white rounded-lg font-black">{request.bloodType}</span>
+                                        <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Blood Type</span>
+                                        <span className="px-3 py-1 bg-red-600 text-white rounded-lg font-bold">{request.bloodType}</span>
                                     </div>
                                     <div className="flex justify-between items-center">
-                                        <span className="text-xs font-black text-gray-400 uppercase tracking-widest">Distance</span>
-                                        <span className="font-black text-gray-900">{request.distance}</span>
+                                        <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Distance</span>
+                                        <span className="font-bold text-gray-900">{request.distance}</span>
                                     </div>
                                     <div className="flex justify-between items-center">
-                                        <span className="text-xs font-black text-gray-400 uppercase tracking-widest">Urgency</span>
-                                        <span className="text-red-600 font-black">{request.urgency}</span>
+                                        <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Urgency</span>
+                                        <span className="text-red-600 font-bold">{request.urgency}</span>
                                     </div>
                                 </div>
 
@@ -82,7 +82,7 @@ const ResponseModal = ({ isOpen, onClose, request, onRefresh }) => {
                                     <button
                                         onClick={handleConfirm}
                                         disabled={submitting}
-                                        className="w-full bg-red-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-red-200 hover:bg-red-700 transition-all transform active:scale-[0.98] disabled:opacity-50"
+                                        className="w-full bg-red-600 text-white py-5 rounded-2xl font-semibold uppercase tracking-widest shadow-xl shadow-red-200 hover:bg-red-700 transition-all transform active:scale-[0.98] disabled:opacity-50"
                                     >
                                         {submitting ? (
                                             <>
@@ -107,21 +107,21 @@ const ResponseModal = ({ isOpen, onClose, request, onRefresh }) => {
                                 >
                                     <i className="fas fa-check text-4xl text-green-600"></i>
                                 </motion.div>
-                                <h2 className="text-2xl font-black text-gray-900 mb-2">You're a Hero!</h2>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-2">You're a Hero!</h2>
                                 <p className="text-gray-500 text-sm mb-8 leading-relaxed">
                                     Hospital has been notified of your response. Please reach the blood bank within 30 minutes.
                                 </p>
                                 <div className="flex gap-4 mb-6">
-                                    <button onClick={() => setIsCallOpen(true)} className="flex-1 bg-green-500 text-white py-4 rounded-2xl font-black uppercase tracking-widest shadow-lg hover:bg-green-600 transition-all flex items-center justify-center">
+                                    <button onClick={() => setIsCallOpen(true)} className="flex-1 bg-green-500 text-white py-4 rounded-2xl font-semibold uppercase tracking-widest shadow-lg hover:bg-green-600 transition-all flex items-center justify-center">
                                         <i className="fas fa-phone mr-2 text-xl"></i> Call
                                     </button>
-                                    <button onClick={() => setIsChatOpen(true)} className="flex-1 bg-blue-500 text-white py-4 rounded-2xl font-black uppercase tracking-widest shadow-lg hover:bg-blue-600 transition-all flex items-center justify-center">
+                                    <button onClick={() => setIsChatOpen(true)} className="flex-1 bg-blue-500 text-white py-4 rounded-2xl font-semibold uppercase tracking-widest shadow-lg hover:bg-blue-600 transition-all flex items-center justify-center">
                                         <i className="fas fa-comment mr-2 text-xl"></i> Chat
                                     </button>
                                 </div>
                                 <button
                                     onClick={() => { onClose(); setStep(1); setIsChatOpen(false); setIsCallOpen(false); }}
-                                    className="w-full bg-gray-900 text-white py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl hover:bg-black transition-all"
+                                    className="w-full bg-gray-900 text-white py-4 rounded-2xl font-semibold uppercase tracking-widest shadow-xl hover:bg-black transition-all"
                                 >
                                     Got it
                                 </button>

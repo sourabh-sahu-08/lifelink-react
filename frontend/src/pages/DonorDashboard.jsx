@@ -165,7 +165,7 @@ const DonorDashboard = () => {
                     <div className="pt-28 flex flex-col xl:flex-row justify-between items-start gap-10">
                         <div className="flex-1">
                             <div className="flex items-center flex-wrap gap-4">
-                                <h1 className="text-5xl font-black text-slate-900 tracking-tighter">{user?.name}</h1>
+                                <h1 className="text-5xl font-bold text-slate-900 tracking-tighter">{user?.name}</h1>
                                 <span className="blood-type-badge type-b text-2xl px-6 py-2 h-auto rounded-2xl shadow-xl shadow-red-100">
                                     {user?.bloodType}
                                 </span>
@@ -177,9 +177,9 @@ const DonorDashboard = () => {
                                         {[1, 2, 3, 4].map(i => <i key={i} className="fas fa-star mr-0.5"></i>)}
                                         <i className="fas fa-star-half-alt"></i>
                                     </div>
-                                    <span className="ml-2.5 text-[10px] font-black text-yellow-700 tracking-widest uppercase">Top Rated Donor</span>
+                                    <span className="ml-2.5 text-[10px] font-bold text-yellow-700 tracking-widest uppercase">Top Rated Donor</span>
                                 </div>
-                                <div className="flex items-center text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">
+                                <div className="flex items-center text-slate-400 text-[10px] font-semibold uppercase tracking-[0.2em]">
                                     <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center mr-3">
                                         <i className="fas fa-map-marker-alt text-red-500"></i>
                                     </div>
@@ -199,7 +199,7 @@ const DonorDashboard = () => {
                                     }`}
                                 >
                                     <i className={`fas fa-${achieve.icon} ${achieve.condition ? achieve.color : 'text-slate-400'} text-xs`}></i>
-                                    <span className={`text-[10px] font-black uppercase tracking-widest ${achieve.condition ? 'text-slate-800' : 'text-slate-400'}`}>
+                                    <span className={`text-[10px] font-semibold uppercase tracking-widest ${achieve.condition ? 'text-slate-800' : 'text-slate-400'}`}>
                                         {achieve.title}
                                     </span>
                                 </div>
@@ -207,8 +207,8 @@ const DonorDashboard = () => {
                         </div>
 
                         <div className="bg-gradient-to-br from-slate-50 to-white p-8 rounded-[2.5rem] border border-slate-100 text-center min-w-[180px] shadow-inner group-hover:shadow-xl group-hover:-translate-y-2 transition-all duration-500 xl:absolute xl:top-0 xl:right-0">
-                            <div className="text-5xl font-black gradient-text tracking-tighter leading-none mb-2">{stats?.cityRank}</div>
-                            <div className="text-[10px] text-slate-400 uppercase tracking-[0.3em] font-black">City Ranking</div>
+                            <div className="text-5xl font-bold gradient-text tracking-tighter leading-none mb-2">{stats?.cityRank}</div>
+                            <div className="text-[10px] text-slate-400 uppercase tracking-[0.3em] font-bold">City Ranking</div>
                         </div>
                     </div>
 
@@ -226,8 +226,8 @@ const DonorDashboard = () => {
                                 <div className={`w-14 h-14 ${stat.bg.replace('50', '100')} rounded-[1.5rem] flex items-center justify-center mb-6 transition-transform group-hover/stat:rotate-12 shadow-sm`}>
                                     <i className={`fas fa-${stat.icon} ${stat.color} text-xl`}></i>
                                 </div>
-                                <div className="text-4xl font-black text-slate-900 group-hover/stat:scale-110 transition-transform origin-left tracking-tight">{stat.value}</div>
-                                <div className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mt-2">{stat.label}</div>
+                                <div className="text-4xl font-bold text-slate-900 group-hover/stat:scale-110 transition-transform origin-left tracking-tight">{stat.value}</div>
+                                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-2">{stat.label}</div>
                             </div>
                         ))}
                     </div>
@@ -246,7 +246,7 @@ const DonorDashboard = () => {
                                 <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-md mx-auto md:mx-0">
                                     <i className="fas fa-tint text-2xl"></i>
                                 </div>
-                                <h3 className="text-3xl font-black tracking-tight">Need Blood?</h3>
+                                <h3 className="text-3xl font-bold tracking-tight">Need Blood?</h3>
                                 <p className="text-red-100 text-sm mt-3 leading-relaxed max-w-xs">Post an emergency blood request. Hospitals and supply networks will respond directly.</p>
                             </div>
                             <button onClick={() => setShowBloodRequestForm(true)}
@@ -260,8 +260,8 @@ const DonorDashboard = () => {
                     <div className="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 overflow-hidden group">
                         <div className="px-10 py-8 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between group-hover:bg-white transition-colors">
                             <div>
-                                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Geo-Supply Network</h2>
-                                <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] mt-2">Hospital Reserves Near You</p>
+                                <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Geo-Supply Network</h2>
+                                <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-[0.2em] mt-2">Hospital Reserves Near You</p>
                             </div>
                             <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center border border-blue-100">
                                 <i className="fas fa-hospital text-blue-600 text-lg"></i>
@@ -276,8 +276,8 @@ const DonorDashboard = () => {
                     <div className="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 overflow-hidden group">
                         <div className="px-10 py-8 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center group-hover:bg-white transition-colors">
                             <div>
-                                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Health Assessment</h2>
-                                <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] mt-2">Status: {quizResult ? quizResult.toUpperCase() : 'PENDING'}</p>
+                                <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Health Assessment</h2>
+                                <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-[0.2em] mt-2">Status: {quizResult ? quizResult.toUpperCase() : 'PENDING'}</p>
                             </div>
                             <div className={`p-4 rounded-2xl ${quizResult === 'eligible' ? 'bg-green-50 text-green-600 border border-green-100' : quizResult === 'ineligible' ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-blue-50 text-blue-600 border border-blue-100'}`}>
                                 <i className={`fas fa-${quizResult === 'eligible' ? 'check-circle' : quizResult === 'ineligible' ? 'times-circle' : 'stethoscope'} text-xl`}></i>
@@ -286,7 +286,7 @@ const DonorDashboard = () => {
                         <div className="p-10">
                             {quizResult ? (
                                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-8">
-                                    <h3 className="text-4xl font-black text-slate-900 mb-4 tracking-tight">
+                                    <h3 className="text-4xl font-bold text-slate-900 mb-4 tracking-tight">
                                         {quizResult === 'eligible' ? 'Ready to Save Lives!' : 'Wait for a Better Time'}
                                     </h3>
                                     <p className="text-slate-500 font-medium mb-10 max-w-md mx-auto leading-relaxed">
@@ -305,7 +305,7 @@ const DonorDashboard = () => {
                             ) : showQuiz ? (
                                 <div className="slide-in">
                                     <div className="mb-10">
-                                        <div className="flex justify-between text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4">
+                                        <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em] mb-4">
                                             <span>Progress</span>
                                             <span>{Math.round(((quizIndex + 1) / eligibilityQuestions.length) * 100)}%</span>
                                         </div>
@@ -317,7 +317,7 @@ const DonorDashboard = () => {
                                             ></motion.div>
                                         </div>
                                     </div>
-                                    <h3 className="text-3xl font-black text-slate-900 mb-6 tracking-tight">{eligibilityQuestions[quizIndex].question}</h3>
+                                    <h3 className="text-3xl font-bold text-slate-900 mb-6 tracking-tight">{eligibilityQuestions[quizIndex].question}</h3>
                                     <p className="text-sm text-slate-500 font-medium mb-10 border-l-4 border-red-500 pl-6 py-1 leading-relaxed">{eligibilityQuestions[quizIndex].description}</p>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
                                         {eligibilityQuestions[quizIndex].options.map((opt, i) => (
@@ -326,7 +326,7 @@ const DonorDashboard = () => {
                                                 onClick={() => handleQuizOption(eligibilityQuestions[quizIndex].id, opt.value)}
                                                 className={`p-8 rounded-[2rem] border-2 transition-all flex items-center justify-between group ${userAnswers[eligibilityQuestions[quizIndex].id] === opt.value ? 'border-red-600 bg-red-50 shadow-xl shadow-red-100' : 'border-slate-50 bg-slate-50 hover:border-slate-200 hover:bg-white'}`}
                                             >
-                                                <span className={`font-black text-xs uppercase tracking-widest ${userAnswers[eligibilityQuestions[quizIndex].id] === opt.value ? 'text-red-600' : 'text-slate-500'}`}>{opt.text}</span>
+                                                <span className={`font-semibold text-xs uppercase tracking-widest ${userAnswers[eligibilityQuestions[quizIndex].id] === opt.value ? 'text-red-600' : 'text-slate-500'}`}>{opt.text}</span>
                                                 <div className={`w-8 h-8 rounded-2xl border-2 flex items-center justify-center transition-all ${userAnswers[eligibilityQuestions[quizIndex].id] === opt.value ? 'bg-red-600 border-red-600 text-white shadow-lg shadow-red-200' : 'border-slate-300'}`}>
                                                     {userAnswers[eligibilityQuestions[quizIndex].id] === opt.value && <i className="fas fa-check text-xs"></i>}
                                                 </div>
@@ -350,8 +350,8 @@ const DonorDashboard = () => {
                                             <i className="fas fa-notes-medical text-red-500 text-4xl"></i>
                                         </div>
                                         <div>
-                                            <p className="text-2xl font-black text-slate-900 tracking-tight">Active Status Check</p>
-                                            <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] mt-3 leading-relaxed">Safety assessment required for active membership</p>
+                                            <p className="text-2xl font-bold text-slate-900 tracking-tight">Active Status Check</p>
+                                            <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-[0.2em] mt-3 leading-relaxed">Safety assessment required for active membership</p>
                                         </div>
                                     </div>
                                     <button
@@ -369,10 +369,10 @@ const DonorDashboard = () => {
                     <div className="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 overflow-hidden group">
                         <div className="px-10 py-8 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center group-hover:bg-white transition-colors">
                             <div>
-                                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Geo-Sync Network</h2>
-                                <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] mt-2">Live Proximity Radar</p>
+                                <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Geo-Sync Network</h2>
+                                <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-[0.2em] mt-2">Live Proximity Radar</p>
                             </div>
-                            <span className="bg-blue-50 text-blue-600 px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] border border-blue-100">Active</span>
+                            <span className="bg-blue-50 text-blue-600 px-5 py-2 rounded-2xl text-[10px] font-semibold uppercase tracking-[0.3em] border border-blue-100">Active</span>
                         </div>
                         <div className="h-[450px]">
                             <GISMap 
@@ -385,8 +385,8 @@ const DonorDashboard = () => {
                     {/* Active Requests */}
                     <div className="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 overflow-hidden group">
                         <div className="px-10 py-8 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center group-hover:bg-white transition-colors">
-                            <h2 className="text-2xl font-black text-slate-900 tracking-tight">Critical Alerts</h2>
-                            <span className="bg-red-50 text-red-600 px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] animate-pulse border border-red-100">Live Feed</span>
+                            <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Critical Alerts</h2>
+                            <span className="bg-red-50 text-red-600 px-5 py-2 rounded-2xl text-[10px] font-semibold uppercase tracking-[0.3em] animate-pulse border border-red-100">Live Feed</span>
                         </div>
                         <div className="p-10">
                             <BloodRequestsList refreshKey={supplyRefreshKey} />
@@ -401,7 +401,7 @@ const DonorDashboard = () => {
                         <div className="absolute -right-12 -bottom-12 opacity-5 rotate-12 transition-transform duration-1000 group-hover:scale-150 text-slate-900">
                             <i className="fas fa-award text-[15rem]"></i>
                         </div>
-                        <h2 className="text-2xl font-black text-slate-900 mb-10 tracking-tight">Social Impact</h2>
+                        <h2 className="text-2xl font-bold text-slate-900 mb-10 tracking-tight">Social Impact</h2>
                         <div className="space-y-8">
                             {[
                                 { label: 'Lives Affected', value: (stats?.livesSaved * 2.5).toFixed(0), icon: 'users', color: 'text-blue-500', bg: 'bg-blue-50' },
@@ -414,17 +414,17 @@ const DonorDashboard = () => {
                                             <i className={`fas fa-${impact.icon} ${impact.color} text-lg`}></i>
                                         </div>
                                         <div>
-                                            <p className="text-[10px] font-black text-slate-900 uppercase tracking-widest">{impact.label}</p>
+                                            <p className="text-[10px] font-bold text-slate-900 uppercase tracking-widest">{impact.label}</p>
                                             <p className="text-[9px] font-bold text-slate-400 mt-1.5 uppercase tracking-tighter">Verified Contribution</p>
                                         </div>
                                     </div>
-                                    <span className={`font-black ${impact.color} text-2xl tracking-tighter`}>{impact.value}</span>
+                                    <span className={`font-bold ${impact.color} text-2xl tracking-tighter`}>{impact.value}</span>
                                 </div>
                             ))}
                         </div>
                         <button
                             onClick={() => setShowCertificate(true)}
-                            className="w-full mt-10 border-2 border-dashed border-slate-200 py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 hover:text-red-600 hover:border-red-500 hover:bg-red-50 transition-all"
+                            className="w-full mt-10 border-2 border-dashed border-slate-200 py-5 rounded-2xl text-[10px] font-semibold uppercase tracking-[0.3em] text-slate-400 hover:text-red-600 hover:border-red-500 hover:bg-red-50 transition-all"
                         >
                             View Hero Certificate
                         </button>
@@ -440,9 +440,9 @@ const DonorDashboard = () => {
                             <div className="bg-white/10 border border-white/20 w-14 h-14 rounded-2xl flex items-center justify-center mb-8 backdrop-blur-md">
                                 <i className="fas fa-stars text-xl text-yellow-400"></i>
                             </div>
-                            <h3 className="font-black text-4xl tracking-tight mb-4 leading-none">Refer & Earn</h3>
+                            <h3 className="font-bold text-4xl tracking-tight mb-4 leading-none">Refer & Earn</h3>
                             <p className="text-slate-300 font-medium text-sm leading-relaxed mb-10">Invite friends to LifeLink. Unlock health benefits and premium rewards for every referral.</p>
-                            <button className="bg-white text-slate-900 px-10 py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-2xl hover:bg-slate-50 transition-all transform hover:-translate-y-1 active:translate-y-0 w-full group/btn">
+                            <button className="bg-white text-slate-900 px-10 py-5 rounded-2xl text-[10px] font-semibold uppercase tracking-[0.2em] shadow-2xl hover:bg-slate-50 transition-all transform hover:-translate-y-1 active:translate-y-0 w-full group/btn">
                                 Share Link <i className="fas fa-arrow-right ml-3 group-hover/btn:translate-x-1 transition-transform"></i>
                             </button>
                         </div>
@@ -450,7 +450,7 @@ const DonorDashboard = () => {
 
                     {/* Recent News Card -> Live Feed */}
                     <div className="bg-white rounded-[3rem] p-10 text-slate-900 relative overflow-hidden border border-slate-100 shadow-xl group">
-                        <h3 className="font-black text-[10px] uppercase tracking-[0.3em] text-red-600 mb-8 flex items-center">
+                        <h3 className="font-semibold text-[10px] uppercase tracking-[0.3em] text-red-600 mb-8 flex items-center">
                             <i className="fas fa-satellite-dish mr-4 animate-pulse"></i> Global Network Live
                         </h3>
                         <ActivityFeed limit={4} />
@@ -484,24 +484,24 @@ const DonorDashboard = () => {
                                 <div className="mx-auto w-24 h-24 bg-red-50 rounded-full flex items-center justify-center mb-6">
                                     <i className="fas fa-award text-4xl text-red-500"></i>
                                 </div>
-                                <h4 className="text-[10px] font-black tracking-[0.3em] text-gray-400 uppercase mb-4">Official LifeLink Citation</h4>
-                                <h3 className="text-4xl font-black text-gray-900 mb-8 font-serif italic">Hero of the Bloodline</h3>
+                                <h4 className="text-[10px] font-bold tracking-[0.3em] text-gray-400 uppercase mb-4">Official LifeLink Citation</h4>
+                                <h3 className="text-4xl font-bold text-gray-900 mb-8 font-serif italic">Hero of the Bloodline</h3>
                                 <p className="text-gray-500 mb-10 text-sm max-w-md mx-auto leading-relaxed border-y border-gray-100 py-6">
-                                    This certifies that <strong className="text-gray-900 font-black">{user?.name}</strong> has demonstrated extraordinary commitment to humanity by saving {stats?.livesSaved} lives through selfless blood donation.
+                                    This certifies that <strong className="text-gray-900 font-bold">{user?.name}</strong> has demonstrated extraordinary commitment to humanity by saving {stats?.livesSaved} lives through selfless blood donation.
                                 </p>
                                 <div className="flex justify-between items-end px-10">
                                     <div className="text-left">
                                         <div className="w-32 h-1 bg-gray-200 mb-2"></div>
-                                        <p className="text-[9px] font-black uppercase tracking-widest text-gray-400">Chief Medical Officer</p>
+                                        <p className="text-[9px] font-semibold uppercase tracking-widest text-gray-400">Chief Medical Officer</p>
                                     </div>
                                     <div className="text-center">
-                                        <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center text-white font-black text-xs shadow-lg transform -rotate-12 outline-dashed outline-red-200 outline-offset-4">
+                                        <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center text-white font-semibold text-xs shadow-lg transform -rotate-12 outline-dashed outline-red-200 outline-offset-4">
                                             SEAL
                                         </div>
                                     </div>
                                     <div className="text-right">
                                         <div className="w-32 h-1 bg-gray-200 mb-2 ml-auto"></div>
-                                        <p className="text-[9px] font-black uppercase tracking-widest text-gray-400">{new Date().getFullYear()} Validation</p>
+                                        <p className="text-[9px] font-semibold uppercase tracking-widest text-gray-400">{new Date().getFullYear()} Validation</p>
                                     </div>
                                 </div>
                             </div>

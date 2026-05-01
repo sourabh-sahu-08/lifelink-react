@@ -109,16 +109,16 @@ const HospitalDashboard = () => {
                 
                 <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-8 relative z-10">
                     <div>
-                        <h1 className="text-4xl font-black text-slate-900 tracking-tighter leading-none">Welcome back, {user?.name || "Hospital"}</h1>
-                        <p className="text-slate-400 font-black uppercase tracking-[0.3em] text-[10px] mt-4 flex items-center">
+                        <h1 className="text-4xl font-bold text-slate-900 tracking-tighter leading-none">Welcome back, {user?.name || "Hospital"}</h1>
+                        <p className="text-slate-400 font-semibold uppercase tracking-[0.3em] text-[10px] mt-4 flex items-center">
                             <span className="w-2.5 h-2.5 bg-green-500 rounded-full mr-3 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
                             {user?.city || "Bilaspur"} Central Hub • System Online
                         </p>
                     </div>
                     <div className="flex flex-wrap items-center gap-4">
                         <div className="text-right border-r border-slate-100 pr-6 hidden sm:block">
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-2">Global Impact Rank</p>
-                            <p className="text-2xl font-black text-slate-900 tracking-tighter italic">#04 <span className="text-xs text-green-500 ml-1">↑2</span></p>
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-2">Global Impact Rank</p>
+                            <p className="text-2xl font-bold text-slate-900 tracking-tighter italic">#04 <span className="text-xs text-green-500 ml-1">↑2</span></p>
                         </div>
                         <button
                             onClick={triggerNewRequest}
@@ -154,8 +154,8 @@ const HospitalDashboard = () => {
                         <div className={`w-14 h-14 ${stat.bg} rounded-2xl flex items-center justify-center mb-6 group-hover:rotate-12 transition-transform shadow-sm`}>
                             <i className={`fas fa-${stat.icon} ${stat.color} text-xl`}></i>
                         </div>
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 leading-none">{stat.label}</p>
-                        <p className="text-4xl font-black text-slate-900 tracking-tighter leading-none">{stat.value}</p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-2 leading-none">{stat.label}</p>
+                        <p className="text-4xl font-bold text-slate-900 tracking-tighter leading-none">{stat.value}</p>
                     </motion.div>
                 ))}
             </div>
@@ -165,15 +165,15 @@ const HospitalDashboard = () => {
                     <div className="bg-white rounded-[3rem] shadow-xl border border-slate-100 overflow-hidden relative group">
                         <div className="px-10 py-8 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center group-hover:bg-white transition-colors">
                             <div>
-                                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Geo-Coverage Terminal</h2>
-                                <p className="text-[10px] text-slate-400 font-black uppercase tracking-[0.2em] mt-2">Live Radar Visualization</p>
+                                <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Geo-Coverage Terminal</h2>
+                                <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-[0.2em] mt-2">Live Radar Visualization</p>
                             </div>
                             <div className="flex items-center space-x-3 bg-white px-5 py-2.5 rounded-2xl shadow-sm border border-slate-100">
                                 <span className="flex h-2.5 w-2.5 relative">
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                                     <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
                                 </span>
-                                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Active Sync</span>
+                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Active Sync</span>
                             </div>
                         </div>
 
@@ -204,8 +204,8 @@ const HospitalDashboard = () => {
                                     <i className={`fas fa-${action.icon} ${action.color} text-xl`}></i>
                                 </div>
                                 <div className="flex-1">
-                                    <h4 className="font-black text-slate-900 text-xl tracking-tight leading-none mb-2">{action.title}</h4>
-                                    <p className="text-[10px] text-slate-400 font-black uppercase tracking-tight leading-relaxed">{action.desc}</p>
+                                    <h4 className="font-bold text-slate-900 text-xl tracking-tight leading-none mb-2">{action.title}</h4>
+                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight leading-relaxed">{action.desc}</p>
                                 </div>
                                 <i className="fas fa-chevron-right text-slate-200 self-center opacity-0 group-hover:opacity-100 transition-all ml-4 group-hover:translate-x-1"></i>
                             </motion.button>
@@ -218,7 +218,7 @@ const HospitalDashboard = () => {
                         <div className="absolute -right-12 -top-12 opacity-10 rotate-12 group-hover:scale-125 group-hover:-rotate-12 transition-all duration-1000">
                             <i className="fas fa-exclamation-triangle text-[12rem]"></i>
                         </div>
-                        <h3 className="text-2xl font-black tracking-tight mb-4 leading-none">Emergency Broadcast</h3>
+                        <h3 className="text-2xl font-bold tracking-tight mb-4 leading-none">Emergency Broadcast</h3>
                         <p className="text-red-100 text-sm mb-10 font-medium leading-relaxed">Broadcast a critical alert to all eligible donors within the regional sector instantly.</p>
                         <button
                             onClick={triggerNewRequest}
@@ -230,7 +230,7 @@ const HospitalDashboard = () => {
 
                     <div className="bg-white rounded-[3rem] shadow-xl border border-slate-100 overflow-hidden group">
                         <div className="px-10 py-8 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center group-hover:bg-white transition-colors">
-                            <h2 className="text-2xl font-black text-slate-900 tracking-tight leading-none">Stock Inventory</h2>
+                            <h2 className="text-2xl font-bold text-slate-900 tracking-tight leading-none">Stock Inventory</h2>
                             <div className="w-10 h-10 rounded-2xl bg-red-50 flex items-center justify-center border border-red-100">
                                 <i className="fas fa-tint text-red-600 text-sm"></i>
                             </div>
@@ -240,10 +240,10 @@ const HospitalDashboard = () => {
                                 <div key={i} className="group/item">
                                     <div className="flex justify-between items-end mb-4">
                                         <div>
-                                            <span className="text-2xl font-black text-slate-900 mr-3 tracking-tighter">{item.type}</span>
-                                            <span className={`text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-xl shadow-sm border border-white ${item.text} bg-slate-50`}>{item.status}</span>
+                                            <span className="text-2xl font-bold text-slate-900 mr-3 tracking-tighter">{item.type}</span>
+                                            <span className={`text-[9px] font-semibold uppercase tracking-[0.2em] px-3 py-1 rounded-xl shadow-sm border border-white ${item.text} bg-slate-50`}>{item.status}</span>
                                         </div>
-                                        <span className={`text-2xl font-black ${item.text} tracking-tighter`}>{item.units} <span className="text-[10px] text-slate-400 uppercase font-black tracking-widest ml-1">Units</span></span>
+                                        <span className={`text-2xl font-bold ${item.text} tracking-tighter`}>{item.units} <span className="text-[10px] text-slate-400 uppercase font-semibold tracking-widest ml-1">Units</span></span>
                                     </div>
                                     <div className="w-full bg-slate-100 rounded-full h-5 border border-slate-200/50 p-1 group-hover/item:shadow-inner transition-all">
                                         <motion.div

@@ -46,8 +46,8 @@ const ManageInventoryModal = ({ isOpen, onClose, inventory, onRefresh }) => {
                         className="relative bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-100"
                     >
                         <div className="bg-gray-900 p-8 text-white relative">
-                            <h2 className="text-2xl font-black uppercase tracking-tight">Stock Management</h2>
-                            <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest mt-1">Real-time Inventory Control</p>
+                            <h2 className="text-2xl font-bold uppercase tracking-tight">Stock Management</h2>
+                            <p className="text-gray-400 text-[10px] font-semibold uppercase tracking-widest mt-1">Real-time Inventory Control</p>
                             <button onClick={onClose} className="absolute top-8 right-8 text-gray-500 hover:text-white">
                                 <i className="fas fa-times text-xl"></i>
                             </button>
@@ -55,7 +55,7 @@ const ManageInventoryModal = ({ isOpen, onClose, inventory, onRefresh }) => {
 
                         <div className="p-8 space-y-6">
                             <div>
-                                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Select Blood Type</label>
+                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Select Blood Type</label>
                                 <div className="grid grid-cols-4 gap-2">
                                     {inventory.map(item => (
                                         <button
@@ -64,7 +64,7 @@ const ManageInventoryModal = ({ isOpen, onClose, inventory, onRefresh }) => {
                                                 setSelectedType(item.type);
                                                 setUnits(item.units);
                                             }}
-                                            className={`py-3 rounded-xl border-2 font-black text-[10px] transition-all ${selectedType === item.type ? 'border-blue-600 bg-blue-50 text-blue-600 shadow-lg shadow-blue-100' : 'border-gray-50 bg-gray-50 text-gray-400'}`}
+                                            className={`py-3 rounded-xl border-2 font-semibold text-[10px] transition-all ${selectedType === item.type ? 'border-blue-600 bg-blue-50 text-blue-600 shadow-lg shadow-blue-100' : 'border-gray-50 bg-gray-50 text-gray-400'}`}
                                         >
                                             {item.type}
                                         </button>
@@ -73,7 +73,7 @@ const ManageInventoryModal = ({ isOpen, onClose, inventory, onRefresh }) => {
                             </div>
 
                             <div>
-                                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Adjust Unit Count</label>
+                                <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Adjust Unit Count</label>
                                 <div className="flex items-center space-x-6 bg-gray-50 p-4 rounded-2xl border border-gray-100">
                                     <button
                                         onClick={() => setUnits(Math.max(0, units - 1))}
@@ -82,8 +82,8 @@ const ManageInventoryModal = ({ isOpen, onClose, inventory, onRefresh }) => {
                                         <i className="fas fa-minus text-sm"></i>
                                     </button>
                                     <div className="flex-1 text-center">
-                                        <span className="text-4xl font-black text-gray-900">{units}</span>
-                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">Status: {units < 5 ? 'Critical' : 'Stable'}</p>
+                                        <span className="text-4xl font-bold text-gray-900">{units}</span>
+                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Status: {units < 5 ? 'Critical' : 'Stable'}</p>
                                     </div>
                                     <button
                                         onClick={() => setUnits(units + 1)}
@@ -97,7 +97,7 @@ const ManageInventoryModal = ({ isOpen, onClose, inventory, onRefresh }) => {
                             <button
                                 onClick={handleUpdate}
                                 disabled={submitting}
-                                className="w-full bg-blue-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all transform active:scale-95 disabled:opacity-50"
+                                className="w-full bg-blue-600 text-white py-5 rounded-2xl font-semibold uppercase tracking-widest shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all transform active:scale-95 disabled:opacity-50"
                             >
                                 {submitting ? 'Updating...' : 'Commit Changes'}
                             </button>
