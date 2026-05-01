@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { Mail, Lock, User, Briefcase, Phone, MapPin, ArrowRight, Github, Chrome } from 'lucide-react';
 
 const Signup = () => {
     const [formData, setFormData] = useState({
@@ -10,8 +11,7 @@ const Signup = () => {
         email: '',
         password: '',
         confirmPassword: '',
-        role: 'donor',
-        bloodType: 'O+',
+        role: 'candidate',
         city: '',
         phone: ''
     });
@@ -20,280 +20,159 @@ const Signup = () => {
     const navigate = useNavigate();
     const { addToast } = useToast();
 
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
     const validateForm = () => {
-        const { email, phone, password, confirmPassword } = formData;
+        const { email, name, password, confirmPassword } = formData;
         
-        // Email validation
+        if (!name) return addToast('Please enter your full name', 'error');
+        
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            addToast('Please enter a valid email address', 'error');
-            return false;
-        }
+        if (!emailRegex.test(email)) return addToast('Please enter a valid email', 'error');
 
-        // Phone validation (10 digits)
-        const phoneRegex = /^\d{10}$/;
-        if (!phoneRegex.test(phone)) {
-            addToast('Please enter a valid 10-digit phone number', 'error');
-            return false;
-        }
+        if (password.length < 6) return addToast('Password must be at least 6 characters', 'error');
 
-        // Password complexity (Hard: Upper, Lower, Number, Special)
-        // AND Min 6 characters
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
-        if (!passwordRegex.test(password)) {
-            if (password.length < 6) {
-                addToast('Password must be at least 6 characters', 'error');
-            } else {
-                addToast('Password must be "hard" (Include uppercase, lowercase, number, and special character)', 'error');
-            }
-            return false;
-        }
-
-        // Confirm password match
-        if (password !== confirmPassword) {
-            addToast('Passwords do not match', 'error');
-            return false;
-        }
+        if (password !== confirmPassword) return addToast('Passwords do not match', 'error');
 
         return true;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
         if (!validateForm()) return;
 
         setSubmitting(true);
         const result = await signup(formData);
         if (result.success) {
-            addToast('Account created successfully!', 'success');
-            navigate('/');
+            addToast('Welcome to JobLuxe!', 'success');
+            navigate('/dashboard');
         } else {
             addToast(result.message, 'error');
         }
         setSubmitting(false);
     };
 
-    const bloodTypes = ['O-', 'O+', 'A-', 'A+', 'B-', 'B+', 'AB-', 'AB+'];
-
     return (
-        <div className="min-h-screen animated-gradient flex items-center justify-center p-4 py-12 relative overflow-hidden">
-            {/* Abstract decorative elements */}
-            <div className="absolute top-[-10%] left-[-10%] w-72 h-72 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
-            <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-red-500/10 rounded-full blur-3xl"></div>
-            
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 relative overflow-hidden font-outfit">
+            {/* Soft decorative gradients */}
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-500/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/3"></div>
+            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-slate-500/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/3"></div>
+
             <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-                className="glass-card w-full max-w-2xl overflow-hidden relative z-10 rounded-[2.5rem]"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="w-full max-w-md relative z-10"
             >
-                <div className="p-10 md:p-16">
-                    <div className="text-center mb-12">
+                <div className="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 p-8 md:p-10">
+                    <div className="text-center mb-10">
                         <motion.div 
-                            whileHover={{ rotate: 10, scale: 1.1 }}
-                            className="w-20 h-20 bg-gradient-to-br from-red-600 to-rose-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-red-500/20 -rotate-3"
+                            whileHover={{ scale: 1.05 }}
+                            className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-indigo-200"
                         >
-                            <i className="fas fa-heart text-white text-4xl"></i>
+                            <Briefcase className="text-white w-6 h-6" />
                         </motion.div>
-                        <h1 className="text-4xl font-bold text-gray-900 tracking-tight mb-2">Join <span className="gradient-text">LifeLink</span></h1>
-                        <p className="text-gray-500 font-medium uppercase tracking-[0.2em] text-[10px]">Empowering Life Through Connection</p>
+                        <h1 className="text-3xl font-bold text-slate-900 tracking-tight mb-2">Create Account</h1>
+                        <p className="text-slate-500 text-sm">Join the next generation of professionals.</p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                        <div className="md:col-span-2 flex p-1.5 bg-gray-200/30 backdrop-blur-md rounded-2xl mb-4 border border-white/20">
-                            <button
-                                type="button"
-                                onClick={() => setFormData({ ...formData, role: 'donor' })}
-                                className={`flex-1 py-3.5 rounded-xl font-semibold text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 ${formData.role === 'donor' ? 'bg-white shadow-lg text-red-600 scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
-                            >
-                                <i className="fas fa-user-heart"></i>
-                                Donor
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setFormData({ ...formData, role: 'hospital' })}
-                                className={`flex-1 py-3.5 rounded-xl font-semibold text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 ${formData.role === 'hospital' ? 'bg-white shadow-lg text-red-600 scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
-                            >
-                                <i className="fas fa-hospital"></i>
-                                Hospital
-                            </button>
-                        </div>
+                    <div className="flex p-1 bg-slate-100 rounded-2xl mb-8">
+                        <button
+                            type="button"
+                            onClick={() => setFormData({ ...formData, role: 'candidate' })}
+                            className={`flex-1 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest transition-all duration-300 ${formData.role === 'candidate' ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-400'}`}
+                        >
+                            Candidate
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setFormData({ ...formData, role: 'recruiter' })}
+                            className={`flex-1 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest transition-all duration-300 ${formData.role === 'recruiter' ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-400'}`}
+                        >
+                            Recruiter
+                        </button>
+                    </div>
 
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
-                                <i className="fas fa-user text-[8px]"></i>
-                                Full Name / Hospital Name
-                            </label>
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Full Name</label>
                             <div className="relative group">
-                                <i className="fas fa-user absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
+                                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
                                 <input
                                     type="text"
                                     required
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none relative z-10"
-                                    placeholder="Enter name"
+                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-sm text-slate-700 outline-none focus:bg-white focus:border-indigo-600/30 focus:ring-4 focus:ring-indigo-600/5 transition-all"
+                                    placeholder="Alex Johnson"
                                 />
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
-                                <i className="fas fa-envelope text-[8px]"></i>
-                                Email Address
-                            </label>
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
                             <div className="relative group">
-                                <i className="fas fa-envelope absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
+                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
                                 <input
                                     type="email"
                                     required
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none relative z-10"
-                                    placeholder="name@example.com"
+                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-sm text-slate-700 outline-none focus:bg-white focus:border-indigo-600/30 focus:ring-4 focus:ring-indigo-600/5 transition-all"
+                                    placeholder="alex@example.com"
                                 />
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
-                                <i className="fas fa-key text-[8px]"></i>
-                                Password (Hard & Min 6)
-                            </label>
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Password</label>
                             <div className="relative group">
-                                <i className="fas fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
                                 <input
-                                    type={showPassword ? "text" : "password"}
+                                    type="password"
                                     required
                                     value={formData.password}
                                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-12 font-bold text-gray-700 outline-none relative z-10"
-                                    placeholder="••••••"
+                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-sm text-slate-700 outline-none focus:bg-white focus:border-indigo-600/30 focus:ring-4 focus:ring-indigo-600/5 transition-all"
+                                    placeholder="••••••••"
                                 />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-600 z-30 transition-colors"
-                                >
-                                    <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-                                </button>
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
-                                <i className="fas fa-check-double text-[8px]"></i>
-                                Confirm Password
-                            </label>
+                        <div className="space-y-1.5">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Confirm Password</label>
                             <div className="relative group">
-                                <i className="fas fa-shield-alt absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
                                 <input
-                                    type={showConfirmPassword ? "text" : "password"}
+                                    type="password"
                                     required
                                     value={formData.confirmPassword}
                                     onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-12 font-bold text-gray-700 outline-none relative z-10"
-                                    placeholder="••••••"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-600 z-30 transition-colors"
-                                >
-                                    <i className={`fas ${showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
-                                <i className="fas fa-phone-alt text-[8px]"></i>
-                                Phone Number
-                            </label>
-                            <div className="relative group">
-                                <i className="fas fa-phone absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
-                                <input
-                                    type="tel"
-                                    required
-                                    value={formData.phone}
-                                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none relative z-10"
-                                    placeholder="10-digit number"
+                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-sm text-slate-700 outline-none focus:bg-white focus:border-indigo-600/30 focus:ring-4 focus:ring-indigo-600/5 transition-all"
+                                    placeholder="••••••••"
                                 />
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
-                                <i className="fas fa-city text-[8px]"></i>
-                                City
-                            </label>
-                            <div className="relative group">
-                                <i className="fas fa-map-marker-alt absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 z-20 group-focus-within:text-red-600 transition-colors text-lg"></i>
-                                <input
-                                    type="text"
-                                    required
-                                    value={formData.city}
-                                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                                    className="w-full glass-input rounded-2xl py-4 pl-12 pr-4 font-bold text-gray-700 outline-none relative z-10"
-                                    placeholder="Enter city"
-                                />
-                            </div>
-                        </div>
-
-                        {formData.role === 'donor' && (
-                            <div className="md:col-span-2 space-y-2">
-                                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
-                                    <i className="fas fa-burn text-[8px]"></i>
-                                    Blood Type
-                                </label>
-                                <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
-                                    {bloodTypes.map(type => (
-                                        <button
-                                            key={type}
-                                            type="button"
-                                            onClick={() => setFormData({ ...formData, bloodType: type })}
-                                            className={`py-3 rounded-xl font-semibold text-xs transition-all duration-300 flex flex-col items-center justify-center gap-1 ${formData.bloodType === type ? 'bg-red-600 text-white shadow-lg scale-110' : 'bg-white/40 hover:bg-white/60 text-gray-700 border border-white/20'}`}
-                                        >
-                                            <i className={`fas fa-tint ${formData.bloodType === type ? 'text-white' : 'text-red-500'}`}></i>
-                                            {type}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        <div className="md:col-span-2 pt-6">
-                            <motion.button
-                                type="submit"
-                                disabled={submitting}
-                                whileHover={{ scale: 1.01 }}
-                                whileTap={{ scale: 0.99 }}
-                                className="w-full bg-gradient-to-r from-red-600 to-rose-500 text-white py-5 rounded-2xl font-semibold uppercase tracking-widest shadow-2xl shadow-red-500/30 hover:shadow-red-500/40 transition-all disabled:opacity-50 flex items-center justify-center gap-3"
-                            >
-                                {submitting ? (
-                                    <>
-                                        <i className="fas fa-spinner fa-spin mr-2"></i> Initializing...
-                                    </>
-                                ) : (
-                                    <>
-                                        <i className="fas fa-user-plus text-xl"></i>
-                                        Create Hero Account
-                                    </>
-                                )}
-                            </motion.button>
-                        </div>
+                        <motion.button
+                            type="submit"
+                            disabled={submitting}
+                            whileHover={{ scale: 1.01 }}
+                            whileTap={{ scale: 0.99 }}
+                            className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold text-sm shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition-all flex items-center justify-center gap-2 mt-4"
+                        >
+                            {submitting ? 'Creating account...' : 'Create Account'}
+                            <ArrowRight className="w-4 h-4" />
+                        </motion.button>
                     </form>
 
-                    <div className="mt-12 text-center">
-                        <p className="text-gray-500 font-semibold text-xs">
-                            Already have an account? <Link to="/login" className="text-red-600 hover:underline">Sign In</Link>
+                    <div className="mt-8 text-center">
+                        <p className="text-slate-400 text-xs font-semibold">
+                            Already have an account? <Link to="/login" className="text-indigo-600 hover:underline">Sign In</Link>
                         </p>
                     </div>
+                </div>
+
+                <div className="mt-8 flex items-center justify-center gap-6 grayscale opacity-40">
+                    <Github className="w-5 h-5" />
+                    <Chrome className="w-5 h-5" />
                 </div>
             </motion.div>
         </div>
