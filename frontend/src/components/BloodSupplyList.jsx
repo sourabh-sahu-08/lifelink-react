@@ -58,12 +58,12 @@ const BloodSupplyList = ({ refreshKey }) => {
                         className="p-4 bg-slate-50 rounded-2xl border border-gray-100 hover:bg-white hover:shadow-lg hover:border-blue-100 transition-all group">
                         <div className="flex items-start justify-between gap-3">
                             <div className="flex items-center gap-3 flex-1 min-w-0">
-                                <div className={`w-12 h-12 ${bloodTypeColors[s.bloodType] || 'bg-gray-500'} rounded-2xl flex items-center justify-center text-white font-black text-sm flex-shrink-0 shadow-lg`}>
+                                <div className={`w-12 h-12 ${bloodTypeColors[s.bloodType] || 'bg-gray-500'} rounded-2xl flex items-center justify-center text-white font-semibold text-sm flex-shrink-0 shadow-lg`}>
                                     {s.bloodType}
                                 </div>
                                 <div className="min-w-0">
                                     <div className="flex items-center gap-2">
-                                        <p className="font-black text-gray-900 text-sm truncate">{s.hospitalName}</p>
+                                        <p className="font-bold text-gray-900 text-sm truncate">{s.hospitalName}</p>
                                     </div>
                                     <p className="text-[10px] text-gray-400 font-bold mt-0.5">{s.units} units available {s.city ? `• ${s.city}` : ''}</p>
                                     {s.expiryDate && <p className="text-[9px] text-orange-500 font-bold mt-0.5"><i className="fas fa-clock mr-1"></i>Expires: {s.expiryDate}</p>}
@@ -72,11 +72,11 @@ const BloodSupplyList = ({ refreshKey }) => {
                             </div>
                             <div className="flex flex-col gap-2 flex-shrink-0">
                                 <button onClick={() => handleClaim(s._id)} disabled={claimingId === s._id}
-                                    className="px-4 py-2 bg-blue-600 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-black transition-all shadow-sm disabled:opacity-50">
+                                    className="px-4 py-2 bg-blue-600 text-white rounded-xl text-[9px] font-semibold uppercase tracking-widest hover:bg-black transition-all shadow-sm disabled:opacity-50">
                                     {claimingId === s._id ? <i className="fas fa-spinner fa-spin"></i> : 'Claim'}
                                 </button>
                                 <button onClick={() => openChat(s.hospitalName)}
-                                    className="px-4 py-2 bg-blue-50 text-blue-600 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-blue-500 hover:text-white transition-all shadow-sm flex items-center justify-center">
+                                    className="px-4 py-2 bg-blue-50 text-blue-600 rounded-xl text-[9px] font-semibold uppercase tracking-widest hover:bg-blue-500 hover:text-white transition-all shadow-sm flex items-center justify-center">
                                     <i className="fas fa-comment mr-1"></i> Message
                                 </button>
                             </div>

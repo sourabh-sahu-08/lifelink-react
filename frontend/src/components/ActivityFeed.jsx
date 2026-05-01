@@ -46,10 +46,10 @@ const ActivityFeed = ({ limit = 3 }) => {
                                 } text-sm`}></i>
                         </div>
                         <div className="flex-1">
-                            <p className="text-sm font-black text-gray-900 group-hover:text-red-600 transition-colors">{activity.user}</p>
+                            <p className="text-sm font-bold text-gray-900 group-hover:text-red-600 transition-colors">{activity.user}</p>
                             <p className="text-[10px] font-bold text-gray-500 uppercase tracking-tight">{activity.action}</p>
                         </div>
-                        <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest">{activity.time}</span>
+                        <span className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">{activity.time}</span>
                     </motion.div>
                 ))}
             </AnimatePresence>

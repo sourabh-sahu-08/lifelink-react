@@ -58,13 +58,13 @@ const BloodRequestsList = ({ refreshKey }) => {
                         className="p-4 bg-slate-50 rounded-2xl border border-gray-100 hover:bg-white hover:shadow-lg hover:border-red-100 transition-all group">
                         <div className="flex items-start justify-between gap-3">
                             <div className="flex items-center gap-3 flex-1 min-w-0">
-                                <div className="w-12 h-12 bg-red-600 rounded-2xl flex items-center justify-center text-white font-black text-sm flex-shrink-0 shadow-lg">
+                                <div className="w-12 h-12 bg-red-600 rounded-2xl flex items-center justify-center text-white font-semibold text-sm flex-shrink-0 shadow-lg">
                                     {req.bloodType}
                                 </div>
                                 <div className="min-w-0">
                                     <div className="flex items-center gap-2 flex-wrap">
-                                        <p className="font-black text-gray-900 text-sm">{req.requesterName}</p>
-                                        <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-lg border ${urgencyColor[req.urgency] || urgencyColor.Normal}`}>{req.urgency}</span>
+                                        <p className="font-bold text-gray-900 text-sm">{req.requesterName}</p>
+                                        <span className={`text-[9px] font-semibold uppercase tracking-widest px-2 py-0.5 rounded-lg border ${urgencyColor[req.urgency] || urgencyColor.Normal}`}>{req.urgency}</span>
                                     </div>
                                     <p className="text-[10px] text-gray-400 font-bold mt-0.5 truncate">{req.units} units needed {req.city ? `• ${req.city}` : ''}</p>
                                     {req.reason && <p className="text-xs text-gray-500 mt-1 truncate">{req.reason}</p>}
@@ -72,11 +72,11 @@ const BloodRequestsList = ({ refreshKey }) => {
                             </div>
                             <div className="flex flex-col gap-2 flex-shrink-0">
                                 <button onClick={() => handleRespond(req._id)} disabled={respondingId === req._id}
-                                    className="px-4 py-2 bg-red-600 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-black transition-all shadow-sm disabled:opacity-50">
+                                    className="px-4 py-2 bg-red-600 text-white rounded-xl text-[9px] font-semibold uppercase tracking-widest hover:bg-black transition-all shadow-sm disabled:opacity-50">
                                     {respondingId === req._id ? <i className="fas fa-spinner fa-spin"></i> : 'Provide'}
                                 </button>
                                 <button onClick={() => openChat(req.requesterName)}
-                                    className="px-4 py-2 bg-blue-50 text-blue-600 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-blue-500 hover:text-white transition-all shadow-sm flex items-center justify-center">
+                                    className="px-4 py-2 bg-blue-50 text-blue-600 rounded-xl text-[9px] font-semibold uppercase tracking-widest hover:bg-blue-500 hover:text-white transition-all shadow-sm flex items-center justify-center">
                                     <i className="fas fa-comment mr-1"></i> Message
                                 </button>
                             </div>

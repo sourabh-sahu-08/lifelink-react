@@ -99,7 +99,7 @@ const Signup = () => {
                         >
                             <i className="fas fa-heart text-white text-4xl"></i>
                         </motion.div>
-                        <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-2">Join <span className="gradient-text">LifeLink</span></h1>
+                        <h1 className="text-4xl font-bold text-gray-900 tracking-tight mb-2">Join <span className="gradient-text">LifeLink</span></h1>
                         <p className="text-gray-500 font-medium uppercase tracking-[0.2em] text-[10px]">Empowering Life Through Connection</p>
                     </div>
 
@@ -108,7 +108,7 @@ const Signup = () => {
                             <button
                                 type="button"
                                 onClick={() => setFormData({ ...formData, role: 'donor' })}
-                                className={`flex-1 py-3.5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 ${formData.role === 'donor' ? 'bg-white shadow-lg text-red-600 scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
+                                className={`flex-1 py-3.5 rounded-xl font-semibold text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 ${formData.role === 'donor' ? 'bg-white shadow-lg text-red-600 scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
                             >
                                 <i className="fas fa-user-heart"></i>
                                 Donor
@@ -116,7 +116,7 @@ const Signup = () => {
                             <button
                                 type="button"
                                 onClick={() => setFormData({ ...formData, role: 'hospital' })}
-                                className={`flex-1 py-3.5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 ${formData.role === 'hospital' ? 'bg-white shadow-lg text-red-600 scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
+                                className={`flex-1 py-3.5 rounded-xl font-semibold text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 ${formData.role === 'hospital' ? 'bg-white shadow-lg text-red-600 scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
                             >
                                 <i className="fas fa-hospital"></i>
                                 Hospital
@@ -124,7 +124,7 @@ const Signup = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
+                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
                                 <i className="fas fa-user text-[8px]"></i>
                                 Full Name / Hospital Name
                             </label>
@@ -142,7 +142,7 @@ const Signup = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
+                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
                                 <i className="fas fa-envelope text-[8px]"></i>
                                 Email Address
                             </label>
@@ -160,7 +160,7 @@ const Signup = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
+                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
                                 <i className="fas fa-key text-[8px]"></i>
                                 Password (Hard & Min 6)
                             </label>
@@ -185,7 +185,7 @@ const Signup = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
+                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
                                 <i className="fas fa-check-double text-[8px]"></i>
                                 Confirm Password
                             </label>
@@ -210,7 +210,7 @@ const Signup = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
+                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
                                 <i className="fas fa-phone-alt text-[8px]"></i>
                                 Phone Number
                             </label>
@@ -228,7 +228,7 @@ const Signup = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
+                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
                                 <i className="fas fa-city text-[8px]"></i>
                                 City
                             </label>
@@ -247,7 +247,7 @@ const Signup = () => {
 
                         {formData.role === 'donor' && (
                             <div className="md:col-span-2 space-y-2">
-                                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
+                                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
                                     <i className="fas fa-burn text-[8px]"></i>
                                     Blood Type
                                 </label>
@@ -257,7 +257,7 @@ const Signup = () => {
                                             key={type}
                                             type="button"
                                             onClick={() => setFormData({ ...formData, bloodType: type })}
-                                            className={`py-3 rounded-xl font-bold text-xs transition-all duration-300 flex flex-col items-center justify-center gap-1 ${formData.bloodType === type ? 'bg-red-600 text-white shadow-lg scale-110' : 'bg-white/40 hover:bg-white/60 text-gray-700 border border-white/20'}`}
+                                            className={`py-3 rounded-xl font-semibold text-xs transition-all duration-300 flex flex-col items-center justify-center gap-1 ${formData.bloodType === type ? 'bg-red-600 text-white shadow-lg scale-110' : 'bg-white/40 hover:bg-white/60 text-gray-700 border border-white/20'}`}
                                         >
                                             <i className={`fas fa-tint ${formData.bloodType === type ? 'text-white' : 'text-red-500'}`}></i>
                                             {type}
@@ -273,7 +273,7 @@ const Signup = () => {
                                 disabled={submitting}
                                 whileHover={{ scale: 1.01 }}
                                 whileTap={{ scale: 0.99 }}
-                                className="w-full bg-gradient-to-r from-red-600 to-rose-500 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-2xl shadow-red-500/30 hover:shadow-red-500/40 transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+                                className="w-full bg-gradient-to-r from-red-600 to-rose-500 text-white py-5 rounded-2xl font-semibold uppercase tracking-widest shadow-2xl shadow-red-500/30 hover:shadow-red-500/40 transition-all disabled:opacity-50 flex items-center justify-center gap-3"
                             >
                                 {submitting ? (
                                     <>
@@ -290,7 +290,7 @@ const Signup = () => {
                     </form>
 
                     <div className="mt-12 text-center">
-                        <p className="text-gray-500 font-bold text-xs">
+                        <p className="text-gray-500 font-semibold text-xs">
                             Already have an account? <Link to="/login" className="text-red-600 hover:underline">Sign In</Link>
                         </p>
                     </div>

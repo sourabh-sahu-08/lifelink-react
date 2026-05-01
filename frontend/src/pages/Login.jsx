@@ -67,7 +67,7 @@ const Login = () => {
                         >
                             <i className="fas fa-tint text-white text-4xl"></i>
                         </motion.div>
-                        <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-2">Welcome <span className="gradient-text">Back</span></h1>
+                        <h1 className="text-4xl font-bold text-gray-900 tracking-tight mb-2">Welcome <span className="gradient-text">Back</span></h1>
                         <p className="text-gray-500 font-medium uppercase tracking-[0.2em] text-[10px]">Continue your life-saving journey</p>
                     </div>
 
@@ -75,7 +75,7 @@ const Login = () => {
                         <button
                             type="button"
                             onClick={() => setRole('donor')}
-                            className={`flex-1 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 ${role === 'donor' ? 'bg-white shadow-lg text-red-600 scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
+                            className={`flex-1 py-3 rounded-xl font-semibold text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 ${role === 'donor' ? 'bg-white shadow-lg text-red-600 scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
                         >
                             <i className="fas fa-user-circle"></i>
                             Donor Login
@@ -83,7 +83,7 @@ const Login = () => {
                         <button
                             type="button"
                             onClick={() => setRole('hospital')}
-                            className={`flex-1 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 ${role === 'hospital' ? 'bg-white shadow-lg text-red-600 scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
+                            className={`flex-1 py-3 rounded-xl font-semibold text-[10px] uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 ${role === 'hospital' ? 'bg-white shadow-lg text-red-600 scale-[1.02]' : 'text-gray-500 hover:text-gray-700'}`}
                         >
                             <i className="fas fa-hospital-alt"></i>
                             Hospital Portal
@@ -92,7 +92,7 @@ const Login = () => {
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
+                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
                                 <i className="fas fa-envelope text-[8px]"></i>
                                 Email Address
                             </label>
@@ -110,7 +110,7 @@ const Login = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
+                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-4 flex items-center gap-2">
                                 <i className="fas fa-key text-[8px]"></i>
                                 Password
                             </label>
@@ -135,7 +135,7 @@ const Login = () => {
                         </div>
 
                         <div className="text-right">
-                            <a href="#" className="text-[10px] font-black text-red-600 uppercase tracking-widest hover:text-red-700 transition-colors flex items-center justify-end gap-1">
+                            <a href="#" className="text-[10px] font-bold text-red-600 uppercase tracking-widest hover:text-red-700 transition-colors flex items-center justify-end gap-1">
                                 <i className="fas fa-question-circle"></i>
                                 Forgot Password?
                             </a>
@@ -146,7 +146,7 @@ const Login = () => {
                             disabled={submitting}
                             whileHover={{ scale: 1.01 }}
                             whileTap={{ scale: 0.99 }}
-                            className="w-full bg-gradient-to-r from-red-600 to-rose-500 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-2xl shadow-red-500/30 hover:shadow-red-500/40 transition-all disabled:opacity-50 mt-4 flex items-center justify-center gap-3"
+                            className="w-full bg-gradient-to-r from-red-600 to-rose-500 text-white py-5 rounded-2xl font-semibold uppercase tracking-widest shadow-2xl shadow-red-500/30 hover:shadow-red-500/40 transition-all disabled:opacity-50 mt-4 flex items-center justify-center gap-3"
                         >
                             {submitting ? (
                                 <>
@@ -162,7 +162,7 @@ const Login = () => {
                     </form>
 
                     <div className="mt-10 text-center">
-                        <p className="text-gray-500 font-bold text-xs">
+                        <p className="text-gray-500 font-semibold text-xs">
                             Don't have an account? <Link to="/signup" className="text-red-600 hover:underline">Create Account</Link>
                         </p>
                     </div>

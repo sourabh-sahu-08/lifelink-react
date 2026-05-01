@@ -66,8 +66,8 @@ const Profile = ({ user }) => {
                             />
                         </div>
                         <div className="ml-8 mb-6">
-                            <h1 className="text-4xl font-black text-gray-900 tracking-tight">{userData.name}</h1>
-                            <p className="text-gray-500 flex items-center font-bold text-sm mt-2">
+                            <h1 className="text-4xl font-bold text-gray-900 tracking-tight">{userData.name}</h1>
+                            <p className="text-gray-500 flex items-center font-semibold text-sm mt-2">
                                 <i className="fas fa-map-marker-alt mr-2 text-red-500"></i> {userData.location}
                             </p>
                         </div>
@@ -77,23 +77,23 @@ const Profile = ({ user }) => {
                 <div className="pt-28 px-12 pb-12">
                     <div className="flex justify-between items-center mb-10">
                         <div className="flex space-x-3">
-                            <span className="px-5 py-2 bg-red-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-red-200">
+                            <span className="px-5 py-2 bg-red-600 text-white rounded-2xl font-semibold text-[10px] uppercase tracking-widest shadow-lg shadow-red-200">
                                 {userType}
                             </span>
                             {userType === 'donor' && (
-                                <span className="px-5 py-2 bg-yellow-400 text-yellow-900 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-yellow-100">
+                                <span className="px-5 py-2 bg-yellow-400 text-yellow-900 rounded-2xl font-semibold text-[10px] uppercase tracking-widest shadow-lg shadow-yellow-100">
                                     GOLD MEMBER
                                 </span>
                             )}
                         </div>
-                        <button className="px-8 py-3 bg-gray-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-black transition-all transform hover:scale-105 active:scale-95 shadow-xl shadow-gray-200">
+                        <button className="px-8 py-3 bg-gray-900 text-white rounded-2xl font-semibold text-xs uppercase tracking-widest hover:bg-black transition-all transform hover:scale-105 active:scale-95 shadow-xl shadow-gray-200">
                             Edit Profile
                         </button>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                         <div className="space-y-8">
-                            <h3 className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] border-b border-gray-100 pb-4">Personal Information</h3>
+                            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] border-b border-gray-100 pb-4">Personal Information</h3>
                             <div className="space-y-6">
                                 {[
                                     { icon: 'envelope', label: 'Email Address', value: user.email, color: 'text-red-500', bg: 'bg-red-50' },
@@ -105,8 +105,8 @@ const Profile = ({ user }) => {
                                             <i className={`fas fa-${item.icon} ${item.color}`}></i>
                                         </div>
                                         <div>
-                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{item.label}</p>
-                                            <p className="font-black text-gray-900 mt-0.5">{item.value}</p>
+                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{item.label}</p>
+                                            <p className="font-bold text-gray-900 mt-0.5">{item.value}</p>
                                         </div>
                                     </div>
                                 ))}
@@ -114,7 +114,7 @@ const Profile = ({ user }) => {
                         </div>
 
                         <div className="space-y-8">
-                            <h3 className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] border-b border-gray-100 pb-4">Security & Settings</h3>
+                            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em] border-b border-gray-100 pb-4">Security & Settings</h3>
                             <div className="space-y-4">
                                 {[
                                     { icon: 'lock', label: 'Change Password', color: 'text-indigo-500', bg: 'bg-indigo-50', hover: 'hover:border-indigo-100 hover:shadow-indigo-100/50' },
@@ -126,7 +126,7 @@ const Profile = ({ user }) => {
                                             <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mr-6 ${item.bg} group-hover:scale-110 transition-transform`}>
                                                 <i className={`fas fa-${item.icon} ${item.color} text-lg`}></i>
                                             </div>
-                                            <span className="font-black text-gray-800 text-sm uppercase tracking-widest">{item.label}</span>
+                                            <span className="font-bold text-gray-800 text-sm uppercase tracking-widest">{item.label}</span>
                                         </div>
                                         <div className="w-10 h-10 rounded-full flex items-center justify-center bg-gray-50 group-hover:bg-white border border-transparent group-hover:border-gray-200 transition-colors shadow-sm group-hover:shadow">
                                             <i className="fas fa-arrow-right text-gray-300 group-hover:text-gray-600 -rotate-45 group-hover:rotate-0 transition-all duration-300"></i>
@@ -141,12 +141,12 @@ const Profile = ({ user }) => {
 
             <div className="bg-white rounded-[2rem] shadow-xl p-12 border border-gray-100">
                 <div className="flex justify-between items-center mb-10">
-                    <h2 className="text-3xl font-black text-gray-900 tracking-tight flex items-center">
+                    <h2 className="text-3xl font-bold text-gray-900 tracking-tight flex items-center">
                         <i className="fas fa-history text-red-500 mr-5"></i>
                         {userType === 'donor' ? 'Donation History' : 'Recent Blood Requests'}
                     </h2>
                     {loading ? <Skeleton className="h-6 w-24" /> : (
-                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">{history.length} RECORDS</span>
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">{history.length} RECORDS</span>
                     )}
                 </div>
 
@@ -167,13 +167,13 @@ const Profile = ({ user }) => {
                                         <i className={`fas ${userType === 'donor' ? 'fa-tint text-red-500' : 'fa-hospital text-blue-500'} text-xl`}></i>
                                     </div>
                                     <div>
-                                        <p className="font-black text-gray-900 text-lg">{item.hospital}</p>
-                                        <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-1">{item.date} • {item.type}</p>
+                                        <p className="font-bold text-gray-900 text-lg">{item.hospital}</p>
+                                        <p className="text-xs text-gray-400 font-semibold uppercase tracking-widest mt-1">{item.date} • {item.type}</p>
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <p className="font-black text-gray-900 text-xl">{item.amount || '4 Units'}</p>
-                                    <p className={`text-[10px] font-black uppercase tracking-widest mt-1 ${item.status === 'Completed' ? 'text-green-500' : 'text-blue-500'}`}>
+                                    <p className="font-bold text-gray-900 text-xl">{item.amount || '4 Units'}</p>
+                                    <p className={`text-[10px] font-semibold uppercase tracking-widest mt-1 ${item.status === 'Completed' ? 'text-green-500' : 'text-blue-500'}`}>
                                         {item.status}
                                     </p>
                                 </div>
@@ -182,7 +182,7 @@ const Profile = ({ user }) => {
                     ) : (
                         <div className="text-center py-12 opacity-50">
                             <i className="fas fa-folder-open text-4xl mb-4"></i>
-                            <p className="font-black uppercase tracking-widest text-xs">No records found</p>
+                            <p className="font-semibold uppercase tracking-widest text-xs">No records found</p>
                         </div>
                     )}
                 </div>

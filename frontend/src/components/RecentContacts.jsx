@@ -38,7 +38,7 @@ const RecentContacts = () => {
 
     return (
         <div className="bg-white rounded-[2rem] shadow-xl border border-gray-100 p-6">
-            <h3 className="font-black text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-4 flex items-center justify-between">
+            <h3 className="font-semibold text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-4 flex items-center justify-between">
                 <span><i className="fas fa-address-book mr-3 text-blue-500"></i> Direct Messages</span>
                 <span className="bg-blue-50 px-2 py-1 rounded text-blue-600">{conversations.length}</span>
             </h3>
@@ -57,11 +57,11 @@ const RecentContacts = () => {
                         return (
                             <div key={conv._id} className="p-4 bg-slate-50 rounded-2xl border border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between group hover:bg-white hover:border-blue-100 hover:shadow-lg transition-all gap-4">
                                 <div className="flex items-center space-x-4 flex-1 w-full min-w-0">
-                                    <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center font-black text-blue-600 text-xs flex-shrink-0">
+                                    <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center font-bold text-blue-600 text-xs flex-shrink-0">
                                         {otherParticipant.charAt(0)}{otherParticipant.split(' ')[1]?.[0] || ''}
                                     </div>
                                     <div className="min-w-0 flex-1">
-                                        <p className="text-sm font-black text-gray-900 truncate">{otherParticipant}</p>
+                                        <p className="text-sm font-bold text-gray-900 truncate">{otherParticipant}</p>
                                         <p className="text-[10px] text-gray-400 font-bold truncate">
                                             {conv.lastMessage || "Started a new conversation..."}
                                         </p>

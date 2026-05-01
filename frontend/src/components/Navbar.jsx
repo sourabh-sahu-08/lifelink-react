@@ -27,7 +27,7 @@ const Navbar = ({ onNewRequest, onEmergency }) => {
                         <div className="w-10 h-10 bg-gradient-to-br from-red-600 to-rose-500 rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/20 group-hover:rotate-12 transition-transform duration-300">
                             <i className="fas fa-tint text-white"></i>
                         </div>
-                        <span className="ml-3 text-xl font-black text-slate-900 tracking-tighter">LifeLink</span>
+                        <span className="ml-3 text-xl font-bold text-slate-900 tracking-tighter">LifeLink</span>
                     </Link>
 
                     {/* Desktop Navigation */}
@@ -40,7 +40,7 @@ const Navbar = ({ onNewRequest, onEmergency }) => {
                             <Link
                                 key={link.path}
                                 to={link.path}
-                                className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 flex items-center gap-2 ${
+                                className={`px-6 py-2.5 rounded-xl text-[10px] font-semibold uppercase tracking-[0.2em] transition-all duration-300 flex items-center gap-2 ${
                                     isActive(link.path)
                                         ? 'bg-white shadow-md text-red-600'
                                         : 'text-slate-500 hover:text-slate-900'
@@ -55,24 +55,24 @@ const Navbar = ({ onNewRequest, onEmergency }) => {
                     {/* Actions */}
                     <div className="flex items-center gap-4">
                         <div className="hidden xl:flex flex-col text-right mr-2">
-                            <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none">Status</span>
+                            <span className="text-[8px] font-semibold text-slate-400 uppercase tracking-widest leading-none">Status</span>
                             <div className="flex items-center mt-1 justify-end">
                                 <span className="h-1.5 w-1.5 rounded-full bg-green-500 mr-1.5 animate-pulse"></span>
-                                <span className="text-[9px] font-black text-slate-900">Network Live</span>
+                                <span className="text-[9px] font-semibold text-slate-900">Network Live</span>
                             </div>
                         </div>
 
                         {user.role === 'donor' ? (
                             <button
                                 onClick={onEmergency}
-                                className="emergency-pulse bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-2xl font-black uppercase tracking-widest text-[9px] transition-all shadow-lg shadow-red-500/20"
+                                className="emergency-pulse bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-2xl font-semibold uppercase tracking-widest text-[9px] transition-all shadow-lg shadow-red-500/20"
                             >
                                 <i className="fas fa-bell mr-2"></i> Emergency
                             </button>
                         ) : (
                             <button
                                 onClick={onNewRequest}
-                                className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-2xl font-black uppercase tracking-widest text-[9px] transition-all shadow-lg shadow-red-500/20"
+                                className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-2xl font-semibold uppercase tracking-widest text-[9px] transition-all shadow-lg shadow-red-500/20"
                             >
                                 <i className="fas fa-plus mr-2"></i> Request
                             </button>
@@ -82,8 +82,8 @@ const Navbar = ({ onNewRequest, onEmergency }) => {
 
                         <div className="flex items-center gap-3 group cursor-pointer" onClick={() => navigate('/profile')}>
                             <div className="hidden sm:flex flex-col text-right">
-                                <p className="text-[10px] font-black text-slate-900 leading-none">{user.name.split(' ')[0]}</p>
-                                <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">Hero</p>
+                                <p className="text-[10px] font-semibold text-slate-900 leading-none">{user.name.split(' ')[0]}</p>
+                                <p className="text-[8px] font-semibold text-slate-400 uppercase tracking-widest mt-1">Hero</p>
                             </div>
                             <div className="relative">
                                 <img
