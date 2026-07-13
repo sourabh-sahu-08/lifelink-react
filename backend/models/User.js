@@ -23,23 +23,20 @@ const userSchema = new mongoose.Schema({
     },
     role: { 
         type: String, 
-        enum: ['candidate', 'recruiter', 'admin'],
-        default: 'candidate'
+        enum: ['donor', 'hospital', 'admin'],
+        default: 'donor'
     },
-    profilePicture: {
+    bloodType: {
         type: String,
-        default: 'no-photo.jpg'
+        enum: ['O-', 'O+', 'A-', 'A+', 'B-', 'B+', 'AB-', 'AB+']
     },
-    bio: String,
-    experience: String,
     city: String,
     phone: String
 }, { timestamps: true });
 
-// Encrypt password using bcrypt
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function() {
     if (!this.isModified('password')) {
-        next();
+        return;
     }
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);

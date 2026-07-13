@@ -51,24 +51,15 @@ function deg2rad(deg) {
     return deg * (Math.PI / 180)
 }
 
-app.options('*', cors()); 
-app.use(cors({
-    origin: (origin, callback) => {
-        // Allow any localhost origin
-        const isLocalhost = origin && (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:'));
-        const isVercel = origin && (typeof origin === 'string' && origin.match(/https:\/\/.*\.vercel\.app$/));
-        
-        if (!origin || isLocalhost || isVercel) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+const corsOptions = {
+    origin: 'http://localhost:5173',
     credentials: true,
-    optionsSuccessStatus: 200
-}));
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 
 

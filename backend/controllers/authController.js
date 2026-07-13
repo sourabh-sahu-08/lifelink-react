@@ -13,7 +13,7 @@ const generateToken = (id) => {
 // @access  Public
 exports.signup = async (req, res) => {
     try {
-        const { name, email, password, role } = req.body;
+        const { name, email, password, role, bloodType, city, phone } = req.body;
 
         const userExists = await User.findOne({ email });
 
@@ -25,7 +25,10 @@ exports.signup = async (req, res) => {
             name,
             email,
             password,
-            role
+            role,
+            bloodType,
+            city,
+            phone
         });
 
         if (user) {
@@ -98,10 +101,27 @@ exports.logout = async (req, res) => {
     res.status(200).json({ success: true, message: 'Logged out successfully' });
 };
 
-// @desc    Get user profile
-// @route   GET /api/auth/me
-// @access  Private
 exports.getMe = async (req, res) => {
-    const user = await User.findById(req.user.id);
-    res.status(200).json({ success: true, user });
+    try {
+        let token;
+
+        if (req.cookies.token) {
+            token = req.cookies.token;
+        } else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+            token = req.headers.authorization.split(' ')[1];
+        }
+
+        if (!token) {
+            return res.status(200).json({ success: false, user: null, message: 'Not logged in' });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.id);
+        if (!user) {
+            return res.status(200).json({ success: false, user: null, message: 'User not found' });
+        }
+        res.status(200).json({ success: true, user });
+    } catch (error) {
+        return res.status(200).json({ success: false, user: null, message: 'Invalid token' });
+    }
 };
