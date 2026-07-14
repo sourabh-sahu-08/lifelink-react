@@ -1,15 +1,18 @@
 services:
   - type: web
-    name: lifelink-backend
+    name: lifelink
     env: node
     plan: free
-    rootDir: backend
-    buildCommand: npm install
+    buildCommand: npm run build
     startCommand: npm start
     envVars:
       - key: MONGO_URI
         sync: false
       - key: GROQ_API_KEY
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: GOOGLE_CLIENT_ID
         sync: false
       - key: NODE_ENV
         value: production
