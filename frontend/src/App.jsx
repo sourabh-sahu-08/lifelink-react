@@ -38,7 +38,7 @@ function App() {
                     </Route>
 
                     {/* Redirect unknown routes to dashboard */}
-                    <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                    <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </AuthProvider>
         </ToastProvider>

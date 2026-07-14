@@ -3,15 +3,37 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { Mail, Lock, Heart, ArrowRight } from 'lucide-react';
+import { Mail, Lock, Heart, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { useGoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [submitting, setSubmitting] = useState(false);
-    const { login } = useAuth();
+    const { login, googleLogin } = useAuth();
     const navigate = useNavigate();
     const { addToast } = useToast();
+
+    const handleGoogleLogin = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            console.log('Google login success tokenResponse:', tokenResponse);
+            setSubmitting(true);
+            const result = await googleLogin(tokenResponse.access_token);
+            console.log('Google login result:', result);
+            if (result.success) {
+                addToast('Welcome back to LifeLink!', 'success');
+                navigate('/');
+            } else {
+                addToast(result.message, 'error');
+            }
+            setSubmitting(false);
+        },
+        onError: (error) => {
+            console.error('Google login error:', error);
+            addToast('Google login failed. Please try again.', 'error');
+        }
+    });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -19,7 +41,7 @@ const Login = () => {
         const result = await login(email, password);
         if (result.success) {
             addToast('Welcome back to LifeLink!', 'success');
-            navigate('/dashboard');
+            navigate('/');
         } else {
             addToast(result.message, 'error');
         }
@@ -73,13 +95,20 @@ const Login = () => {
                             <div className="relative group">
                                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-red-600 transition-colors" />
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 pr-4 text-sm text-slate-700 outline-none focus:bg-white focus:border-red-600/30 focus:ring-4 focus:ring-red-600/5 transition-all"
+                                    className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 pr-12 text-sm text-slate-700 outline-none focus:bg-white focus:border-red-600/30 focus:ring-4 focus:ring-red-600/5 transition-all"
                                     placeholder="••••••••"
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-red-600 transition-colors focus:outline-none"
+                                >
+                                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                </button>
                             </div>
                         </div>
 
@@ -98,6 +127,7 @@ const Login = () => {
                     <div className="mt-10 pt-8 border-t border-slate-50">
                         <button 
                             type="button"
+                            onClick={() => handleGoogleLogin()}
                             className="w-full flex items-center justify-center gap-3 bg-white border border-slate-100 py-3.5 rounded-2xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all shadow-sm"
                         >
                             <i className="fab fa-google text-red-500"></i>

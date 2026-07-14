@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
         required: [true, 'Please add an email'], 
         unique: true,
         match: [
-            /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+            /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$/,
             'Please add a valid email'
         ]
     },
@@ -31,7 +31,11 @@ const userSchema = new mongoose.Schema({
         enum: ['O-', 'O+', 'A-', 'A+', 'B-', 'B+', 'AB-', 'AB+']
     },
     city: String,
-    phone: String
+    phone: String,
+    location: {
+        lat: { type: Number },
+        lng: { type: Number }
+    }
 }, { timestamps: true });
 
 userSchema.pre('save', async function() {

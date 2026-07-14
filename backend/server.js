@@ -114,7 +114,12 @@ app.get('/', (req, res) => {
 
 app.get('/api/stats', async (req, res) => {
     try {
-        const donorId = parseInt(req.query.donorId) || 1;
+        const val = req.query.donorId;
+        let donorId;
+        if (!val) donorId = 1;
+        else if (!isNaN(val)) donorId = parseInt(val);
+        else donorId = val;
+
         const userDonorHistory = await DonorHistory.find({ donorId });
         const completedDonations = userDonorHistory.filter(h => h.status === "Completed").length;
         
@@ -147,6 +152,20 @@ app.get('/api/donors', async (req, res) => {
     try {
         const donors = await Donor.find({}).sort({createdAt: -1});
         res.json(donors);
+    } catch (err) {
+        res.status(500).json({message: err.message});
+    }
+});
+
+app.get('/api/hospitals', async (req, res) => {
+    try {
+        const { city } = req.query;
+        let query = { role: 'hospital' };
+        if (city) {
+            query.city = new RegExp(`^${city.trim()}$`, 'i'); // case-insensitive match for specific city
+        }
+        const hospitals = await User.find(query).select('-password');
+        res.json(hospitals);
     } catch (err) {
         res.status(500).json({message: err.message});
     }

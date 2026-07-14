@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const donorHistorySchema = new mongoose.Schema({
     id: { type: Number, required: false },
-    donorId: { type: Number, required: true },
+    donorId: { type: mongoose.Schema.Types.Mixed, required: true },
     requestId: { type: Number },
     hospital: { type: String },
     date: { type: String },
