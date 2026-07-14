@@ -3,8 +3,12 @@ import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import Skeleton from '../components/Skeleton';
 import API_BASE_URL from '../config/apiConfig';
+import { useAuth } from '../context/AuthContext';
 
-const Profile = ({ user }) => {
+const Profile = ({ user: propUser }) => {
+    const { user: authUser } = useAuth();
+    const user = propUser || authUser;
+
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState({
@@ -19,13 +23,23 @@ const Profile = ({ user }) => {
         successRate: "0%"
     });
 
+    if (!user) {
+        return (
+            <div className="flex items-center justify-center min-h-[50vh]">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
+            </div>
+        );
+    }
+
     const userType = user.role;
+    const userId = user.id || user._id;
 
     useEffect(() => {
+        if (!userId) return;
         const fetchData = async () => {
             try {
                 const [histRes, statsRes] = await Promise.all([
-                    axios.get(`${API_BASE_URL}/api/history/${user.id}`),
+                    axios.get(`${API_BASE_URL}/api/history/${userId}`),
                     axios.get(`${API_BASE_URL}/api/stats`)
                 ]);
                 setHistory(histRes.data);
@@ -37,7 +51,7 @@ const Profile = ({ user }) => {
             }
         };
         fetchData();
-    }, [userType, user.id]);
+    }, [userType, userId]);
 
     const userData = {
         name: user.name,

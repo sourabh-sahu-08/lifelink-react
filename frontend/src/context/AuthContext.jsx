@@ -17,6 +17,8 @@ export const AuthProvider = ({ children }) => {
                 const response = await axios.get(`${API_BASE_URL}/api/auth/me`);
                 if (response.data.success) {
                     setUser(response.data.user);
+                } else {
+                    setUser(null);
                 }
             } catch (err) {
                 // Not logged in or session expired - this is expected for guests
@@ -58,6 +60,21 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const googleLogin = async (credential) => {
+        try {
+            const response = await axios.post(`${API_BASE_URL}/api/auth/google`, { credential });
+            if (response.data.success) {
+                setUser(response.data);
+                return { success: true };
+            }
+        } catch (error) {
+            return { 
+                success: false, 
+                message: error.response?.data?.message || 'Google login failed' 
+            };
+        }
+    };
+
     const logout = async () => {
         try {
             await axios.get(`${API_BASE_URL}/api/auth/logout`);
@@ -68,7 +85,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, loading, login, signup, logout }}>
+        <AuthContext.Provider value={{ user, loading, login, signup, logout, googleLogin }}>
             {children}
         </AuthContext.Provider>
     );

@@ -61,14 +61,23 @@ const DonorDashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [statsRes, reqsRes, supplyRes] = await Promise.all([
+                const params = user?.city ? { city: user.city } : {};
+                const [statsRes, reqsRes, supplyRes, hospitalsRes] = await Promise.all([
                     axios.get(`${API_BASE_URL}/api/stats`),
                     axios.get(`${API_BASE_URL}/api/blood-requests`),
-                    axios.get(`${API_BASE_URL}/api/blood-supply`)
+                    axios.get(`${API_BASE_URL}/api/blood-supply`),
+                    axios.get(`${API_BASE_URL}/api/hospitals`, { params })
                 ]);
                 setStats(statsRes.data.donorStats);
                 
+                const hospitalMarkers = hospitalsRes.data.filter(h => h.location).map(h => ({
+                    ...h.location,
+                    title: h.name,
+                    type: 'Hospital'
+                }));
+
                 const markers = [
+                    ...hospitalMarkers,
                     ...reqsRes.data.filter(r => r.location).map(r => ({ ...r.location, title: r.requesterName, type: 'Request', bloodType: r.bloodType, units: r.units })),
                     ...supplyRes.data.filter(s => s.location).map(s => ({ ...s.location, title: s.hospitalName, type: 'Supply', bloodType: s.bloodType, units: s.units }))
                 ];
@@ -80,7 +89,7 @@ const DonorDashboard = () => {
             }
         };
         fetchData();
-    }, []);
+    }, [user?.city]);
 
     const handleQuizOption = (questionId, value) => {
         setUserAnswers(prev => ({ ...prev, [questionId]: value }));

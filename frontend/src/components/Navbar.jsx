@@ -21,13 +21,13 @@ const Navbar = ({ onNewRequest, onEmergency }) => {
     return (
         <div className="fixed top-6 left-0 right-0 z-[100] px-4 md:px-8 pointer-events-none">
             <div className="max-w-7xl mx-auto pointer-events-auto">
-                <nav className="glass-nav rounded-[2.5rem] px-6 py-3 flex items-center justify-between transition-all duration-500">
+                <nav className="glass-nav rounded-3xl sm:rounded-[2.5rem] px-3.5 py-2.5 sm:px-6 sm:py-3 flex items-center justify-between transition-all duration-500">
                     {/* Brand */}
                     <Link to="/" className="flex items-center group">
-                        <div className="w-10 h-10 bg-gradient-to-br from-red-600 to-rose-500 rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/20 group-hover:rotate-12 transition-transform duration-300">
-                            <i className="fas fa-tint text-white"></i>
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-red-600 to-rose-500 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/20 group-hover:rotate-12 transition-transform duration-300">
+                            <i className="fas fa-tint text-white text-xs sm:text-sm"></i>
                         </div>
-                        <span className="ml-3 text-xl font-bold text-slate-900 tracking-tighter">LifeLink</span>
+                        <span className="ml-2 sm:ml-3 text-lg sm:text-xl font-bold text-slate-900 tracking-tighter hidden min-[400px]:inline-block">LifeLink</span>
                     </Link>
 
                     {/* Desktop Navigation */}
@@ -53,7 +53,7 @@ const Navbar = ({ onNewRequest, onEmergency }) => {
                     </div>
 
                     {/* Actions */}
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 sm:gap-4">
                         <div className="hidden xl:flex flex-col text-right mr-2">
                             <span className="text-[8px] font-semibold text-slate-400 uppercase tracking-widest leading-none">Status</span>
                             <div className="flex items-center mt-1 justify-end">
@@ -65,14 +65,14 @@ const Navbar = ({ onNewRequest, onEmergency }) => {
                         {user.role === 'donor' ? (
                             <button
                                 onClick={onEmergency}
-                                className="emergency-pulse bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-2xl font-semibold uppercase tracking-widest text-[9px] transition-all shadow-lg shadow-red-500/20"
+                                className="emergency-pulse bg-red-600 hover:bg-red-700 text-white px-3 py-2 sm:px-6 sm:py-3 rounded-xl sm:rounded-2xl font-semibold uppercase tracking-widest text-[9px] transition-all shadow-lg shadow-red-500/20"
                             >
                                 <i className="fas fa-bell mr-2"></i> Emergency
                             </button>
                         ) : (
                             <button
                                 onClick={onNewRequest}
-                                className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-2xl font-semibold uppercase tracking-widest text-[9px] transition-all shadow-lg shadow-red-500/20"
+                                className="bg-red-600 hover:bg-red-700 text-white px-3 py-2.5 sm:px-6 sm:py-3 rounded-xl sm:rounded-2xl font-semibold uppercase tracking-widest text-[9px] transition-all shadow-lg shadow-red-500/20"
                             >
                                 <i className="fas fa-plus mr-2"></i> Request
                             </button>
@@ -87,7 +87,7 @@ const Navbar = ({ onNewRequest, onEmergency }) => {
                             </div>
                             <div className="relative">
                                 <img
-                                    className="h-10 w-10 rounded-2xl border-2 border-white shadow-md group-hover:scale-105 transition-transform"
+                                    className="h-8 w-8 sm:h-10 sm:w-10 rounded-xl sm:rounded-2xl border-2 border-white shadow-md group-hover:scale-105 transition-transform"
                                     src={`https://ui-avatars.com/api/?name=${user.name}&background=fecaca&color=b91c1c`}
                                     alt="User"
                                 />
@@ -97,7 +97,7 @@ const Navbar = ({ onNewRequest, onEmergency }) => {
 
                         <button 
                             onClick={handleLogout}
-                            className="p-3 text-slate-400 hover:text-red-600 transition-colors"
+                            className="p-2 sm:p-3 text-slate-400 hover:text-red-600 transition-colors text-sm sm:text-base"
                             title="Logout"
                         >
                             <i className="fas fa-power-off"></i>

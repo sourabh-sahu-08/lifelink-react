@@ -65,7 +65,7 @@ const GISMap = ({ center = [22.0797, 82.1391], markers = [], zoom = 12 }) => {
                                 <div className="p-1 min-w-[140px] font-sans">
                                     <h3 className="font-bold text-gray-900 text-sm tracking-tight mb-1">{marker.title}</h3>
                                     <div className="flex items-center space-x-2">
-                                        <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider ${marker.type === 'Request' ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'}`}>
+                                        <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider ${marker.type === 'Request' ? 'bg-red-100 text-red-600' : marker.type === 'Hospital' ? 'bg-emerald-100 text-emerald-600' : 'bg-blue-100 text-blue-600'}`}>
                                             {marker.type}
                                         </span>
                                         {marker.bloodType && (
