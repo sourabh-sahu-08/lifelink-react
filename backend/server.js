@@ -108,9 +108,11 @@ try {
 app.use('/api/auth', authRoutes);
 
 // Routes
-app.get('/', (req, res) => {
-    res.send('LifeLink API is running on MongoDB');
-});
+if (process.env.NODE_ENV !== 'production') {
+    app.get('/', (req, res) => {
+        res.send('LifeLink API is running on MongoDB');
+    });
+}
 
 app.get('/api/stats', async (req, res) => {
     try {
