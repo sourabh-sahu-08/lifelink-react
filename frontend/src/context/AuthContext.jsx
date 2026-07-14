@@ -84,8 +84,37 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const updateProfile = async (profileData) => {
+        try {
+            const response = await axios.put(`${API_BASE_URL}/api/auth/profile`, profileData);
+            if (response.data.success) {
+                setUser(prev => ({ ...prev, ...response.data }));
+                return { success: true };
+            }
+        } catch (error) {
+            return {
+                success: false,
+                message: error.response?.data?.message || 'Profile update failed'
+            };
+        }
+    };
+
+    const updatePassword = async (passwordData) => {
+        try {
+            const response = await axios.put(`${API_BASE_URL}/api/auth/password`, passwordData);
+            if (response.data.success) {
+                return { success: true };
+            }
+        } catch (error) {
+            return {
+                success: false,
+                message: error.response?.data?.message || 'Password update failed'
+            };
+        }
+    };
+
     return (
-        <AuthContext.Provider value={{ user, loading, login, signup, logout, googleLogin }}>
+        <AuthContext.Provider value={{ user, loading, login, signup, logout, googleLogin, updateProfile, updatePassword }}>
             {children}
         </AuthContext.Provider>
     );

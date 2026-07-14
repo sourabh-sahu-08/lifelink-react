@@ -213,3 +213,74 @@ exports.googleLogin = async (req, res) => {
     }
 };
 
+exports.updateProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        const { name, phone, city, bloodType } = req.body;
+        if (name) user.name = name;
+        if (phone) user.phone = phone;
+        if (city) {
+            user.city = city;
+            // Update location coordinates as well
+            const cleanCity = city.trim().toLowerCase();
+            if (cityCoords[cleanCity]) {
+                user.location = cityCoords[cleanCity];
+            } else {
+                user.location = {
+                    lat: 22.0797 + (Math.random() - 0.5) * 0.05,
+                    lng: 82.1391 + (Math.random() - 0.5) * 0.05
+                };
+            }
+        }
+        if (bloodType) user.bloodType = bloodType;
+
+        const updatedUser = await user.save();
+
+        res.status(200).json({
+            success: true,
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            role: updatedUser.role,
+            city: updatedUser.city,
+            phone: updatedUser.phone,
+            bloodType: updatedUser.bloodType,
+            location: updatedUser.location
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+exports.updatePassword = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id).select('+password');
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        const { currentPassword, newPassword } = req.body;
+        
+        // Verify current password
+        const isMatch = await user.matchPassword(currentPassword);
+        if (!isMatch) {
+            return res.status(400).json({ success: false, message: 'Incorrect current password' });
+        }
+
+        if (newPassword.length < 6) {
+            return res.status(400).json({ success: false, message: 'New password must be at least 6 characters' });
+        }
+
+        user.password = newPassword;
+        await user.save();
+
+        res.status(200).json({ success: true, message: 'Password updated successfully' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
