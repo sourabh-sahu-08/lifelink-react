@@ -37,7 +37,7 @@ const Layout = () => {
                     <div className="absolute bottom-[-10%] left-[-10%] w-[30vw] h-[30vw] bg-blue-100/30 rounded-full blur-[100px]"></div>
                 </div>
 
-                <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-12 relative z-10">
+                <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-32 lg:pb-12 relative z-10">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={location.pathname}

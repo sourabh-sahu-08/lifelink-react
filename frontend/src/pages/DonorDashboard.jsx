@@ -155,27 +155,27 @@ const DonorDashboard = () => {
                     </div>
                 </div>
 
-                <div className="px-12 pb-12 relative">
-                    <div className="absolute -top-28 left-12">
+                <div className="px-6 sm:px-12 pb-6 sm:pb-12 relative">
+                    <div className="absolute -top-20 sm:-top-28 left-6 sm:left-12">
                         <div className="relative">
-                            <div className="h-48 w-48 rounded-[3rem] border-[12px] border-white shadow-2xl overflow-hidden bg-white group-hover:shadow-red-500/10 transition-all duration-500">
+                            <div className="h-32 w-32 sm:h-48 sm:w-48 rounded-[2rem] sm:rounded-[3rem] border-8 sm:border-[12px] border-white shadow-2xl overflow-hidden bg-white group-hover:shadow-red-500/10 transition-all duration-500">
                                 <img
                                     className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110"
                                     src={`https://ui-avatars.com/api/?name=${user?.name}&background=fecaca&color=b91c1c&size=512`}
                                     alt="Donor"
                                 />
                             </div>
-                            <div className="absolute -bottom-2 -right-2 bg-green-500 w-12 h-12 rounded-2xl border-4 border-white flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform">
-                                <i className="fas fa-check text-white text-sm"></i>
+                            <div className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 bg-green-500 w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl border-2 sm:border-4 border-white flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform">
+                                <i className="fas fa-check text-white text-xs sm:text-sm"></i>
                             </div>
                         </div>
                     </div>
 
-                    <div className="pt-28 flex flex-col xl:flex-row justify-between items-start gap-10">
+                    <div className="pt-16 sm:pt-28 flex flex-col xl:flex-row justify-between items-start gap-10">
                         <div className="flex-1">
-                            <div className="flex items-center flex-wrap gap-4">
-                                <h1 className="text-5xl font-bold text-slate-900 tracking-tighter">{user?.name}</h1>
-                                <span className="blood-type-badge type-b text-2xl px-6 py-2 h-auto rounded-2xl shadow-xl shadow-red-100">
+                            <div className="flex items-center flex-wrap gap-3 sm:gap-4">
+                                <h1 className="text-3xl sm:text-5xl font-bold text-slate-900 tracking-tighter">{user?.name}</h1>
+                                <span className="blood-type-badge type-b text-xl sm:text-2xl px-4 py-1.5 sm:px-6 sm:py-2 h-auto rounded-xl sm:rounded-2xl shadow-xl shadow-red-100">
                                     {user?.bloodType}
                                 </span>
                             </div>
@@ -221,7 +221,7 @@ const DonorDashboard = () => {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mt-16">
+                    <div className="grid grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8 mt-10 sm:mt-16">
                         {[
                             { label: 'Donations', value: stats?.donations, icon: 'tint', color: 'text-red-600', bg: 'bg-red-50', border: 'border-red-100' },
                             { label: 'Lives Saved', value: stats?.livesSaved, icon: 'heart', color: 'text-rose-600', bg: 'bg-rose-50', border: 'border-rose-100' },
@@ -230,13 +230,13 @@ const DonorDashboard = () => {
                         ].map((stat, i) => (
                             <div 
                                 key={i} 
-                                className={`p-8 ${stat.bg} ${stat.border} rounded-[2.5rem] border hover:bg-white hover:shadow-2xl hover:scale-105 transition-all duration-500 group/stat`}
+                                className={`p-6 sm:p-8 ${stat.bg} ${stat.border} rounded-[2rem] sm:rounded-[2.5rem] border hover:bg-white hover:shadow-2xl hover:scale-105 transition-all duration-500 group/stat`}
                             >
-                                <div className={`w-14 h-14 ${stat.bg.replace('50', '100')} rounded-[1.5rem] flex items-center justify-center mb-6 transition-transform group-hover/stat:rotate-12 shadow-sm`}>
-                                    <i className={`fas fa-${stat.icon} ${stat.color} text-xl`}></i>
+                                <div className={`w-12 h-12 sm:w-14 sm:h-14 ${stat.bg.replace('50', '100')} rounded-2xl sm:rounded-[1.5rem] flex items-center justify-center mb-4 sm:mb-6 transition-transform group-hover/stat:rotate-12 shadow-sm`}>
+                                    <i className={`fas fa-${stat.icon} ${stat.color} text-lg sm:text-xl`}></i>
                                 </div>
-                                <div className="text-4xl font-bold text-slate-900 group-hover/stat:scale-110 transition-transform origin-left tracking-tight">{stat.value}</div>
-                                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-2">{stat.label}</div>
+                                <div className="text-3xl sm:text-4xl font-bold text-slate-900 group-hover/stat:scale-110 transition-transform origin-left tracking-tight">{stat.value}</div>
+                                <div className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-2">{stat.label}</div>
                             </div>
                         ))}
                     </div>
