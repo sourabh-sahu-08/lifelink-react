@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🩸 LifeLink. 
+# 🩸 LifeLink...
 
 ### *Real-Time Emergency Blood Donation & Hospital Network Platform*
 
